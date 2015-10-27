@@ -1,0 +1,15 @@
+qiniu
+sevencow
+
+pymysql
+mysql-python
+sqlalchemy
+
+twisted
+fake-factory
+python-testdata
+pymongo
+requests
+
+tornado
+supervisor
