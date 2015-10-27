@@ -4,7 +4,7 @@
 from __future__ import unicode_literals, print_function
 
 from conf.data_config import Base
-from conf.loger_config import model_record_log
+from conf.logger_config import model_record_log
 
 
 class BasicBase(Base):
