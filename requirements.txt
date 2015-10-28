@@ -1,15 +1,13 @@
 qiniu
-sevencow
+tornado
+twisted
+requests
+sqlalchemy
+supervisor
 
 pymysql
+pymongo
 mysql-python
-sqlalchemy
 
-twisted
 fake-factory
 python-testdata
-pymongo
-requests
-
-tornado
-supervisor
