@@ -27,6 +27,7 @@ class BasicBase(Base):
         """批量保存.
         """
 
+        result = False
         try:
             db_session.add_all(entities_list)
             db_session.commit()
@@ -35,5 +36,7 @@ class BasicBase(Base):
             db_session.rollback()
         else:
             model_record_log.info("OK")
+            result = True
         finally:
             db_session.close()
+            return result

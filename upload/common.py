@@ -3,7 +3,7 @@
 
 from qiniu.auth import Auth
 from qiniu import BucketManager
-
+from qiniu import put_data, put_file, put_stream
 from conf.store_config import *
 
 q = Auth(ACCESS_KEY, SECRET_KEY)
@@ -23,6 +23,23 @@ def get_up_token(file_name=None):
 
     up_token = q.upload_token(BUCKET_NAME, file_name, expires=UNIX_TIME_TTL)
     return up_token
+
+
+def put_up_datum(file_path, key, kind="file"):
+    """上传资料, 三种模式: data, file, stream
+    """
+
+    mime_type = "text/plain"
+
+    token = q.upload_token(BUCKET_NAME, key)
+    if kind == "data":
+        ret, info = put_data(token, key, file_path)
+    elif kind == "stream":
+        ret, info = put_stream(token, key, file_path)
+    else:
+        ret, info = put_file(token, key, file_path, mime_type=mime_type, check_crc=True)
+
+    return ret, info
 
 
 def get_shift_rs_url(file_info, bucket=None):

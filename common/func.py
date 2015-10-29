@@ -14,6 +14,8 @@ class FileProcess(object):
     """文件处理."""
 
     def __init__(self, path):
+        """文件路径."""
+
         self.path = path
 
     def read(self):
@@ -68,6 +70,33 @@ class FileProcess(object):
             shutil.rmtree(self.path)  # 空目录,有内容的目录都可以删
         else:
             pass
+
+
+class FileFinished(object):
+    """文件上传完成处理.
+
+        移走放到其它目录, seek_dir ==> done_dir.
+    """
+
+    def __init__(self, seek_dir, done_dir):
+        """seek_dir: 搜索目录; done_dir: 移到的目录."""
+
+        self.seek_directory = seek_dir
+        self.done_directory = done_dir
+
+    def batch_move(self, entities_list):
+        """批量移动文件列表."""
+
+        def make_dirs(directory):
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+
+        make_dirs(self.done_directory)
+        for entity in entities_list:
+            dir_name = os.path.dirname(entity)
+            new_path = dir_name.replace(self.seek_directory, self.done_directory)
+            make_dirs(self.done_directory)
+            shutil.move(entity, new_path)
 
 
 if __name__ == "__main__":
