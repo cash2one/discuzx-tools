@@ -14,3 +14,15 @@ DONE_DIRECTORY = ""
 
 # 每次扫描数据数量
 LIMIT_MATCH_FILES = 5
+
+USER_MAP_CONFIG = {
+    "wujuguang": "1|kylinfish@126.com|kylinfish",
+    "liaochunping": "2|liaocp1976@126.com|haifei",
+    "zhangzongqi": "3|zzq-bryan@hotmail.com|zzq-bryan",
+    "xierongtang": "4|923508831@qq.com|rongtang",
+    "liyucheng": "5|12777104180@qq.com|yucheng",
+    "yangbaoyuan": "6|ybychem@gmail.com|moonlight",
+    "zhoufangge": "12|305672105@qq.com|fangge",
+    "zouchen": "13|zouchen@pku.edu.cn|Laplace",
+    "dingke": "21|dingkecrown2010@163.com|dingkecrown",
+}
