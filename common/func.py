@@ -8,6 +8,9 @@ from __future__ import unicode_literals, print_function
 
 import os
 import shutil
+from xpinyin import Pinyin
+
+pinyin = Pinyin()
 
 
 def get_info_by_path(file_path):
@@ -21,6 +24,25 @@ def get_info_by_path(file_path):
     suffix = os.path.splitext(file_path)[-1]
     suffix = suffix if suffix else ""
     return dz_info[0], dz_info[1], suffix
+
+
+def get_plate_map_conf(plate_map_string):
+    """转换从数据库导出的数据.
+
+        SELECT fid, name FROM `bbs_forum_forum` WHERE status=1 AND type= 'forum';
+    """
+
+    dict_data = {}
+    lines = plate_map_string.split("\n")
+    for line in lines:
+        key_value_list = line.strip(" ").strip("|").split("|")
+        if len(key_value_list) < 2:
+            continue
+        dict_key = pinyin.get_pinyin(key_value_list[1]).lower()
+        dict_data[dict_key] = int(key_value_list[0])
+
+    print(dict_data)
+    return dict_data
 
 
 class FileProcess(object):

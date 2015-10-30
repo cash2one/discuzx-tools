@@ -5,10 +5,12 @@ from __future__ import unicode_literals, print_function
 
 import os
 import uuid
-from itertools import chain
+import itertools
+
 from conf.data_config import robot_session
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
     LIMIT_MATCH_FILES, USER_MAP_CONFIG, PLATE_MAP_CONFIG
+
 from common.func import FileFinished, get_info_by_path
 from models.record import Attachment
 from upload.common import put_up_datum
@@ -26,10 +28,10 @@ def search_match_files(directory):
     for i in os.listdir(directory):
         sub_path = os.path.join(directory, i)
         if os.path.isdir(sub_path):
-            base_name = os.path.basename(sub_path)
+            base_name = os.path.basename(sub_path).lower()
 
             # 跳过未适配的版块和作者.
-            if base_name not in chain(PLATE_MAP_CONFIG.keys(),USER_MAP_CONFIG.keys()):
+            if base_name not in itertools.chain(PLATE_MAP_CONFIG.keys(), USER_MAP_CONFIG.keys()):
                 continue
 
             search_match_files(sub_path)
