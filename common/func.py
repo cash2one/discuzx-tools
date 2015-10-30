@@ -10,6 +10,19 @@ import os
 import shutil
 
 
+def get_info_by_path(file_path):
+    """根据文件存放结构获取信息.
+    """
+
+    dz_info = os.path.dirname(file_path).rsplit(os.sep, 2)[-2:]
+    if len(dz_info) != 2:
+        raise Exception("文件存放路径异常! 必须放在[plate%sauthor]之下!" % os.sep)
+
+    suffix = os.path.splitext(file_path)[-1]
+    suffix = suffix if suffix else ""
+    return dz_info[0], dz_info[1], suffix
+
+
 class FileProcess(object):
     """文件处理."""
 
