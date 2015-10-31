@@ -8,17 +8,19 @@
         func.py
         common.py        
         logger.py
+        xpinyin
 
 2.配置项
 --------
     conf:
-        control.py
         data_config.py
         logger_config.py
+        regular_config.py
         store_config.py
         supervisor_app.conf
         supervisor_dev.conf
         web_config.conf
+        web_config.dev.conf
 
 3.启动脚本项
 ------------
@@ -56,6 +58,8 @@
 7.注册用户
 ----------
     register:
+        control.py
+        factory.py
     
 8.动发帖
 --------

@@ -18,18 +18,3 @@ GE_DATA_WRITE = True
 
 # 是否使用已有基础数据 False: 不使用; True: 使用
 GE_DATA_USAGE = False
-
-# ===================以下为CacheDB选项===================
-
-# 是否启用Cache, False: 不启用; True: 启用
-CACHE_DB_ON = True
-
-cache_host = "localhost"
-cache_port = 27017
-cache_database = "dz_gen_data"
-
-cache_option = {
-    'host': cache_host,
-    'port': cache_port,
-    'database': cache_database
-}

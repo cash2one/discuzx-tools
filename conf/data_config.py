@@ -31,3 +31,18 @@ robot_engine = create_engine(robot_url, echo=is_echo, pool_recycle=db_pool_recyc
 forum_session = scoped_session(sessionmaker(bind=forum_engine))()
 robot_session = scoped_session(sessionmaker(bind=robot_engine))()
 Base = declarative_base()
+
+# ===================以下为CacheDB选项===================
+
+# 是否启用Cache, False: 不启用; True: 启用
+CACHE_DB_ON = True
+
+cache_host = "localhost"
+cache_port = 27017
+cache_database = "dz_gen_data"
+
+cache_option = {
+    'host': cache_host,
+    'port': cache_port,
+    'database': cache_database
+}
