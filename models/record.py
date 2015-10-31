@@ -64,6 +64,7 @@ class Member(BasicBase):
       `username` VARCHAR(45) NOT NULL COMMENT '账户名',
       `password` VARCHAR(45) NOT NULL COMMENT '账户密码',
       `email` VARCHAR(45) NOT NULL COMMENT '邮箱',
+      `dz_uid` INT DEFAULT 0 COMMENT '论坛的uid',
       `create_datetime` timestamp NOT NULL COMMENT '添入时间',
       PRIMARY KEY (`id`)  COMMENT '自动注册用户');
     """
@@ -71,10 +72,21 @@ class Member(BasicBase):
     __tablename__ = "bbs_member"
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
-    username = Column(VARCHAR)
-    password = Column(VARCHAR)
-    email = Column(VARCHAR)
-    create_datetime = Column(TIMESTAMP)
+    username = Column(VARCHAR, nullable=False)
+    password = Column(VARCHAR, nullable=False)
+    email = Column(VARCHAR, default='')
+    dz_uid = Column(INTEGER, default=0)
+    create_datetime = Column(TIMESTAMP, nullable=False)
+
+    def __init__(self, username, password, email, uid):
+        """存放自动注册的账户信息.
+        """
+
+        self.username = username
+        self.password = password
+        self.email = email
+        self.dz_uid = uid
+        self.create_datetime = datetime.datetime.now()
 
 
 class Thread(BasicBase):

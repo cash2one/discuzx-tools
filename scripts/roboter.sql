@@ -6,6 +6,7 @@ CREATE TABLE `roboter`.`bbs_member` (
   `username` VARCHAR(45) NOT NULL COMMENT '账户名',
   `password` VARCHAR(45) NOT NULL COMMENT '账户密码',
   `email` VARCHAR(45) NOT NULL COMMENT '邮箱',
+  `dz_uid` INT DEFAULT 0 COMMENT '论坛的uid',
   `create_datetime` timestamp NOT NULL COMMENT '添入时间',
   PRIMARY KEY (`id`)  COMMENT '自动注册用户');
 

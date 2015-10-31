@@ -11,3 +11,4 @@ level = logging.INFO  # logging.DEBUG
 # 注意指定的目录要有权限
 model_record_log = build_file_logs("model_record.log", level)
 model_remote_log = build_file_logs("model_remote.log", level)
+faker_data_log = build_file_logs("faker_data_log.log", level)

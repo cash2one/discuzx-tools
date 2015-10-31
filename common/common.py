@@ -6,6 +6,9 @@
 
 from __future__ import unicode_literals, print_function
 
+from random import randint, sample
+from string import digits, ascii_lowercase
+
 import pymongo
 from faker import Faker
 from faker.providers import BaseProvider
@@ -28,7 +31,10 @@ class CountFromCollection(Factory):
         return self._possible_values[self.current_index]
 
 
-class ZLandProvider(BaseProvider):
+class ChinaProvider(BaseProvider):
+    allowed_chars = ascii_lowercase + digits
+    email_domains = ('126.com', 'qq.com', '163.com')
+
     cn_tag_data = [
         "女生", "情侣", "霸气", "伤感", "个性", "男生", "超拽", "唯美", "森系",
         "原创", "搞笑", "爱情", "非主流", "好听", "文艺", "姐妹", "校园", "幸福",
@@ -164,14 +170,18 @@ class ZLandProvider(BaseProvider):
         "人生就是一场未知目的地的旅行，更多的时候，我们并不知道自己接下来会遇见怎样的未来。只不过有时候，我们只是一味地狂奔，却忘记了旅行的意义。"
     ]
 
-    def zh_cn_bio(self):
-        return self.randomElement(self.cn_bio_data)
+    def cn_email(self):
+        character = ''.join(sample(self.allowed_chars, randint(4, 10)))
+        return character + '@' + self.random_element(self.email_domains)
 
-    def zh_cn_tag(self):
-        return self.randomElement(self.cn_tag_data)
+    def cn_bio(self):
+        return self.random_element(self.cn_bio_data)
 
-    def zh_cn_message(self):
-        return self.randomElement(self.cn_message_data)
+    def cn_tag(self):
+        return self.random_element(self.cn_tag_data)
+
+    def cn_message(self):
+        return self.random_element(self.cn_message_data)
 
 
 def mongodb_init(host, port, database):
@@ -193,11 +203,11 @@ def test():
     """
 
     fake = Faker()
-    fake.add_provider(ZLandProvider)
+    fake.add_provider(ChinaProvider)
 
     for _ in range(10):
-        print(fake.zh_cn_email())
-        print(fake.zh_cn_tag())
+        print(fake.cn_email())
+        print(fake.cn_tag())
 
 
 if __name__ == '__main__':
