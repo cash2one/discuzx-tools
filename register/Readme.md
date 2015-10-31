@@ -1,5 +1,5 @@
 ## 介绍:
-    生成测试数据, 用于内容的充实和支撑.    
+    生成测试数据, 用于内容的充实和支撑.
     适配业务规则, 上线如果需要, 以服务的形式运行, 来模拟用户操作, 产生优质内容.
 
 ## 使用:
@@ -12,7 +12,7 @@
 
     sudo service mongod start
     sudo service mongod stop
-    sudo service mongod restart    
+    sudo service mongod restart
     where <port> is the port configured in /etc/mongod.conf, 27017 by default.
 
 ## 脚本:

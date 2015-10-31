@@ -3,8 +3,14 @@
 
 from __future__ import unicode_literals, print_function
 
+from autoloads import Entity, EntityHelper
 from conf.data_config import Base
 from conf.logger_config import model_record_log
+
+
+class BaseModel(Entity, EntityHelper):
+    def __init__(self, **kargs):
+        Entity.__init__(self, **kargs)
 
 
 class BasicBase(Base):
