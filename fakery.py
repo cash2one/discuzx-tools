@@ -6,14 +6,18 @@
 
 from __future__ import unicode_literals, print_function
 
+import time
 import random
+import string
+
 from twisted.internet import task
 from twisted.internet import reactor
 from conf.data_config import robot_session
 from conf.logger_config import faker_data_log
+from common.func import md5, dz_uc_md5
 from register.factory import FakeMember, FakePost
 from models.record import Member
-from models.remote import CommonMember
+from models.remote import CommonMember, CenterMember
 
 
 def fake_member(gen_data_count=1):
@@ -31,13 +35,32 @@ def fake_member(gen_data_count=1):
         random_string = [random.choice(random_string) for _ in range(length)]
         password = ''.join(random_string)
 
+        # 用户中心md5后的实际密码.
+        salt = "".join([random.choice(string.ascii_lowercase + string.digits) for _ in range(6)])
+        hash_password = dz_uc_md5(password, salt)
+
+        # 会员表md5后的伪密码.
+        fake_password = md5(str(random.randint(10 * 9, 10 ** 10 - 1)))
+
         try:
-            common_member = CommonMember(_username=username, _password=password, _email=entity["email"])
+            common_member = CommonMember(__groupid=10,
+                                         __username=username,
+                                         __password=fake_password,
+                                         __email=entity["email"],
+                                         __regdate=int(time.time()))
             CommonMember.add(common_member)
+
+            center_member = CenterMember(__salt=salt,
+                                         __username=username,
+                                         __password=hash_password,
+                                         __email=entity["email"],
+                                         __regdate=int(time.time()),
+                                         __uid=common_member.__uid)
+            CenterMember.add(center_member)
         except Exception, ex:
             faker_data_log.exception(ex)
         else:
-            member = Member(username, password, entity["email"], common_member._uid)
+            member = Member(username, password, entity["email"], common_member.__uid)
             common_member_entities_list.append(member)
 
         Member.batch_save(robot_session, common_member_entities_list)

@@ -69,7 +69,7 @@ cache_option = {
 # ===================以下为从数据库到ORM的映射===================
 
 
-def generate_models(mysql_config, databases_config, database_name, column_prefix='_'):
+def generate_models(mysql_config, databases_config, database_name, column_prefix='__'):
     """"从数据库表生成模型.
 
         mysql_config:        MySQL配置
@@ -101,7 +101,7 @@ def generate_models(mysql_config, databases_config, database_name, column_prefix
 
 MYSQL_DATABASES_TABLES = dict(
     discuzx=[
-        "bbs_common_member", "bbs_forum_thread", "bbs_forum_post",
+        "bbs_common_member", "bbs_ucenter_members", "bbs_forum_thread", "bbs_forum_post",
         "bbs_forum_attachment", "bbs_forum_attachment_0"
     ]
 )

@@ -7,10 +7,24 @@
 from __future__ import unicode_literals, print_function
 
 import os
+import hashlib
 import shutil
 from xpinyin import Pinyin
 
 pinyin = Pinyin()
+
+
+def md5(text):
+    """php内置md5加密一致."""
+
+    m = hashlib.md5(text).hexdigest()
+    return m
+
+
+def dz_uc_md5(password, salt):
+    """dz uc加密规则."""
+
+    return md5(''.join((md5(password), salt)))
 
 
 def get_info_by_path(file_path):

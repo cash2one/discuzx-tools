@@ -9,6 +9,8 @@ from conf.data_config import generate_db_models
 from base import BaseModel
 
 common_member = generate_db_models('bbs_common_member')
+center_member = generate_db_models('bbs_ucenter_members')
+
 forum_thread = generate_db_models('bbs_forum_thread')
 forum_post = generate_db_models('bbs_forum_post')
 
@@ -17,6 +19,11 @@ forum_attachment_content = generate_db_models('bbs_forum_attachment_0')
 
 
 class CommonMember(common_member, BaseModel):
+    def __init__(self, **kargs):
+        BaseModel.__init__(self, **kargs)
+
+
+class CenterMember(common_member, BaseModel):
     def __init__(self, **kargs):
         BaseModel.__init__(self, **kargs)
 
