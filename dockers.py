@@ -14,19 +14,26 @@ from conf.data_config import robot_session
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
     MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
 
-from common.func import FileFinished, Utils
+from common.func import FileFinished, Utils, RedisService
 from models.record import Attachment, Surplus
 from upload.common import put_up_datum
 
 fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
+redis_service = RedisService(db="files_md5sum")
+
+
+def init_redis_data():
+    """初始化redis的数据.
+    """
+
+    attachment_entities = robot_session.query(Attachment, Attachment.id, Attachment.md5sum).all()
+    for entity in attachment_entities:
+        redis_service.set(entity.md5sum, entity.id)
 
 
 def search_match_files(directory):
     """对指定的目录文件扫描, 并结果入库.
     """
-
-    files_entities = []
-    files_md5sum_dict = {}  # key为md5sum, value为fid
 
     # 扫描文件
     for i in os.listdir(directory):
@@ -50,18 +57,17 @@ def search_match_files(directory):
             md5sum = Utils.md5sum(sub_path)
 
             # 如有重复记录到日志.
-            if md5sum in files_md5sum_dict.keys():
-                fid = files_md5sum_dict.get(md5sum, 0)
+            fid = redis_service.get(md5sum)
+            if fid:
                 Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).save(robot_session)
                 continue
 
             entity = Attachment(sub_path, plate=plate, author=author, md5sum=md5sum)
-            files_entities.append(entity)
+            entity.save(robot_session)
+            redis_service.set(entity.md5sum, entity.id)
 
-    Attachment.batch_save(robot_session, files_entities)
 
-
-def update_match_files(limit=5):
+def upload_match_files(limit=5):
     """对结果入库的数据扫描, 并文件上传.
     """
 
@@ -97,10 +103,11 @@ def main():
     """扫描文件入库——> 入库扫描上传 ——> 完毕之后再扫描.
     """
 
+    init_redis_data()
     search_match_files(SEEK_DIRECTORY)
 
     # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(update_match_files, MATCH_FILES_LIMIT)
+    create_data = task.LoopingCall(upload_match_files, MATCH_FILES_LIMIT)
     create_data.start(MATCH_FILES_INTERVAL)
     reactor.run()
 

@@ -119,7 +119,6 @@ class Utils(object):
             dict_key = pinyin.get_pinyin(key_value_list[1]).lower()
             dict_data[dict_key] = int(key_value_list[0])
 
-        print(dict_data)
         return dict_data
 
 
