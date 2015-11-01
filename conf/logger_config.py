@@ -12,3 +12,5 @@ level = logging.INFO  # logging.DEBUG
 model_record_log = build_file_logs("model_record.log", level)
 model_remote_log = build_file_logs("model_remote.log", level)
 faker_data_log = build_file_logs("faker_data_log.log", level)
+redis_data_log = build_file_logs("redis_data_log.log", level)
+gateway_debug_log = build_file_logs("gateway_debug_log")

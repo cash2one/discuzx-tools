@@ -9,9 +9,35 @@ from __future__ import unicode_literals, print_function
 import os
 import hashlib
 import shutil
+import redis
+
 from xpinyin import Pinyin
+from conf.data_config import redis_host, redis_port
+from conf.logger_config import redis_data_log
 
 pinyin = Pinyin()
+redis_pool = redis.ConnectionPool(host=redis_host, port=redis_port)
+
+
+class RedisService(object):
+    def __init__(self, db):
+        try:
+            self._redis_cli = redis.Redis(connection_pool=redis_pool, db=db)
+        except Exception, ex:
+            self._redis_cli = None
+            redis_data_log.error("redis连接失败：%s" % (str(ex)))
+
+    def get(self, key):
+        return self._redis_cli and self._redis_cli.get(key)
+
+    def set(self, key, value):
+        return self._redis_cli and self._redis_cli.set(key, value)
+
+    def mset(self, **kwargs):
+        return self._redis_cli and self._redis_cli.mset(**kwargs)
+
+    def hget(self, name, key):
+        return self._redis_cli and self._redis_cli.hget(name, key)
 
 
 class Utils(object):

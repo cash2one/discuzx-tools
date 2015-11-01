@@ -18,24 +18,24 @@ db_pool_recycle = 60
 robot_environ = False  # local/server数据库连接, False: local; True: server.
 
 if robot_environ:
-    forum_conn = 'mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@127.0.0.1/%s?charset=utf8mb4'
+    forum_conn = 'mysql+pymysql://operate:4F9dE8IWB8pf0f2927PfEb9b7@127.0.0.1/%s?charset=utf8mb4'
     robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@127.0.0.1/%s?charset=utf8mb4"
 
     MYSQL_CONFIG = dict(
         host="127.0.0.1",
         port=3306,
-        user="develop",
-        password="f0f2927PfEb9b74F9dE8IWB8p",
+        user="operate",
+        password="4F9dE8IWB8pf0f2927PfEb9b7",
         charset="utf8",
     )
 else:
-    forum_conn = 'mysql+pymysql://develop:4F9dE8IWB8pf0f2927PfEb9b7@127.0.0.1/%s?charset=utf8mb4'
-    robot_conn = "mysql+pymysql://develop:4F9dE8IWB8pf0f2927PfEb9b7@127.0.0.1/%s?charset=utf8mb4"
+    forum_conn = 'mysql+pymysql://operate:4F9dE8IWB8pf0f2927PfEb9b7@123.57.176.248/%s?charset=utf8mb4'
+    robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@123.57.176.248/%s?charset=utf8mb4"
 
     MYSQL_CONFIG = dict(
-        host="127.0.0.1",
+        host="123.57.176.248",
         port=3306,
-        user="develop",
+        user="operate",
         password="4F9dE8IWB8pf0f2927PfEb9b7",
         charset="utf8",
     )
@@ -65,6 +65,8 @@ cache_option = {
     'database': cache_database
 }
 
+redis_host = "127.0.0.1"
+redis_port = 6379
 
 # ===================以下为从数据库到ORM的映射===================
 

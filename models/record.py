@@ -142,3 +142,11 @@ class Thread(BasicBase):
     thread_id = Column(INTEGER)
     attachment_id = Column(INTEGER)
     create_datetime = Column(TIMESTAMP)
+
+    def __init__(self, thread_id, attachment_id):
+        """存放发帖信息.
+        """
+
+        self.thread_id = thread_id
+        self.attachment_id = attachment_id
+        self.create_datetime = datetime.datetime.now()
