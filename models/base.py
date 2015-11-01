@@ -28,6 +28,22 @@ class BasicBase(Base):
                 ret[name] = getattr(self, name)
         return ret
 
+    def save(self, db_session, refresh=True):
+        """自保存.
+        """
+
+        try:
+            db_session.add(self)
+            if refresh:
+                db_session.flush()
+                db_session.refresh(self)
+            db_session.commit()
+        except Exception, ex:
+            model_record_log.exception(ex)
+            db_session.rollback()
+        finally:
+            db_session.close()
+
     @staticmethod
     def batch_save(db_session, entities_list):
         """批量保存.

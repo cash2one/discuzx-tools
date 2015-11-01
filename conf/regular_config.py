@@ -5,7 +5,7 @@
 """
 
 from __future__ import unicode_literals, print_function
-from common.func import get_plate_map_conf
+from common.func import Utils
 
 # 搜索目录
 SEEK_DIRECTORY = ""
@@ -14,7 +14,10 @@ SEEK_DIRECTORY = ""
 DONE_DIRECTORY = ""
 
 # 每次扫描数据数量
-LIMIT_MATCH_FILES = 5
+MATCH_FILES_LIMIT = 5
+
+# 每次扫描时间间隔, 默认五分钟.
+MATCH_FILES_INTERVAL = 5 * 60
 
 # 用户映射配置
 USER_MAP_CONFIG = dict(
@@ -60,4 +63,4 @@ __plate_map_string = """
 """
 
 # 版块映射配置
-PLATE_MAP_CONFIG = get_plate_map_conf(__plate_map_string)
+PLATE_MAP_CONFIG = Utils.get_plate_map_conf(__plate_map_string)

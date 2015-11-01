@@ -14,49 +14,87 @@ from xpinyin import Pinyin
 pinyin = Pinyin()
 
 
-def md5(text):
-    """php内置md5加密一致."""
+class Utils(object):
+    @staticmethod
+    def md5(text):
+        """php内置md5加密一致."""
 
-    m = hashlib.md5(text).hexdigest()
-    return m
+        m = hashlib.md5(text).hexdigest()
+        return m
 
+    @staticmethod
+    def dz_uc_md5(password, salt):
+        """dz uc加密规则."""
 
-def dz_uc_md5(password, salt):
-    """dz uc加密规则."""
+        return Utils.md5(''.join((Utils.md5(password), salt)))
 
-    return md5(''.join((md5(password), salt)))
+    @staticmethod
+    def md5sum(file_path):
+        """计算文件的MD5值.
+        """
 
+        try:
+            with open(file_path, "rb") as f:
+                return Utils.md5(f.read())
+        except Exception, ex:
+            print(ex)
+            return ""
 
-def get_info_by_path(file_path):
-    """根据文件存放结构获取信息.
-    """
+    @staticmethod
+    def md5sum_bigfile(file_path):
+        """计算文件的MD5值.
+        """
 
-    dz_info = os.path.dirname(file_path).rsplit(os.sep, 2)[-2:]
-    if len(dz_info) != 2:
-        raise Exception("文件存放路径异常! 必须放在[plate%sauthor]之下!" % os.sep)
+        def read_chunks(_fh):
+            fh.seek(0)
+            _chunk = fh.read(8096)
+            while _chunk:
+                yield _chunk
+                _chunk = _fh.read(8096)
+            else:
+                # 最后要将游标放回文件开头
+                _fh.seek(0)
 
-    suffix = os.path.splitext(file_path)[-1]
-    suffix = suffix if suffix else ""
-    return dz_info[0], dz_info[1], suffix
+        m = hashlib.md5()
+        if isinstance(file_path, basestring) and os.path.exists(file_path):
+            with open(file_path, "rb") as fh:
+                for chunk in read_chunks(fh):
+                    m.update(chunk)
+        else:
+            return ""
+        return m.hexdigest()
 
+    @staticmethod
+    def get_info_by_path(file_path):
+        """根据文件存放结构获取信息.
+        """
 
-def get_plate_map_conf(plate_map_string):
-    """转换从数据库导出的数据.
+        dz_info = os.path.dirname(file_path).rsplit(os.sep, 2)[-2:]
+        if len(dz_info) != 2:
+            raise Exception("文件存放路径异常! 必须放在[plate%sauthor]之下!" % os.sep)
 
-        SELECT fid, name FROM `bbs_forum_forum` WHERE status=1 AND type= 'forum';
-    """
+        suffix = os.path.splitext(file_path)[-1]
+        suffix = suffix if suffix else ""
+        return dz_info[0], dz_info[1], suffix
 
-    dict_data = {}
-    lines = plate_map_string.split("\n")
-    for line in lines:
-        key_value_list = line.strip(" ").strip("|").split("|")
-        if len(key_value_list) < 2:
-            continue
-        dict_key = pinyin.get_pinyin(key_value_list[1]).lower()
-        dict_data[dict_key] = int(key_value_list[0])
+    @staticmethod
+    def get_plate_map_conf(plate_map_string):
+        """转换从数据库导出的数据.
 
-    print(dict_data)
-    return dict_data
+            SELECT fid, name FROM `bbs_forum_forum` WHERE status=1 AND type= 'forum';
+        """
+
+        dict_data = {}
+        lines = plate_map_string.split("\n")
+        for line in lines:
+            key_value_list = line.strip(" ").strip("|").split("|")
+            if len(key_value_list) < 2:
+                continue
+            dict_key = pinyin.get_pinyin(key_value_list[1]).lower()
+            dict_data[dict_key] = int(key_value_list[0])
+
+        print(dict_data)
+        return dict_data
 
 
 class FileProcess(object):

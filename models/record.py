@@ -18,6 +18,7 @@ class Attachment(BasicBase):
       `file_name` VARCHAR(255) NOT NULL COMMENT '文件名',
       `key_name` VARCHAR(80) DEFAULT '' COMMENT '七牛文件名',
       `down_link` VARCHAR(150) DEFAULT '' COMMENT '下载地址',
+      `md5sum` VARCHAR(80) DEFAULT '' COMMENT '文件信息摘要Hash',
       `plate` INT DEFAULT 0 COMMENT '版块',
       `status` INT DEFAULT 0 COMMENT '是否发帖(0:未传;1:已传;2:已发)',
       `author` VARCHAR(45) DEFAULT '' COMMENT '所属用户',
@@ -32,19 +33,21 @@ class Attachment(BasicBase):
     file_name = Column(VARCHAR, nullable=False)
     key_name = Column(VARCHAR, default='')
     down_link = Column(VARCHAR, default='')
+    md5sum = Column(VARCHAR, default='')
     plate = Column(INTEGER, default=0)
     status = Column(INTEGER, default=0)
     author = Column(VARCHAR, default='')
     create_datetime = Column(TIMESTAMP, nullable=False)
     upload_datetime = Column(TIMESTAMP, nullable=True)
 
-    def __init__(self, file_name, plate=0, author=''):
+    def __init__(self, file_name, plate=0, author='', md5sum=''):
         """扫描文件目录记录入库.
         """
 
         self.file_name = file_name
         self.plate = plate
         self.author = author
+        self.md5sum = md5sum
         self.create_datetime = datetime.datetime.now()
 
     def after_upload_action(self, key_name, down_link):
@@ -55,6 +58,40 @@ class Attachment(BasicBase):
         self.down_link = down_link
         self.status = 1
         self.upload_datetime = datetime.datetime.now()
+
+
+class Surplus(BasicBase):
+    """
+    CREATE TABLE `bbs_surplus` (
+      `id` INT NOT NULL AUTO_INCREMENT COMMENT '自动编号',
+      `fid` INT DEFAULT 0 COMMENT '版块',
+      `path` VARCHAR(255) NOT NULL COMMENT '文件名',
+      `md5sum` VARCHAR(80) DEFAULT '' COMMENT '文件信息摘要Hash',
+      `plate` INT DEFAULT 0 COMMENT '版块',
+      `author` VARCHAR(45) DEFAULT '' COMMENT '所属用户',
+      `create_datetime` timestamp NOT NULL COMMENT '记录时间',
+      PRIMARY KEY (`id`)  COMMENT '文件重复日志');
+    """
+    __tablename__ = "bbs_surplus"
+
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
+    fid = Column(INTEGER, default=0)
+    path = Column(VARCHAR, nullable=False)
+    md5sum = Column(VARCHAR, default='')
+    plate = Column(INTEGER, default=0)
+    author = Column(VARCHAR, default='')
+    create_datetime = Column(TIMESTAMP, nullable=False)
+
+    def __init__(self, file_name, plate=0, author='', md5sum='', fid=0):
+        """重复文件记录日志.
+        """
+
+        self.fid = fid
+        self.path = file_name
+        self.plate = plate
+        self.author = author
+        self.md5sum = md5sum
+        self.create_datetime = datetime.datetime.now()
 
 
 class Member(BasicBase):
