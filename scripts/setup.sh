@@ -18,8 +18,8 @@ if [ ! -d "/opt/program" ]; then
   mkdir /opt/program
 fi
 
-sudo cd /opt/program
+cd /opt/program
 sudo wget http://download.redis.io/releases/redis-3.0.5.tar.gz
 sudo tar xzf redis-3.0.5.tar.gz
-sudo cd redis-3.0.5
+cd redis-3.0.5
 sudo make
