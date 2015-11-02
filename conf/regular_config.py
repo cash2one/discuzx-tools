@@ -7,6 +7,15 @@
 from __future__ import unicode_literals, print_function
 from common.func import Utils
 
+# 计划跳过的文件列表
+IGNORE_FILE_LIST = ["readme.txt", "README"]
+
+# 是否要跳过列表文件
+SKIP_README_FILE = True
+
+# 是否启用规定的文件夹结构(版块/作者)
+ENABLE_FOLDER_RULE = True
+
 # 搜索目录
 SEEK_DIRECTORY = ""
 

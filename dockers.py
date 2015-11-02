@@ -11,8 +11,8 @@ from twisted.internet import task
 from twisted.internet import reactor
 
 from conf.data_config import robot_session, REDIS_CONFIG
-from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
-    MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
+from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, IGNORE_FILE_LIST, SKIP_README_FILE, \
+    ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
 
 from common.func import FileFinished, Utils, RedisService
 from models.record import Attachment, Surplus
@@ -39,24 +39,31 @@ def search_match_files(directory):
     for i in os.listdir(directory):
         sub_path = os.path.join(directory, i)
         if os.path.isdir(sub_path):
-            base_name = os.path.basename(sub_path).lower()
 
             # 跳过未适配的版块和作者.
-            if base_name not in itertools.chain(PLATE_MAP_CONFIG.keys(), USER_MAP_CONFIG.keys()):
-                continue
+            if ENABLE_FOLDER_RULE:
+                base_name = os.path.basename(sub_path).lower()
+                if base_name not in itertools.chain(PLATE_MAP_CONFIG.keys(), USER_MAP_CONFIG.keys()):
+                    continue
 
             search_match_files(sub_path)
         else:
-            # 跳过注释的readme.txt文件.
-            if os.path.basename(sub_path).lower() == "readme.txt":
-                continue
+
+            # 跳过计划的文件列表.
+            if SKIP_README_FILE:
+                ignore_file_list = map(lambda x: x.lower(), IGNORE_FILE_LIST)
+                if ignore_file_list and os.path.basename(sub_path).lower() in ignore_file_list:
+                    continue
 
             # 版块与作者(plate=0, author='')的对应.
-            plate, author = Utils.get_info_by_path(sub_path)[:2]
-            plate = PLATE_MAP_CONFIG.get(plate)
-            md5sum = Utils.md5sum(sub_path)
+            if ENABLE_FOLDER_RULE:
+                plate, author = Utils.get_info_by_path(sub_path)[:2]
+                plate = PLATE_MAP_CONFIG.get(plate)
+            else:
+                plate, author = 0, ''
 
             # 如有重复记录到日志.
+            md5sum = Utils.md5sum(sub_path)
             fid = redis_service.get(md5sum)
             if fid:
                 Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).save(robot_session)
@@ -83,7 +90,7 @@ def upload_match_files(limit=5):
             ret, info = put_up_datum(attachment.file_name, key_name)
             print(ret, info)
 
-            ret = True
+            # ret = True
             if ret:
                 attachment.after_upload_action(key_name, "sadgadsg")
                 success_entities.append(attachment)
