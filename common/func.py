@@ -12,17 +12,17 @@ import shutil
 import redis
 
 from xpinyin import Pinyin
-from conf.data_config import redis_host, redis_port
+from conf.data_config import REDIS_CONFIG
 from conf.logger_config import redis_data_log
 
 pinyin = Pinyin()
-redis_pool = redis.ConnectionPool(host=redis_host, port=redis_port)
+redis_pool = redis.ConnectionPool(host=REDIS_CONFIG.get("redis_host"), port=REDIS_CONFIG.get("redis_port"))
 
 
 class RedisService(object):
-    def __init__(self, db):
+    def __init__(self, db=0, password=None):
         try:
-            self._redis_cli = redis.Redis(connection_pool=redis_pool, db=db)
+            self._redis_cli = redis.Redis(connection_pool=redis_pool, db=db, password=password)
         except Exception, ex:
             self._redis_cli = None
             redis_data_log.error("redis连接失败：%s" % (str(ex)))

@@ -10,7 +10,7 @@ import itertools
 from twisted.internet import task
 from twisted.internet import reactor
 
-from conf.data_config import robot_session
+from conf.data_config import robot_session, REDIS_CONFIG
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
     MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
 
@@ -19,7 +19,7 @@ from models.record import Attachment, Surplus
 from upload.common import put_up_datum
 
 fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
-redis_service = RedisService(db="files_md5sum")
+redis_service = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
 
 
 def init_redis_data():
