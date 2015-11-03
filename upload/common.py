@@ -37,14 +37,13 @@ def put_up_datum(file_path, key, kind="file"):
         :parameter kind
     """
 
-    mime_type = "text/plain"
-
     token = q.upload_token(BUCKET_NAME, key)
     if kind == "data":
         ret, info = put_data(token, key, file_path)
     elif kind == "stream":
         ret, info = put_stream(token, key, file_path)
     else:
+        mime_type = "text/plain"
         ret, info = put_file(token, key, file_path, mime_type=mime_type, check_crc=True)
 
     return ret, info
