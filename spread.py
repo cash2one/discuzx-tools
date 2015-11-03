@@ -53,6 +53,8 @@ def post_content(tid):
 
 def spread_match_files(limit=5):
     """对结果入库的数据扫描, 并文件上传.
+
+        :parameter limit: 扫描数据数量
     """
 
     attachment_entities = robot_session.query(Attachment).filter(

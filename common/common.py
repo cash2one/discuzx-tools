@@ -189,6 +189,7 @@ def mongodb_init(host, port, database):
 
         :param host: 主机
         :param port: 端口
+        :param database: 数据库
     """
 
     client = pymongo.MongoClient(host, port)

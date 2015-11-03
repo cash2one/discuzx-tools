@@ -30,6 +30,9 @@ class BasicBase(Base):
 
     def save(self, db_session, refresh=True):
         """自保存.
+
+            :parameter db_session
+            :parameter refresh
         """
 
         try:
@@ -47,6 +50,9 @@ class BasicBase(Base):
     @staticmethod
     def batch_save(db_session, entities_list):
         """批量保存.
+
+            :parameter db_session
+            :parameter entities_list
         """
 
         result = False

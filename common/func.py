@@ -43,20 +43,29 @@ class RedisService(object):
 class Utils(object):
     @staticmethod
     def md5(text):
-        """php内置md5加密一致."""
+        """php内置md5加密一致.
+
+            :parameter text
+        """
 
         m = hashlib.md5(text).hexdigest()
         return m
 
     @staticmethod
     def dz_uc_md5(password, salt):
-        """dz uc加密规则."""
+        """dz uc加密规则.
+
+            :parameter password
+            :parameter salt
+        """
 
         return Utils.md5(''.join((Utils.md5(password), salt)))
 
     @staticmethod
     def md5sum(file_path):
         """计算文件的MD5值.
+
+            :parameter file_path
         """
 
         try:
@@ -69,6 +78,8 @@ class Utils(object):
     @staticmethod
     def md5sum_bigfile(file_path):
         """计算文件的MD5值.
+
+            :parameter file_path
         """
 
         def read_chunks(_fh):
@@ -93,6 +104,8 @@ class Utils(object):
     @staticmethod
     def get_info_by_path(file_path):
         """根据文件存放结构获取信息.
+
+            :parameter file_path
         """
 
         dz_info = os.path.dirname(file_path).rsplit(os.sep, 2)[-2:]
@@ -108,6 +121,7 @@ class Utils(object):
         """转换从数据库导出的数据.
 
             SELECT fid, name FROM `bbs_forum_forum` WHERE status=1 AND type= 'forum';
+            :parameter plate_map_string:
         """
 
         dict_data = {}
@@ -139,7 +153,10 @@ class FileProcess(object):
                 return lines
 
     def move(self, new_path):
-        """移动."""
+        """移动.
+
+            :parameter new_path
+        """
 
         if not os.path.exists(self.path):
             raise IOError("Path Not Exist!")
@@ -150,7 +167,10 @@ class FileProcess(object):
         shutil.move(self.path, new_path)
 
     def copy(self, new_path):
-        """移动."""
+        """移动.
+
+            :parameter new_path
+        """
 
         if not os.path.exists(self.path):
             raise IOError("Path Not Exist!")
@@ -197,7 +217,10 @@ class FileFinished(object):
         self.done_directory = done_dir
 
     def batch_move(self, entities_list):
-        """批量移动文件列表."""
+        """批量移动文件列表.
+
+            :parameter entities_list
+        """
 
         def make_dirs(directory):
             if not os.path.exists(directory):

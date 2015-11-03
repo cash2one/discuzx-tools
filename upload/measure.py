@@ -14,6 +14,9 @@ bucket_instance = BucketManager(q)
 
 def stat(file_name, bucket=None):
     """获取文件信息.
+
+        :parameter file_name
+        :parameter bucket
     """
 
     if not bucket:
@@ -28,6 +31,11 @@ def stat(file_name, bucket=None):
 
 def copy(bucket, key, bucket_name, key2):
     """复制文件.
+
+        :parameter bucket
+        :parameter key
+        :parameter bucket_name
+        :parameter key2
     """
 
     if not bucket:
@@ -44,6 +52,11 @@ def copy(bucket, key, bucket_name, key2):
 
 def move(bucket, key, bucket_name, key2):
     """移动文件.
+
+        :parameter bucket
+        :parameter key
+        :parameter bucket_name
+        :parameter key2
     """
 
     if not bucket:
@@ -60,6 +73,9 @@ def move(bucket, key, bucket_name, key2):
 
 def delete(key, bucket=None):
     """删除文件.
+
+        :parameter bucket
+        :parameter key
     """
 
     if not bucket:

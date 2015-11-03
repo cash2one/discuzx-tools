@@ -79,10 +79,10 @@ REDIS_CONFIG = dict(
 def generate_models(mysql_config, databases_config, database_name, column_prefix='__'):
     """"从数据库表生成模型.
 
-        mysql_config:        MySQL配置
-        databases_config:    数据库配置
-        database_name:　     数据库名称
-        column_prefix:       属性(列)前缀
+        :parameter mysql_config:        MySQL配置
+        :parameter databases_config:    数据库配置
+        :parameter database_name:　     数据库名称
+        :parameter column_prefix:       属性(列)前缀
     """
 
     _host = mysql_config['host']

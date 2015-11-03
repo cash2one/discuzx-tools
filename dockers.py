@@ -33,6 +33,8 @@ def init_redis_data():
 
 def search_match_files(directory):
     """对指定的目录文件扫描, 并结果入库.
+
+        :parameter directory 指定的扫描目录
     """
 
     # 扫描文件
@@ -76,6 +78,8 @@ def search_match_files(directory):
 
 def upload_match_files(limit=5):
     """对结果入库的数据扫描, 并文件上传.
+
+        :parameter limit: 检索数据数量
     """
 
     success_entities = []

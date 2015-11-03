@@ -24,6 +24,7 @@ def fake_member(gen_data_count=1):
     """创建虚拟账户.
 
         gen_data_count的取值建议不要大, 因为不希望在时间点上跳跃性增长.
+        :parameter gen_data_count: 生成数据数量
     """
 
     common_member_entities_list = []
@@ -68,6 +69,8 @@ def fake_member(gen_data_count=1):
 
 def fake_post(gen_data_count=1):
     """虚拟对主题回帖.
+
+        :parameter gen_data_count: 生成数据数量
     """
 
     for post in FakePost().generate(gen_data_count):

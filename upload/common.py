@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals, print_function
+
 from qiniu.auth import Auth
 from qiniu import BucketManager
 from qiniu import put_data, put_file, put_stream
@@ -17,8 +19,10 @@ except ImportError:
     from urllib2 import urlopen, Request
 
 
-def get_up_token(file_name=None):
-    u"""生成上传凭证.
+def get_up_token(file_name):
+    """生成上传凭证.
+
+        :parameter file_name 文件名
     """
 
     up_token = q.upload_token(BUCKET_NAME, file_name, expires=UNIX_TIME_TTL)
@@ -27,6 +31,10 @@ def get_up_token(file_name=None):
 
 def put_up_datum(file_path, key, kind="file"):
     """上传资料, 三种模式: data, file, stream
+
+        :parameter file_path
+        :parameter key
+        :parameter kind
     """
 
     mime_type = "text/plain"
@@ -43,9 +51,10 @@ def put_up_datum(file_path, key, kind="file"):
 
 
 def get_shift_rs_url(file_info, bucket=None):
-    u"""生成带Token凭证的url地址.
+    """生成带Token凭证的url地址.
 
-        :param file_info: 文件名[?imageView2/1/w/200/h/200]
+        :parameter file_info 文件名[?imageView2/1/w/200/h/200]
+        :parameter bucket
     """
 
     if not bucket:
@@ -58,7 +67,10 @@ def get_shift_rs_url(file_info, bucket=None):
 
 
 def get_public_dl_url(file_name, suffix=None):
-    u"""公共空间：下载地址.
+    """公共空间：下载地址.
+
+        :parameter file_name
+        :parameter suffix
     """
 
     if not file_name:
@@ -71,7 +83,10 @@ def get_public_dl_url(file_name, suffix=None):
 
 
 def del_remote_dl_key(key, bucket=None):
-    u"""删除文件.
+    """删除文件.
+
+        :parameter key
+        :parameter bucket
     """
 
     if not bucket:

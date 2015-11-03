@@ -15,7 +15,8 @@ logs_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
 def build_file_logs(logger_name, level=logging.INFO):
     """创建文件日志.
 
-        logger_name: 日志名称
+        :parameter logger_name: 日志名称
+        :parameter level
     """
 
     log_path = os.path.join(logs_path, "%s.log" % logger_name)
