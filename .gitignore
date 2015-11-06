@@ -68,3 +68,5 @@ target/
 
 # Mine
 kylin_*
+nohup.out
+testing.py
