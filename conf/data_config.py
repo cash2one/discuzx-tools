@@ -108,10 +108,16 @@ def generate_models(mysql_config, databases_config, database_name, column_prefix
 
 MYSQL_DATABASES_TABLES = dict(
     discuzx=[
-        "bbs_common_member", "bbs_ucenter_members", "bbs_forum_thread", "bbs_forum_post",
-        "bbs_forum_attachment", "bbs_forum_attachment_0"
+        "bbs_common_member", "bbs_ucenter_members", "bbs_forum_thread", "bbs_forum_post", "bbs_forum_attachment",
     ]
 )
 
+# 增加相关的分表
+bbs_forum_attachment_list = ["bbs_forum_attachment_%d" % i for i in range(0, 10)]
+MYSQL_DATABASES_TABLES["discuzx"].extend(bbs_forum_attachment_list)
+
 generate_models = functools.partial(generate_models, MYSQL_CONFIG, MYSQL_DATABASES_TABLES)
 generate_db_models = generate_models("discuzx")
+
+if __name__ == "__main__":
+    pass
