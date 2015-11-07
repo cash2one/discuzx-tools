@@ -130,8 +130,10 @@ class Thread(BasicBase):
     """
     CREATE TABLE `bbs_thread` (
       `id` INT NOT NULL AUTO_INCREMENT COMMENT '自动编号',
-      `thread_id` INT NOT NULL COMMENT '帖子ID',
-      `attachment_id` INT NOT NULL COMMENT '七牛文件ID',
+      `thread_id` INT NOT NULL COMMENT '主题ID',
+      `post_id` INT NOT NULL COMMENT '帖子ID',
+      `attachment_id` INT DEFAULT 0 COMMENT '附件ID',
+      `robot_data_id` INT DEFAULT 0 COMMENT '入库文件ID',
       `create_datetime` timestamp NOT NULL COMMENT '添入时间',
       PRIMARY KEY (`id`)  COMMENT '自动发文件帖子');
     """
@@ -140,13 +142,17 @@ class Thread(BasicBase):
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     thread_id = Column(INTEGER)
+    post_id = Column(INTEGER)
     attachment_id = Column(INTEGER)
+    robot_data_id = Column(INTEGER)
     create_datetime = Column(TIMESTAMP)
 
-    def __init__(self, thread_id, attachment_id):
+    def __init__(self, thread_id, post_id, attachment_id=0, robot_data_id=0):
         """存放发帖信息.
         """
 
         self.thread_id = thread_id
+        self.post_id = post_id
         self.attachment_id = attachment_id
+        self.robot_data_id = robot_data_id
         self.create_datetime = datetime.datetime.now()

@@ -6,49 +6,15 @@
 
 from __future__ import unicode_literals, print_function
 
-import time
-import random
-import string
+import os
 
 from twisted.internet import task
 from twisted.internet import reactor
-from common.func import FileProcess
+
 from conf.data_config import robot_session
+from conf.regular_config import USER_MAP_CONFIG
 from models.record import Attachment, Thread
-from models.remote import ForumPost, ForumThread, ForumAttachment
-
-
-def post_thread():
-    """发主题表操作.
-    """
-
-    try:
-        forum_attachment = ForumAttachment()
-        ForumAttachment.add(forum_attachment)
-
-        forum_thread = ForumThread()
-        forum_post = ForumPost(forum_thread)
-        ForumThread.add(forum_thread)
-        ForumPost.add(forum_post)
-    except Exception, ex:
-        print(ex)
-    else:
-        print("OK")
-
-
-def post_content(tid):
-    """发帖子操作帖子表.
-
-        tid: 帖子ID
-    """
-
-    try:
-        forum_post = ForumPost(tid=tid)
-        ForumPost.add(forum_post)
-    except Exception, ex:
-        print(ex)
-    else:
-        print("OK")
+from posting.manager import spread_info
 
 
 def spread_match_files(limit=5):
@@ -60,20 +26,34 @@ def spread_match_files(limit=5):
     attachment_entities = robot_session.query(Attachment).filter(
         Attachment.status == 1).order_by(Attachment.id).limit(limit).all()
 
+    def author_uid_and_name(real_name):
+        """由真实姓名拼音获取论坛账户(账户Id,账户名称)
+        """
+
+        authors = USER_MAP_CONFIG.get(real_name).split("|")
+        return int(authors[0]), authors[2]
+
     if attachment_entities:
         for attachment in attachment_entities:
-            # 构建附件
-            # 构建主题
-            forum_thread = None
-            # 构建帖子
+            # 构建主题, 帖子, 附件
+            file_base_name = os.path.basename(attachment.file_name)
+            subject = message = os.path.splitext(file_base_name)[0]
+            author = author_uid_and_name(attachment.author)
+            fid = attachment.plate
+
+            tid, pid, aid = spread_info(subject, message, author, fid,
+                                        file_name=file_base_name,
+                                        attachment=attachment.key_name)
+
             # 保存记录
-            Thread(thread_id=forum_thread.__id, attachment_id=attachment.id)
+            robot_record = Thread(tid, pid, aid, attachment.__id)
+            Thread.save(robot_session, robot_record)
 
 
 action_data_config = (
     # 任务, 数据量, 时间间隔
-    (post_thread, 1, 5.0),
-    (post_content, 1, 5.0),
+    (spread_match_files, 2, 5.0),
+    # (None, 1, 5.0),
 )
 
 

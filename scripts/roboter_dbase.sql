@@ -36,10 +36,11 @@ CREATE TABLE `roboter`.`bbs_surplus` (
   PRIMARY KEY (`id`)  COMMENT '文件重复日志');
 
 
- CREATE TABLE `roboter`.`bbs_thread` (
+CREATE TABLE `roboter`.`bbs_thread` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '自动编号',
-  `thread_id` INT NOT NULL COMMENT '帖子ID',
-  `attachment_id` INT NOT NULL COMMENT '七牛文件ID',
+  `thread_id` INT NOT NULL COMMENT '主题ID',
+  `post_id` INT NOT NULL COMMENT '帖子ID',
+  `attachment_id` INT DEFAULT 0 COMMENT '附件ID',
+  `robot_data_id` INT DEFAULT 0 COMMENT '入库文件ID',
   `create_datetime` timestamp NOT NULL COMMENT '添入时间',
   PRIMARY KEY (`id`)  COMMENT '自动发文件帖子');
-
