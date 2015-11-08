@@ -16,7 +16,7 @@ from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, IGNORE_FILE_LIST
 
 from common.func import FileFinished, Utils, RedisService
 from models.record import Attachment, Surplus
-from upload.common import put_up_datum
+from upload import put_up_datum
 
 fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
 redis_service = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
@@ -90,11 +90,10 @@ def upload_match_files(limit=5):
         for attachment in attachment_entities:
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
             key_name = ''.join((uuid.uuid4().get_hex(), suffix))
-            # TODO: 报错异常.
-            ret, info = put_up_datum(attachment.file_name, key_name)
-            print(ret, info)
 
-            # ret = True
+            # 上传文件到七牛
+            ret, info = put_up_datum(attachment.file_name, key_name, kind="stream")
+            print(ret, info)
             if ret:
                 attachment.after_upload_action(key_name, "sadgadsg")
                 success_entities.append(attachment)

@@ -3,20 +3,28 @@
 
 from __future__ import unicode_literals, print_function
 
-from qiniu.auth import Auth
-from qiniu import BucketManager
-from qiniu import put_data, put_file, put_stream
+import os
+
+from qiniu import Auth, BucketManager, put_data, put_file, put_stream
+from qiniu.compat import is_py2, is_py3
 from conf.store_config import *
 
 q = Auth(ACCESS_KEY, SECRET_KEY)
 bucket_instance = BucketManager(q)
 
-try:
-    from urllib.parse import urljoin
-    from urllib.request import urlopen, Request
-except ImportError:
+if is_py2:
+    import sys
+    import StringIO
     from urlparse import urljoin
-    from urllib2 import urlopen, Request
+
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+    StringIO = StringIO.StringIO
+elif is_py3:
+    import io
+    from urllib.parse import urljoin
+
+    StringIO = io.StringIO
 
 
 def get_up_token(file_name):
@@ -25,7 +33,7 @@ def get_up_token(file_name):
         :parameter file_name 文件名
     """
 
-    up_token = q.upload_token(BUCKET_NAME, file_name, expires=UNIX_TIME_TTL)
+    up_token = q.upload_token(BUCKET_NAME, file_name)
     return up_token
 
 
@@ -37,14 +45,22 @@ def put_up_datum(file_path, key, kind="file"):
         :parameter kind
     """
 
-    token = q.upload_token(BUCKET_NAME, key)
+    up_token = get_up_token(key)
     if kind == "data":
-        ret, info = put_data(token, key, file_path)
+        with open(file_path, 'rb') as input_stream:
+            data = input_stream.read()
+            ret, info = put_data(up_token, key, data,
+                                 mime_type="application/octet-stream",
+                                 check_crc=True)
     elif kind == "stream":
-        ret, info = put_stream(token, key, file_path)
+        size = os.stat(file_path).st_size
+        with open(file_path, 'rb') as input_stream:
+            ret, info = put_stream(key=key,
+                                   up_token=up_token,
+                                   input_stream=input_stream,
+                                   data_size=size)
     else:
-        mime_type = "text/plain"
-        ret, info = put_file(token, key, file_path, mime_type=mime_type, check_crc=True)
+        ret, info = put_file(up_token, key, file_path)
 
     return ret, info
 

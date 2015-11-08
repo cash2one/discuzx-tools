@@ -3,23 +3,34 @@
 
 from __future__ import unicode_literals, print_function
 
+import sys
 import time
-from urlparse import urljoin
+import qiniu.conf
 
-from qiniu.io import PutExtra, put, put_file
+from qiniu.io import put, put_file
 from qiniu.auth import digest
 from qiniu.rs import PutPolicy, GetPolicy, Client
 
-from conf.store_config import BUCKET_DOMAIN, BUCKET_NAME, PUBLIC_BUCKET_DOMAIN, PUBLIC_BUCKET_NAME, UNIX_TIME_TTL
+from conf.store_config import ACCESS_KEY, SECRET_KEY, \
+    BUCKET_DOMAIN, BUCKET_NAME, PUBLIC_BUCKET_DOMAIN, PUBLIC_BUCKET_NAME, UNIX_TIME_TTL
 
+qiniu.conf.ACCESS_KEY = ACCESS_KEY
+qiniu.conf.SECRET_KEY = SECRET_KEY
 bucket_instance = Client()
+_ver = sys.version_info
 
-try:
-    from urllib.parse import urljoin
-    from urllib.request import urlopen, Request
-except ImportError:
+if _ver[0] == 2:
+    import StringIO
     from urlparse import urljoin
-    from urllib2 import urlopen, Request
+
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+    StringIO = StringIO.StringIO
+elif _ver[0] == 3:
+    import io
+    from urllib.parse import urljoin
+
+    StringIO = io.StringIO
 
 
 def get_up_token():
@@ -34,20 +45,20 @@ def get_up_token():
 
 
 def put_up_datum(file_path, key, kind="file"):
-    """上传资料, 三种模式: data, file, stream
+    """上传资料, 三种模式: data, file
 
         :parameter file_path
         :parameter key
         :parameter kind
     """
 
-    token = get_up_token()
+    up_token = get_up_token()
     if kind == "data":
-        extra = PutExtra()
-        extra.mime_type = "text/plain"
-        ret, info = put(token, key, file_path,extra)
+        with open(file_path, "rb") as input_stream:
+            data = input_stream.read()
+            ret, info = put(up_token, key, data)
     else:
-        ret, info = put_file(token, key, file_path)
+        ret, info = put_file(up_token, key, file_path)
 
     return ret, info
 
