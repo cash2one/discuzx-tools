@@ -3,18 +3,18 @@
 
 from __future__ import unicode_literals, print_function
 
+import itertools
 import os
 import uuid
-import itertools
 
-from twisted.internet import task
-from twisted.internet import reactor
-
-from conf.data_config import robot_session, REDIS_CONFIG
-from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, IGNORE_FILE_LIST, SKIP_README_FILE, \
-    ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
+from twisted.internet import reactor, task
 
 from common.func import FileFinished, Utils, RedisService
+from conf.data_config import robot_session, REDIS_CONFIG
+from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
+    IGNORE_FILE_LIST, SKIP_README_FILE, ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, \
+    MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
+
 from models.record import Attachment, Surplus
 from upload import put_up_datum
 
@@ -82,11 +82,27 @@ def upload_match_files(limit=5):
         :parameter limit: 检索数据数量
     """
 
-    success_entities = []
     attachment_entities = robot_session.query(Attachment).filter(
         Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
 
+    def map_handler(_attachment):
+        """使用map函数分发模式.
+
+            :parameter _attachment 文件信息
+        """
+
+        _suffix = Utils.get_info_by_path(_attachment.file_name)[2]
+        _key_name = ''.join((uuid.uuid4().get_hex(), _suffix))
+
+        # 上传文件到七牛
+        _ret, _info = put_up_datum(_attachment.file_name, _key_name, kind="stream")
+        print(_ret, _info)
+        if _ret:
+            _attachment.after_upload_action(_key_name, "")
+            return _attachment
+
     if attachment_entities:
+        success_entities = []
         for attachment in attachment_entities:
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
             key_name = ''.join((uuid.uuid4().get_hex(), suffix))
@@ -95,9 +111,10 @@ def upload_match_files(limit=5):
             ret, info = put_up_datum(attachment.file_name, key_name, kind="stream")
             print(ret, info)
             if ret:
-                attachment.after_upload_action(key_name, "sadgadsg")
+                attachment.after_upload_action(key_name, "")
                 success_entities.append(attachment)
 
+        # success_entities = map(map_handler, attachment_entities)
         # 更新上传成功的数据
         result = Attachment.batch_save(robot_session, success_entities)
 
