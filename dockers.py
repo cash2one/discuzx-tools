@@ -10,6 +10,7 @@ import uuid
 from twisted.internet import reactor, task
 
 from common.func import FileFinished, Utils, RedisService
+from conf.logger_config import docker_data_log
 from conf.data_config import robot_session, REDIS_CONFIG
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
     IGNORE_FILE_LIST, SKIP_README_FILE, ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, \
@@ -59,20 +60,23 @@ def search_match_files(directory):
 
             # 版块与作者(plate=0, author='')的对应.
             if ENABLE_FOLDER_RULE:
-                plate, author = Utils.get_info_by_path(sub_path)[:2]
+                author, plate = Utils.get_info_by_path(sub_path)[:2]
                 plate = PLATE_MAP_CONFIG.get(plate)
             else:
-                plate, author = 0, ''
+                author, plate = '', 0
 
             # 如有重复记录到日志.
             md5sum = Utils.md5sum(sub_path)
             fid = redis_service.get(md5sum)
             if fid:
                 Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).save(robot_session)
+                docker_data_log.info("skipping: %s ==> %s" % (author, sub_path))
                 continue
 
+            docker_data_log.info("indexing: %s ==> %s" % (author, sub_path))
             entity = Attachment(sub_path, plate=plate, author=author, md5sum=md5sum)
-            entity.save(robot_session)
+            robot_session.add(entity)
+            robot_session.commit()
             redis_service.set(entity.md5sum, entity.id)
 
 
@@ -107,12 +111,19 @@ def upload_match_files(limit=5):
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
             key_name = ''.join((uuid.uuid4().get_hex(), suffix))
 
-            # 上传文件到七牛
-            ret, info = put_up_datum(attachment.file_name, key_name, kind="stream")
-            print(ret, info)
-            if ret:
-                attachment.after_upload_action(key_name, "")
-                success_entities.append(attachment)
+            try:
+                # 上传文件到七牛
+                ret, info = put_up_datum(attachment.file_name, key_name, kind="stream")
+            except Exception, ex:
+                docker_data_log.exception(ex)
+                docker_data_log.exception("=" * 30)
+            else:
+                docker_data_log.info(ret)
+                docker_data_log.info(info)
+                docker_data_log.info("=" * 30)
+                if ret and ret["key"] == key_name:
+                    attachment.after_upload_action(key_name, "")
+                    success_entities.append(attachment)
 
         # success_entities = map(map_handler, attachment_entities)
         # 更新上传成功的数据
@@ -130,8 +141,8 @@ def main():
     """扫描文件入库——> 入库扫描上传 ——> 完毕之后再扫描.
     """
 
-    init_redis_data()
-    search_match_files(SEEK_DIRECTORY)
+    # init_redis_data()
+    # search_match_files(SEEK_DIRECTORY)
 
     # 纳入间隔时间后再次执行
     create_data = task.LoopingCall(upload_match_files, MATCH_FILES_LIMIT)

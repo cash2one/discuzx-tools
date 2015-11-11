@@ -8,9 +8,9 @@ SECRET_KEY = '1yFjoq3HiB3v_n7wGzHBs20p6opiURrE5go1ksyB'
 UNIX_TIME_TTL = 6000
 
 # 默认私有空间
-BUCKET_NAME = "kuanyu"
+BUCKET_NAME = "roboter"
 BUCKET_DOMAIN = "7xnr3b.com1.z0.glb.clouddn.com"
 
 # 公共空间
-PUBLIC_BUCKET_NAME = "kuanyu"
-PUBLIC_BUCKET_DOMAIN = "7xnr3b.com1.z0.glb.clouddn.com"
+PUBLIC_BUCKET_NAME = "roboter"
+PUBLIC_BUCKET_DOMAIN = "7xo804.com1.z0.glb.clouddn.com"

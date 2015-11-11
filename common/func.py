@@ -106,6 +106,7 @@ class Utils(object):
         """根据文件存放结构获取信息.
 
             :parameter file_path
+            :return auth, plate, suffix: 作者, 版块, 后缀.
         """
 
         dz_info = os.path.dirname(file_path).rsplit(os.sep, 2)[-2:]

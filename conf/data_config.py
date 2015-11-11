@@ -69,8 +69,8 @@ cache_option = {
 # redis配置项
 REDIS_CONFIG = dict(
     redis_host="127.0.0.1",
-    redis_port=6389,
-    password="E8IWB8pf0PfE4F9df2927b9b7")
+    redis_port=6379)
+# password="E8IWB8pf0PfE4F9df2927b9b7")
 
 
 # ===================以下为从数据库到ORM的映射===================

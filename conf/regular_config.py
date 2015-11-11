@@ -17,16 +17,16 @@ SKIP_README_FILE = True
 ENABLE_FOLDER_RULE = True
 
 # 搜索目录
-SEEK_DIRECTORY = ""
+SEEK_DIRECTORY = "/media/kylin/Kevin Xie/uploads/ready"
 
 # 移到的目录
-DONE_DIRECTORY = ""
+DONE_DIRECTORY = "/media/kylin/Kevin Xie/uploads/done"
 
 # 每次扫描数据数量
 MATCH_FILES_LIMIT = 5
 
 # 每次扫描时间间隔, 默认五分钟.
-MATCH_FILES_INTERVAL = 5 * 60
+MATCH_FILES_INTERVAL = 1 * 60
 
 # 用户映射配置
 USER_MAP_CONFIG = dict(

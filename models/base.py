@@ -29,7 +29,7 @@ class BasicBase(Base):
         return ret
 
     def save(self, db_session, refresh=True):
-        """自保存.
+        """自保存, 暂不可用.
 
             :parameter db_session
             :parameter refresh
