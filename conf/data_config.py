@@ -19,8 +19,8 @@ db_pool_recycle = 60
 robot_environ = False  # local/server数据库连接, False: local; True: server.
 
 if robot_environ:
-    forum_conn = 'mysql+pymysql://operate:4F9dE8IWB8pf0f2927PfEb9b7@127.0.0.1/%s?charset=utf8mb4'
-    robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@127.0.0.1/%s?charset=utf8mb4"
+    forum_conn = 'mysql+pymysql://operate:4F9dE8IWB8pf0f2927PfEb9b7@127.0.0.1/%s?charset=utf8'
+    robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@127.0.0.1/%s?charset=utf8"
 
     MYSQL_CONFIG = dict(
         host="127.0.0.1",

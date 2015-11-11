@@ -44,3 +44,6 @@ CREATE TABLE `roboter`.`bbs_thread` (
   `robot_data_id` INT DEFAULT 0 COMMENT '入库文件ID',
   `create_datetime` timestamp NOT NULL COMMENT '添入时间',
   PRIMARY KEY (`id`)  COMMENT '自动发文件帖子');
+
+
+ALTER TABLE `roboter`.`bbs_attachment` ADD INDEX( `status`);
