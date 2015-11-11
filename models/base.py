@@ -49,7 +49,7 @@ class BasicBase(Base):
 
     @staticmethod
     def batch_save(db_session, entities_list):
-        """批量保存.
+        """批量保存, 暂不可用.
 
             :parameter db_session
             :parameter entities_list

@@ -58,6 +58,7 @@ class Attachment(BasicBase):
         self.down_link = down_link
         self.status = 1
         self.upload_datetime = datetime.datetime.now()
+        return self
 
 
 class Surplus(BasicBase):

@@ -37,7 +37,7 @@ def get_up_token(file_name):
     return up_token
 
 
-def put_up_datum(file_path, key, kind="file"):
+def put_up_datum(file_path, key, kind="file", progress_handler=None):
     """上传资料, 三种模式: data, file, stream
 
         :parameter file_path
@@ -49,18 +49,25 @@ def put_up_datum(file_path, key, kind="file"):
     if kind == "data":
         with open(file_path, 'rb') as input_stream:
             data = input_stream.read()
-            ret, info = put_data(up_token, key, data,
+            ret, info = put_data(key=key,
+                                 data=data,
+                                 check_crc=True,
+                                 up_token=up_token,
                                  mime_type="application/octet-stream",
-                                 check_crc=True)
+                                 progress_handler=progress_handler)
     elif kind == "stream":
         size = os.stat(file_path).st_size
         with open(file_path, 'rb') as input_stream:
             ret, info = put_stream(key=key,
                                    up_token=up_token,
                                    input_stream=input_stream,
-                                   data_size=size)
+                                   data_size=size,
+                                   progress_handler=progress_handler)
     else:
-        ret, info = put_file(up_token, key, file_path)
+        ret, info = put_file(key=key,
+                             up_token=up_token,
+                             file_path=file_path,
+                             progress_handler=progress_handler)
 
     return ret, info
 

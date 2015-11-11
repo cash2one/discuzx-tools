@@ -32,6 +32,55 @@ def init_redis_data():
         redis_service.set(entity.md5sum, entity.id)
 
 
+def progress_handler(progress, total):
+    """上传进度显示.
+    """
+
+    out_put = "%s%%" % str(int(float(progress) / float(total) * 100))
+    docker_data_log.info(out_put)
+
+
+def map_handler(_attachment):
+    """使用map函数分发模式.
+
+        :parameter _attachment 文件信息
+    """
+
+    _suffix = Utils.get_info_by_path(_attachment.file_name)[2]
+    _key_name = ''.join((uuid.uuid4().get_hex(), _suffix))
+
+    docker_data_log.info("=" * 80)
+    docker_data_log.info("正在上传:%s" % _attachment.file_name)
+
+    try:
+        # 上传文件到七牛
+        _ret, _info = put_up_datum(key=_key_name,
+                                   kind="file",
+                                   file_path=_attachment.file_name,
+                                   progress_handler=progress_handler)
+    except Exception, ex:
+        docker_data_log.exception(ex)
+    else:
+        docker_data_log.info(_ret)
+        docker_data_log.info(_info)
+        if _ret and _ret["key"] == _key_name:
+            try:
+                attachment = _attachment.after_upload_action(_key_name, "")
+                # 更新上传成功的数据
+                robot_session.add(attachment)
+                robot_session.commit()
+            except Exception, ex:
+                docker_data_log.exception(ex)
+                robot_session.rollback()
+            else:
+                # 移走成功的文件.
+                file_name_list = [attachment.file_name]
+                try:
+                    fileFinished.batch_move(file_name_list)
+                except Exception, ex:
+                    docker_data_log.exception(ex)
+
+
 def search_match_files(directory):
     """对指定的目录文件扫描, 并结果入库.
 
@@ -89,50 +138,42 @@ def upload_match_files(limit=5):
     attachment_entities = robot_session.query(Attachment).filter(
         Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
 
-    def map_handler(_attachment):
-        """使用map函数分发模式.
-
-            :parameter _attachment 文件信息
-        """
-
-        _suffix = Utils.get_info_by_path(_attachment.file_name)[2]
-        _key_name = ''.join((uuid.uuid4().get_hex(), _suffix))
-
-        # 上传文件到七牛
-        _ret, _info = put_up_datum(_attachment.file_name, _key_name, kind="stream")
-        print(_ret, _info)
-        if _ret:
-            _attachment.after_upload_action(_key_name, "")
-            return _attachment
-
     if attachment_entities:
-        success_entities = []
+        # map(map_handler, attachment_entities)
         for attachment in attachment_entities:
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
             key_name = ''.join((uuid.uuid4().get_hex(), suffix))
 
+            docker_data_log.info("=" * 80)
+            docker_data_log.info("正在上传:%s" % attachment.file_name)
+
             try:
                 # 上传文件到七牛
-                ret, info = put_up_datum(attachment.file_name, key_name, kind="stream")
+                ret, info = put_up_datum(key=key_name,
+                                         kind="file",
+                                         file_path=attachment.file_name,
+                                         progress_handler=progress_handler)
             except Exception, ex:
                 docker_data_log.exception(ex)
-                docker_data_log.exception("=" * 30)
             else:
                 docker_data_log.info(ret)
                 docker_data_log.info(info)
-                docker_data_log.info("=" * 30)
                 if ret and ret["key"] == key_name:
-                    attachment.after_upload_action(key_name, "")
-                    success_entities.append(attachment)
-
-        # success_entities = map(map_handler, attachment_entities)
-        # 更新上传成功的数据
-        result = Attachment.batch_save(robot_session, success_entities)
-
-        # 移走成功的文件.
-        if result:
-            file_name_list = [entity.file_name for entity in success_entities]
-            fileFinished.batch_move(file_name_list)
+                    try:
+                        attachment = attachment.after_upload_action(key_name, "")
+                        # 更新上传成功的数据
+                        robot_session.add(attachment)
+                        robot_session.commit()
+                    except Exception, ex:
+                        docker_data_log.exception(ex)
+                        robot_session.rollback()
+                    else:
+                        # 移走成功的文件.
+                        file_name_list = [attachment.file_name]
+                        try:
+                            fileFinished.batch_move(file_name_list)
+                        except Exception, ex:
+                            docker_data_log.exception(ex)
     else:
         search_match_files(SEEK_DIRECTORY)
 
