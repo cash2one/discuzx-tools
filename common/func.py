@@ -231,7 +231,7 @@ class FileFinished(object):
         for entity in entities_list:
             dir_name = os.path.dirname(entity)
             new_path = dir_name.replace(self.seek_directory, self.done_directory)
-            make_dirs(self.done_directory)
+            make_dirs(new_path)
             shutil.move(entity, new_path)
 
 
