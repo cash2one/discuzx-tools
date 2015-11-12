@@ -4,7 +4,7 @@
 ACCESS_KEY = 'NI_DlIj_otOCunan5oSCa5eG3HGIl3qK0pqtoNuI'
 SECRET_KEY = '1yFjoq3HiB3v_n7wGzHBs20p6opiURrE5go1ksyB'
 
-# 默认10分钟
+# 默认100分钟
 UNIX_TIME_TTL = 6000
 
 # 默认私有空间

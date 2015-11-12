@@ -33,7 +33,7 @@ def get_up_token(file_name):
         :parameter file_name 文件名
     """
 
-    up_token = q.upload_token(BUCKET_NAME, file_name)
+    up_token = q.upload_token(BUCKET_NAME, file_name, expires=UNIX_TIME_TTL)
     return up_token
 
 
