@@ -26,3 +26,8 @@ sudo make
 
 # 安装mp3支持包
 sudo sh install-avbin-linux-x86-64-v10
+
+# 安装python环境管理
+sudo apt-get install python-pip
+pip install virtualenv
+pip install virtualenvwrapper
