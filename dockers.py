@@ -9,8 +9,8 @@ import uuid
 
 from twisted.internet import reactor, task
 
-from common.func import FileFinished, Utils, RedisService
 from common.warning import WarnMedia
+from common.func import FileFinished, Utils, RedisService
 from conf.data_config import robot_session, REDIS_CONFIG
 from conf.logger_config import docker_data_log
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
@@ -21,7 +21,9 @@ from upload import put_up_datum
 
 fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
 redis_service = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
-media = WarnMedia(os.path.join("", "media", "warn_pig.mp3"))
+
+media_path = os.path.dirname(os.path.abspath(__file__))
+media_instance = WarnMedia(os.path.join(media_path, "media", "warn_pig.mp3"))
 
 
 def init_redis_data():
@@ -182,7 +184,7 @@ def upload_match_files(limit=5):
 
             # 如果异常, 报警并跳过
             if errors:
-                media.play()
+                media_instance.play()
                 continue
     else:
         search_match_files(SEEK_DIRECTORY)

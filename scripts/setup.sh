@@ -23,3 +23,6 @@ sudo wget http://download.redis.io/releases/redis-3.0.5.tar.gz
 sudo tar xzf redis-3.0.5.tar.gz
 cd redis-3.0.5
 sudo make
+
+# 安装mp3支持包
+sudo sh install-avbin-linux-x86-64-v10
