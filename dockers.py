@@ -10,17 +10,18 @@ import uuid
 from twisted.internet import reactor, task
 
 from common.func import FileFinished, Utils, RedisService
-from conf.logger_config import docker_data_log
+from common.warning import WarnMedia
 from conf.data_config import robot_session, REDIS_CONFIG
+from conf.logger_config import docker_data_log
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
     IGNORE_FILE_LIST, SKIP_README_FILE, ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, \
     MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
-
 from models.record import Attachment, Surplus
 from upload import put_up_datum
 
 fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
 redis_service = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
+media = WarnMedia(os.path.join("", "media", "warn_pig.mp3"))
 
 
 def init_redis_data():
@@ -144,6 +145,7 @@ def upload_match_files(limit=5):
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
             key_name = ''.join((uuid.uuid4().get_hex(), suffix))
 
+            errors = False
             docker_data_log.info("=" * 80)
             docker_data_log.info("正在上传:%s" % attachment.file_name)
 
@@ -154,6 +156,7 @@ def upload_match_files(limit=5):
                                          file_path=attachment.file_name,
                                          progress_handler=progress_handler)
             except Exception, ex:
+                errors = True
                 docker_data_log.exception(ex)
             else:
                 docker_data_log.info(ret)
@@ -165,6 +168,7 @@ def upload_match_files(limit=5):
                         robot_session.add(attachment)
                         robot_session.commit()
                     except Exception, ex:
+                        errors = True
                         docker_data_log.exception(ex)
                         robot_session.rollback()
                     else:
@@ -173,7 +177,13 @@ def upload_match_files(limit=5):
                         try:
                             fileFinished.batch_move(file_name_list)
                         except Exception, ex:
+                            errors = True
                             docker_data_log.exception(ex)
+
+            # 如果异常, 报警并跳过
+            if errors:
+                media.play()
+                continue
     else:
         search_match_files(SEEK_DIRECTORY)
 
