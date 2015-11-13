@@ -202,7 +202,7 @@ def update_name_files(limit=20):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-        Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
+        Attachment.key_name == "", Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
 
     result = False
     if attachment_entities:
