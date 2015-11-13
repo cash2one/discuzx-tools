@@ -20,19 +20,23 @@ from models.record import Attachment, Surplus
 from upload import put_up_datum
 
 fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
-redis_service = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
+redis_md5sum = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
+redis_unique = RedisService(db="files_unique", password=REDIS_CONFIG.get("password"))
 
 media_path = os.path.dirname(os.path.abspath(__file__))
 media_instance = WarnMedia(os.path.join(media_path, "media", "warn_pig.mp3"))
 
 
-def init_redis_data():
+def init_redis_data(kind="md5sum"):
     """初始化redis的数据.
     """
 
-    attachment_entities = robot_session.query(Attachment, Attachment.id, Attachment.md5sum).all()
+    attachment_entities = robot_session.query(Attachment, Attachment.id, Attachment.md5sum, Attachment.key_name).all()
     for entity in attachment_entities:
-        redis_service.set(entity.md5sum, entity.id)
+        if kind.lower() == "md5sum" and entity.md5sum:
+            redis_md5sum.set(entity.md5sum, entity.id)
+        elif kind.lower() == "unique" and entity.key_name:
+            redis_unique.set(entity.key_name, entity.id)
 
 
 def progress_handler(progress, total):
@@ -119,7 +123,7 @@ def search_match_files(directory):
 
             # 如有重复记录到日志.
             md5sum = Utils.md5sum(sub_path)
-            fid = redis_service.get(md5sum)
+            fid = redis_md5sum.get(md5sum)
             if fid:
                 Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).save(robot_session)
                 docker_data_log.info("skipping: %s ==> %s" % (author, sub_path))
@@ -132,7 +136,7 @@ def search_match_files(directory):
             entity = Attachment(sub_path, key_name, plate=plate, author=author, md5sum=md5sum)
             robot_session.add(entity)
             robot_session.commit()
-            redis_service.set(entity.md5sum, entity.id)
+            redis_md5sum.set(entity.md5sum, entity.id)
 
 
 def upload_match_files(limit=5):
@@ -204,9 +208,14 @@ def update_name_files(limit=20):
     if attachment_entities:
         for attachment in attachment_entities:
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
-            key_name = ''.join((uuid.uuid4().get_hex(), suffix))
-            attachment.key_name = key_name
 
+            key_name = ""
+            while True:
+                key_name = ''.join((uuid.uuid4().get_hex(), suffix))
+                fid = redis_md5sum.get(key_name)
+                if not fid:
+                    break
+            attachment.key_name = key_name
         try:
             robot_session.add_all(attachment_entities)
             robot_session.commit()
@@ -237,9 +246,15 @@ def main():
 
 
 def repair():
+    """循环修复, 直至无修复数据退出.
+    """
+
+    init_redis_data(kind="unique")
+
     while True:
-        result = update_name_files(50)
+        result = update_name_files(200)
         if result:
+            print("OK, 修复完成.")
             break
 
 
@@ -247,5 +262,5 @@ if __name__ == "__main__":
     """测试
     """
 
-    main()
-    # repair()
+    # main()
+    repair()
