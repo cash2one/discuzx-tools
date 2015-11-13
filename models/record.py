@@ -40,21 +40,21 @@ class Attachment(BasicBase):
     create_datetime = Column(TIMESTAMP, nullable=False)
     upload_datetime = Column(TIMESTAMP, nullable=True)
 
-    def __init__(self, file_name, plate=0, author='', md5sum=''):
+    def __init__(self, file_name, key_name, plate=0, author='', md5sum=''):
         """扫描文件目录记录入库.
         """
 
         self.file_name = file_name
+        self.key_name = key_name
         self.plate = plate
         self.author = author
         self.md5sum = md5sum
         self.create_datetime = datetime.datetime.now()
 
-    def after_upload_action(self, key_name, down_link):
+    def after_upload_action(self, down_link):
         """上传后更新.
         """
 
-        self.key_name = key_name
         self.down_link = down_link
         self.status = 1
         self.upload_datetime = datetime.datetime.now()

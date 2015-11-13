@@ -68,7 +68,7 @@ def map_handler(_attachment):
         docker_data_log.info(_info)
         if _ret and _ret["key"] == _key_name:
             try:
-                attachment = _attachment.after_upload_action(_key_name, "")
+                attachment = _attachment.after_upload_action("")
                 # 更新上传成功的数据
                 robot_session.add(attachment)
                 robot_session.commit()
@@ -126,7 +126,10 @@ def search_match_files(directory):
                 continue
 
             docker_data_log.info("indexing: %s ==> %s" % (author, sub_path))
-            entity = Attachment(sub_path, plate=plate, author=author, md5sum=md5sum)
+
+            suffix = Utils.get_info_by_path(sub_path)[2]
+            key_name = ''.join((uuid.uuid4().get_hex(), suffix))
+            entity = Attachment(sub_path, key_name, plate=plate, author=author, md5sum=md5sum)
             robot_session.add(entity)
             robot_session.commit()
             redis_service.set(entity.md5sum, entity.id)
@@ -165,7 +168,7 @@ def upload_match_files(limit=5):
                 docker_data_log.info(info)
                 if ret and ret["key"] == key_name:
                     try:
-                        attachment = attachment.after_upload_action(key_name, "")
+                        attachment = attachment.after_upload_action("")
                         # 更新上传成功的数据
                         robot_session.add(attachment)
                         robot_session.commit()
@@ -190,6 +193,36 @@ def upload_match_files(limit=5):
         search_match_files(SEEK_DIRECTORY)
 
 
+def update_name_files(limit=20):
+    """更新导入库的索引文件.
+    """
+
+    attachment_entities = robot_session.query(Attachment).filter(
+        Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
+
+    result = False
+    if attachment_entities:
+        for attachment in attachment_entities:
+            suffix = Utils.get_info_by_path(attachment.file_name)[2]
+            key_name = ''.join((uuid.uuid4().get_hex(), suffix))
+            attachment.key_name = key_name
+
+        try:
+            robot_session.add_all(attachment_entities)
+            robot_session.commit()
+        except Exception, ex:
+            print(ex)
+            robot_session.rollback()
+        else:
+            print("OK")
+        finally:
+            robot_session.close()
+    else:
+        result = True
+
+    return result
+
+
 def main():
     """扫描文件入库——> 入库扫描上传 ——> 完毕之后再扫描.
     """
@@ -203,8 +236,16 @@ def main():
     reactor.run()
 
 
+def repair():
+    while True:
+        result = update_name_files(50)
+        if result:
+            break
+
+
 if __name__ == "__main__":
     """测试
     """
 
     main()
+    # repair()
