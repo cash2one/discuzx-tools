@@ -1,0 +1,8 @@
+Django
+MySQL-python
+
+django-debug-toolbar
+django-admin-honeypot
+
+docutils
+gunicorn
