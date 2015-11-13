@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
-sudo redis-server
+sudo service redis-server start
 /home/kylin/MyEnvs/kydiscuzx/bin/supervisord -c /home/kylin/Luntan/service-quant/conf/supervisor_run.conf
-tail ../logs/docker_data.log -f
