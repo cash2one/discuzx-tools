@@ -32,6 +32,13 @@ def init_redis_data(kind="md5sum"):
     """
 
     attachment_entities = robot_session.query(Attachment, Attachment.id, Attachment.md5sum, Attachment.key_name).all()
+
+    # 清除既有数据.
+    if kind.lower() == "md5sum":
+        redis_md5sum.flush_db()
+    elif kind.lower() == "unique":
+        redis_unique.flush_db()
+
     for entity in attachment_entities:
         if kind.lower() == "md5sum" and entity.md5sum:
             redis_md5sum.set(entity.md5sum, entity.id)
@@ -209,6 +216,7 @@ def update_name_files(limit=20):
         for attachment in attachment_entities:
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
 
+            # 生成唯一标识, 防冲突可能从cache比对已有值.
             key_name = ""
             while True:
                 key_name = ''.join((uuid.uuid4().get_hex(), suffix))
@@ -216,6 +224,10 @@ def update_name_files(limit=20):
                 if not fid:
                     break
             attachment.key_name = key_name
+
+            # 放入cache供后续比对.
+            redis_md5sum.set(key_name, 1)
+
         try:
             robot_session.add_all(attachment_entities)
             robot_session.commit()

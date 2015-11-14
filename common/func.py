@@ -39,6 +39,9 @@ class RedisService(object):
     def hget(self, name, key):
         return self._redis_cli and self._redis_cli.hget(name, key)
 
+    def flush_db(self):
+        self._redis_cli.flushdb()
+
 
 class Utils(object):
     @staticmethod
