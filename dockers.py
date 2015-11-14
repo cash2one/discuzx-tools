@@ -12,7 +12,7 @@ from twisted.internet import reactor, task
 from common.warning import WarnMedia
 from common.func import FileFinished, Utils, RedisService
 from conf.data_config import robot_session, REDIS_CONFIG
-from conf.logger_config import docker_data_log
+from conf.logger_config import docker_data_log, docker_upload_only
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
     IGNORE_FILE_LIST, SKIP_README_FILE, ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, \
     MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
@@ -20,11 +20,14 @@ from models.record import Attachment, Surplus
 from upload import put_up_datum
 
 fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
+
 redis_md5sum = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
 redis_unique = RedisService(db="files_unique", password=REDIS_CONFIG.get("password"))
 
 media_path = os.path.dirname(os.path.abspath(__file__))
 media_instance = WarnMedia(os.path.join(media_path, "media", "warn_pig.mp3"))
+
+upload_only_log = "update bbs_attachment set status = 1, upload_datetime = '%s' where id = %d;"
 
 
 def init_redis_data(kind="md5sum"):
@@ -185,8 +188,9 @@ def upload_match_files(limit=5):
                         robot_session.commit()
                     except Exception, ex:
                         errors = True
-                        docker_data_log.exception(ex)
                         robot_session.rollback()
+                        docker_data_log.exception(ex)
+                        docker_upload_only.log(upload_only_log % (attachment.upload_datetime, attachment.id))
                     else:
                         # 移走成功的文件.
                         file_name_list = [attachment.file_name]
@@ -195,6 +199,8 @@ def upload_match_files(limit=5):
                         except Exception, ex:
                             errors = True
                             docker_data_log.exception(ex)
+                    finally:
+                        robot_session.close()
 
             # 如果异常, 报警并跳过
             if errors:
