@@ -161,16 +161,13 @@ def upload_match_files(limit=5):
     if attachment_entities:
         # map(map_handler, attachment_entities)
         for attachment in attachment_entities:
-            suffix = Utils.get_info_by_path(attachment.file_name)[2]
-            key_name = ''.join((uuid.uuid4().get_hex(), suffix))
-
             errors = False
             docker_data_log.info("=" * 80)
             docker_data_log.info("正在上传:%s" % attachment.file_name)
 
             try:
                 # 上传文件到七牛
-                ret, info = put_up_datum(key=key_name,
+                ret, info = put_up_datum(key=attachment.key_name,
                                          kind="file",
                                          file_path=attachment.file_name,
                                          progress_handler=progress_handler)
@@ -180,7 +177,7 @@ def upload_match_files(limit=5):
             else:
                 docker_data_log.info(ret)
                 docker_data_log.info(info)
-                if ret and ret["key"] == key_name:
+                if ret and ret["key"] == attachment.key_name:
                     try:
                         attachment = attachment.after_upload_action("")
                         # 更新上传成功的数据
@@ -263,6 +260,11 @@ def main():
     reactor.run()
 
 
+def minor():
+    while True:
+        update_name_files(MATCH_FILES_LIMIT)
+
+
 def repair():
     """循环修复, 直至无修复数据退出.
     """
@@ -280,5 +282,6 @@ if __name__ == "__main__":
     """测试
     """
 
-    # main()
-    repair()
+    main()
+    # minor()
+    # repair()
