@@ -149,10 +149,11 @@ def search_match_files(directory):
             redis_md5sum.set(entity.md5sum, entity.id)
 
 
-def upload_match_files(limit=5):
+def upload_match_files(limit=5, loops=True):
     """对结果入库的数据扫描, 并文件上传.
 
         :parameter limit: 检索数据数量
+        :parameter loops: 是否执行完数据再扫描
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
@@ -204,7 +205,8 @@ def upload_match_files(limit=5):
                 media_instance.play()
                 continue
     else:
-        search_match_files(SEEK_DIRECTORY)
+        if loops:
+            search_match_files(SEEK_DIRECTORY)
 
 
 def update_name_files(limit=20):
@@ -251,18 +253,21 @@ def main():
     """扫描文件入库——> 入库扫描上传 ——> 完毕之后再扫描.
     """
 
-    # init_redis_data()
-    # search_match_files(SEEK_DIRECTORY)
+    init_redis_data()
+    search_match_files(SEEK_DIRECTORY)
 
     # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(upload_match_files, MATCH_FILES_LIMIT)
+    create_data = task.LoopingCall(upload_match_files, MATCH_FILES_LIMIT, True)
     create_data.start(MATCH_FILES_INTERVAL)
     reactor.run()
 
 
 def minor():
+    """仅对已扫描的数据数据执行上传操作.
+    """
+
     while True:
-        update_name_files(MATCH_FILES_LIMIT)
+        upload_match_files(MATCH_FILES_LIMIT, False)
 
 
 def repair():
@@ -279,9 +284,9 @@ def repair():
 
 
 if __name__ == "__main__":
-    """测试
+    """测试并跑任务, 注意以下三者的区别.
     """
 
-    main()
-    # minor()
+    # main()
+    minor()
     # repair()
