@@ -57,13 +57,13 @@ ALLOWED_HOSTS = []
 
 EMAIL_PORT = '25'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.126.com'
-EMAIL_HOST_USER = 'dev_kylin@126.com'
-EMAIL_HOST_PASSWORD = 'wds157158wjg'
+EMAIL_HOST = 'smtp.mxhichina.com'
+EMAIL_HOST_USER = 'administrator@ikuanyu.com'
+EMAIL_HOST_PASSWORD = 'WDS926haichuantiandiHi157wjg'
 
 # Default email address to use for various automated correspondence from
 # the site managers.
-DEFAULT_FROM_EMAIL = 'dev_kylin@126.com'
+DEFAULT_FROM_EMAIL = 'administrator@ikuanyu.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Subject-line prefix for email messages send with django.core.mail.mail_admins
@@ -71,8 +71,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_SUBJECT_PREFIX = '[Django] '
 
 ADMINS = MANAGERS = (
-    ('kylinfish', 'kylinfish@126.com'),
-    ('wujuguang', 'wujuguang@126.com'),)
+    ('wujuguang', 'wujuguang@ikuanyu.com'),)
 
 # Email address that error messages come from.
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
