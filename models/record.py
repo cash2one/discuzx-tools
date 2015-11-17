@@ -139,7 +139,7 @@ class Thread(BasicBase):
       PRIMARY KEY (`id`)  COMMENT '自动发文件帖子');
     """
 
-    __tablename__ = "forum_thread"
+    __tablename__ = "bbs_thread"
 
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     thread_id = Column(INTEGER)
