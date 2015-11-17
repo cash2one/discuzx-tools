@@ -35,8 +35,8 @@ def main():
     parse_options_config(os.path.join(os.path.dirname(__file__), "conf"))
 
     handlers = [
-        (r"/download/file/public", CommunalHandler),
-        (r"/download/file/private", PrivatelyHandler),
+        (r"/source/public/download", CommunalHandler),
+        (r"/source/private/download", PrivatelyHandler),
     ]
 
     show(handlers, 40, 60)
@@ -54,6 +54,7 @@ def main():
         instance.start()
     else:
         tornado.ioloop.IOLoop.instance().start()
+
 
 if __name__ == "__main__":
     main()
