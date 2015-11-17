@@ -24,7 +24,7 @@ def spread_match_files(limit=5):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-        Attachment.status == 1, Attachment.id == 598).order_by(Attachment.id).limit(limit).all()
+        Attachment.status == 1).order_by(Attachment.id).limit(limit).all()
 
     def author_uid_and_name(real_name):
         """由真实姓名拼音获取论坛账户(账户Id,账户名称)
@@ -45,8 +45,11 @@ def spread_match_files(limit=5):
                                         file_name=file_base_name,
                                         attachment=attachment.key_name)
 
-            # 保存记录
+            # 更新发帖成功的数据状态, 保存记录
+            attachment.status = 2
             robot_record = Thread(tid, pid, aid, attachment.id)
+
+            robot_session.add(attachment)
             robot_session.add(robot_record)
             robot_session.commit()
 
@@ -74,8 +77,9 @@ def minor():
     """仅对已扫描的数据数据执行上传操作.
     """
 
-    # while True:
-    spread_match_files(1)
+    while True:
+        spread_match_files(1)
+
 
 if __name__ == '__main__':
     """测试并跑任务, 注意以下三者的区别.
