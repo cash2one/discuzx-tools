@@ -9,8 +9,8 @@ UNIX_TIME_TTL = 6000
 
 # 默认私有空间
 BUCKET_NAME = "roboter"
-BUCKET_DOMAIN = "7xo804.com1.z0.glb.clouddn.com"
-# BUCKET_DOMAIN = "source.ikuanyu.com"
+BUCKET_DOMAIN = "source.ikuanyu.com"
+# BUCKET_DOMAIN = "7xo804.com1.z0.glb.clouddn.com"
 
 # 公共空间
 PUBLIC_BUCKET_NAME = ""

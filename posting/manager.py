@@ -128,7 +128,15 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
         :parameter tid      主题Id
     """
 
+    aid = 0  # 使用DZ远程附件时附件Id
     refresh = True
+    type_attachment = 0  # 附件: 0无附件; 1普通附件; 2有图片附件
+    attachment_enable = False  # 是否使用DZ远程附件形式
+    download_link = '<a target="_blank" href="source/private/download?file=%s">%s</a>'
+
+    if attachment_enable:
+        type_attachment = 1
+        message = ''.join((message, download_link % (attachment, file_name)))
 
     try:
         if not tid:
@@ -142,7 +150,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
                 __dateline=dateline,
                 __lastpost=dateline,
                 __lastposter=author[1],
-                __attachment=1,  # 附件,0无附件 1普通附件 2有图片附件
+                __attachment=type_attachment,  # 附件,0无附件 1普通附件 2有图片附件
                 # __status=0,
             )
 
@@ -166,7 +174,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
             __authorid=author[0],
             __first=1,  # 是否是首贴
             __usesig=1,
-            __attachment=1,
+            __attachment=type_attachment,
             __dateline=int(time.time()),
 
         )
@@ -178,41 +186,42 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
         pid = forum_post.__pid
         print("2: 发帖子 ==>> (%s)" % pid)
 
-        # 3: 发附件
-        uid = author[0]
-        index = int(str(tid)[-1])
+        if attachment_enable:
+            # 3: 发附件
+            uid = author[0]
+            index = int(str(tid)[-1])
 
-        # 附件索引
-        forum_affix_index = ForumAffixIndex(
-            __tid=tid,
-            __pid=pid,
-            __uid=uid,
-            __tableid=index)
-        ForumAffixIndex.add(forum_affix_index)
-        aid = forum_affix_index.__aid
+            # 附件索引
+            forum_affix_index = ForumAffixIndex(
+                __tid=tid,
+                __pid=pid,
+                __uid=uid,
+                __tableid=index)
+            ForumAffixIndex.add(forum_affix_index)
+            aid = forum_affix_index.__aid
 
-        # 附件集合
-        description = file_name.split(".")[0]
-        attachment_class = ModelFactory.get_attachment(index)
-        forum_attachment = attachment_class(
-            __aid=aid,
-            __tid=tid,
-            __pid=pid,
-            __uid=uid,
-            __filename=file_name,
-            __attachment=attachment,
-            __description=description,
-            __dateline=int(time.time()),
-            __remote=1,  # 是否远程附件
-            __price=0,  # 附件价格
-        )
+            # 附件集合
+            description = file_name.split(".")[0]
+            attachment_class = ModelFactory.get_attachment(index)
+            forum_attachment = attachment_class(
+                __aid=aid,
+                __tid=tid,
+                __pid=pid,
+                __uid=uid,
+                __filename=file_name,
+                __attachment=attachment,
+                __description=description,
+                __dateline=int(time.time()),
+                __remote=1,  # 是否远程附件
+                __price=0,  # 附件价格
+            )
 
-        forum_session.add(forum_attachment)
-        if refresh:
-            forum_session.flush()
-            forum_session.refresh(forum_attachment)
-        aid = forum_attachment.__aid
-        print("3: 发附件 ==>> (%s)" % aid)
+            forum_session.add(forum_attachment)
+            if refresh:
+                forum_session.flush()
+                forum_session.refresh(forum_attachment)
+            aid = forum_attachment.__aid
+            print("3: 发附件 ==>> (%s)" % aid)
 
         forum_session.commit()
     except Exception, ex:
