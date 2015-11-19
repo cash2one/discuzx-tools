@@ -15,4 +15,4 @@ MySQL-python>=1.2.5
 fake-factory>=0.5.3
 python-testdata>=1.0.5
 
-pip install git+https://github.com/wujuguang/autoloads.git
+git+https://github.com/wujuguang/autoloads.git
