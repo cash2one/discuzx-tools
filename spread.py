@@ -7,6 +7,7 @@
 from __future__ import unicode_literals, print_function
 
 import os
+import random
 
 from twisted.internet import task
 from twisted.internet import reactor
@@ -81,9 +82,23 @@ def minor():
         spread_match_files(1)
 
 
+def spread_only():
+    """仅仅发帖部分.
+    """
+
+    interval = (2, 3, 5, 7, 10)
+    limit = (2, 3, 5, 7)
+
+    # 纳入间隔时间后再次执行
+    create_data = task.LoopingCall(spread_match_files, random.choice(limit))
+    create_data.start(random.choice(interval))
+    reactor.run()
+
+
 if __name__ == '__main__':
     """测试并跑任务, 注意以下三者的区别.
     """
 
     # main()
-    minor()
+    # minor()
+    spread_only()
