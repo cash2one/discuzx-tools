@@ -6,11 +6,17 @@
 
 from __future__ import unicode_literals, print_function
 
+import sys
 import time
+import traceback
+
 from sqlalchemy.sql import text
 from conf.data_config import forum_session, forum_engine
 from models.submeter import ModelFactory
 from models.remote import ForumPost, ForumThread, ForumAffixIndex
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 def alchemy_sql(sql, kind="list"):
@@ -159,7 +165,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
                 forum_session.flush()
                 forum_session.refresh(forum_thread)
             tid = forum_thread.__tid
-        print("1: 发主题 ==>> (%s)" % tid)
+        print("1: 发主题 ==>> (%s)" % str(tid))
 
         # 2:发帖子
         max_pid = alchemy_sql("select max(pid) from bbs_forum_post;", "scalar")
@@ -184,7 +190,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
             forum_session.flush()
             forum_session.refresh(forum_post)
         pid = forum_post.__pid
-        print("2: 发帖子 ==>> (%s)" % pid)
+        print("2: 发帖子 ==>> (%s)" % str(pid))
 
         if attachment_enable:
             # 3: 发附件
@@ -221,11 +227,11 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
                 forum_session.flush()
                 forum_session.refresh(forum_attachment)
             aid = forum_attachment.__aid
-            print("3: 发附件 ==>> (%s)" % aid)
+            print("3: 发附件 ==>> (%s)" % str(aid))
 
         forum_session.commit()
     except Exception, ex:
-        print(ex)
+        traceback.print_exc()
         forum_session.rollback()
         raise ex
     finally:

@@ -7,11 +7,13 @@
 from __future__ import unicode_literals, print_function
 
 import time
+import datetime
 import random
 import string
 
 from twisted.internet import task
 from twisted.internet import reactor
+
 from conf.data_config import robot_session
 from conf.logger_config import faker_data_log
 from common.func import Utils
@@ -99,4 +101,8 @@ def main():
 if __name__ == '__main__':
     # main()
     # fake_member()
-    pass
+    # pass
+
+    while True:
+        print(datetime.datetime.now())
+        time.sleep(60)
