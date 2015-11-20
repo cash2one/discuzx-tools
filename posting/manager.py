@@ -138,13 +138,19 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
     refresh = True
     type_attachment = 0  # 附件: 0无附件; 1普通附件; 2有图片附件
     attachment_enable = False  # 是否使用DZ远程附件形式
-    download_link = '<a target="_blank" href="source/private/download?file=%s">%s</a>'
 
     if attachment_enable:
         type_attachment = 1
+    else:
+        download_link = '<a target="_blank" href="source/private/download?file=%s">%s</a>'
         message = ''.join((message, download_link % (attachment, file_name)))
 
     try:
+        # 处理 Data too long for column 'subject'错误
+        subject_count = len(subject)
+        if subject_count > 80:
+            subject = subject[:80]
+
         if not tid:
             # 1: 发主题
             dateline = int(time.time())
