@@ -15,6 +15,8 @@ redis_data_log = build_file_logs("redis_data", level)
 docker_data_log = build_file_logs("docker_data", level)
 docker_upload_only = build_file_logs("docker_upload_only", level)
 
+posting_data_log = build_file_logs("posting_data", level)
+
 model_record_log = build_file_logs("model_record", level)
 model_remote_log = build_file_logs("model_remote", level)
 

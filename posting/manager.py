@@ -11,9 +11,11 @@ import time
 import traceback
 
 from sqlalchemy.sql import text
+from conf.logger_config import posting_data_log
 from conf.data_config import forum_session, forum_engine
 from models.submeter import ModelFactory
 from models.remote import ForumPost, ForumThread, ForumAffixIndex
+from posting import type_attachment, attachment_enable, download_link
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -95,7 +97,7 @@ def spread_attachment(tid, pid, author, file_name, attachment):
         return forum_attachment.__aid
 
 
-def spread_post(subject, message, author, fid, tid):
+def spread_post(subject, message, author, fid, tid, first=0, attachment_type=0):
     """发帖子.
 
         :parameter subject  标题
@@ -106,7 +108,13 @@ def spread_post(subject, message, author, fid, tid):
     """
 
     try:
+        # 处理 Data too long for column 'subject'错误
+        subject_count = len(subject)
+        if subject_count > 80:
+            subject = subject[:80]
+
         max_pid = alchemy_sql("select max(pid) from bbs_forum_post;", "scalar")
+
         forum_post = ForumPost(
             __pid=max_pid + 1,
             __tid=tid,
@@ -114,7 +122,12 @@ def spread_post(subject, message, author, fid, tid):
             __subject=subject,
             __message=message,
             __author=author[1],
-            __authorid=author[0])
+            __authorid=author[0],
+            __first=first,  # 是否是首贴
+            __usesig=1,
+            __attachment=attachment_type,
+            __dateline=int(time.time()),
+        )
 
         ForumPost.add(forum_post)
     except Exception, ex:
@@ -136,14 +149,8 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
 
     aid = 0  # 使用DZ远程附件时附件Id
     refresh = True
-    type_attachment = 0  # 附件: 0无附件; 1普通附件; 2有图片附件
-    attachment_enable = False  # 是否使用DZ远程附件形式
 
-    if attachment_enable:
-        type_attachment = 1
-    else:
-        # download_link = '<a target="_blank" href="source/private/download?file=%s">%s</a>'
-        download_link = '\r\n[url=http://file.ikuanyu.com/source/private/download?file=%s]%s[/url]'
+    if not attachment_enable:
         message = ''.join((message, download_link % (attachment, file_name)))
 
     try:
@@ -172,7 +179,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
                 forum_session.flush()
                 forum_session.refresh(forum_thread)
             tid = forum_thread.__tid
-        print("1: 发主题 ==>> (%s)" % str(tid))
+        posting_data_log.info("1: 发主题 ==>> (%s)" % str(tid))
 
         # 2:发帖子
         max_pid = alchemy_sql("select max(pid) from bbs_forum_post;", "scalar")
@@ -197,7 +204,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
             forum_session.flush()
             forum_session.refresh(forum_post)
         pid = forum_post.__pid
-        print("2: 发帖子 ==>> (%s)" % str(pid))
+        posting_data_log.info("2: 发帖子 ==>> (%s)" % str(pid))
 
         if attachment_enable:
             # 3: 发附件
@@ -234,7 +241,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
                 forum_session.flush()
                 forum_session.refresh(forum_attachment)
             aid = forum_attachment.__aid
-            print("3: 发附件 ==>> (%s)" % str(aid))
+            posting_data_log.info("3: 发附件 ==>> (%s)" % str(aid))
 
         forum_session.commit()
     except Exception, ex:

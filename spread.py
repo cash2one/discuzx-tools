@@ -13,6 +13,7 @@ from twisted.internet import task
 from twisted.internet import reactor
 
 from conf.data_config import robot_session
+from conf.logger_config import posting_data_log
 from conf.regular_config import USER_MAP_CONFIG
 from models.record import Attachment, Thread
 from posting.manager import spread_info
@@ -41,6 +42,9 @@ def spread_match_files(limit=5):
             subject = message = os.path.splitext(file_base_name)[0]
             author = author_uid_and_name(attachment.author)
             fid = attachment.plate
+
+            posting_data_log.info("=" * 80)
+            posting_data_log.info("正在发帖:%s" % file_base_name)
 
             tid, pid, aid = spread_info(subject, message, author, fid,
                                         file_name=file_base_name,
