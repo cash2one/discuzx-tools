@@ -143,7 +143,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
         type_attachment = 1
     else:
         # download_link = '<a target="_blank" href="source/private/download?file=%s">%s</a>'
-        download_link = '\r\n[url=source/private/download?file=%s]%s[/url]'
+        download_link = '\r\n[url=http://file.ikuanyu.com/source/private/download?file=%s]%s[/url]'
         message = ''.join((message, download_link % (attachment, file_name)))
 
     try:
