@@ -10,7 +10,7 @@ import tornado.httpserver
 import tornado.autoreload
 from tornado.log import app_log
 from web.utils.options_parse import options, parse_options_config
-from web.handler.views import CommunalHandler, PrivatelyHandler
+from web.handler.views import MainHandler, CommunalHandler, PrivatelyHandler
 
 reload(sys)
 sys.setdefaultencoding("utf8")
@@ -35,6 +35,7 @@ def main():
     parse_options_config(os.path.join(os.path.dirname(__file__), "conf"))
 
     handlers = [
+        (r"/", MainHandler),
         (r"/source/public/download", CommunalHandler),
         (r"/source/private/download", PrivatelyHandler),
     ]
