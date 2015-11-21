@@ -50,13 +50,17 @@ def spread_match_files(limit=5):
                                         file_name=file_base_name,
                                         attachment=attachment.key_name)
 
-            # 更新发帖成功的数据状态, 保存记录
-            attachment.status = 2
-            robot_record = Thread(tid, pid, aid, attachment.id)
+            if tid and pid:
+                # 更新发帖成功的数据状态, 保存记录
+                attachment.status = 2
+                robot_record = Thread(tid, pid, aid, attachment.id)
 
-            robot_session.add(attachment)
-            robot_session.add(robot_record)
-            robot_session.commit()
+                robot_session.add(attachment)
+                robot_session.add(robot_record)
+                robot_session.commit()
+                posting_data_log.info("发帖成功: OK.")
+            else:
+                posting_data_log.info("发帖失败: Error.")
 
 
 action_data_config = (
