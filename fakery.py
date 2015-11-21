@@ -98,10 +98,31 @@ def main():
     reactor.run()
 
 
+def minor():
+    """仅对已扫描的数据数据执行上传操作.
+    """
+
+    while True:
+        fake_member(1)
+
+
+def fake_member_only():
+    """仅仅注册部分.
+    """
+
+    interval = (20, 30, 50, 70, 100)
+    limit = (2, 3, 5, 7)
+
+    # 纳入间隔时间后再次执行
+    create_data = task.LoopingCall(fake_member, random.choice(limit))
+    create_data.start(random.choice(interval))
+    reactor.run()
+
+
 if __name__ == '__main__':
     # main()
-    # fake_member()
-    # pass
+    # minor()
+    # fake_member_only()
 
     while True:
         print(datetime.datetime.now())

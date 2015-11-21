@@ -51,14 +51,20 @@ def spread_match_files(limit=5):
                                         attachment=attachment.key_name)
 
             if tid and pid:
-                # 更新发帖成功的数据状态, 保存记录
-                attachment.status = 2
-                robot_record = Thread(tid, pid, aid, attachment.id)
+                try:
+                    # 更新发帖成功的数据状态, 保存记录
+                    attachment.status = 2
+                    robot_record = Thread(tid, pid, aid, attachment.id)
 
-                robot_session.add(attachment)
-                robot_session.add(robot_record)
-                robot_session.commit()
-                posting_data_log.info("发帖成功: OK.")
+                    robot_session.add(attachment)
+                    robot_session.add(robot_record)
+                    robot_session.commit()
+                    posting_data_log.info("发帖成功: OK.")
+                except Exception, ex:
+                    robot_session.rollback()
+                    posting_data_log.exception(ex)
+                finally:
+                    robot_session.close()
             else:
                 posting_data_log.info("发帖失败: Error.")
 
@@ -83,7 +89,7 @@ def main():
 
 
 def minor():
-    """仅对已扫描的数据数据执行上传操作.
+    """仅对已扫描的数据数据执行发帖操作.
     """
 
     while True:
