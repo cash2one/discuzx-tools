@@ -5,6 +5,7 @@ from __future__ import unicode_literals, print_function
 
 import itertools
 import os
+import time
 import uuid
 
 from twisted.internet import reactor, task
@@ -12,7 +13,7 @@ from twisted.internet import reactor, task
 from common.warning import WarnMedia
 from common.func import FileFinished, Utils, RedisService
 from conf.data_config import robot_session, REDIS_CONFIG
-from conf.logger_config import docker_data_log, docker_upload_only
+from conf.logger_config import record_info, upload_info, upload_error
 from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
     IGNORE_FILE_LIST, SKIP_README_FILE, ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, \
     MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
@@ -54,7 +55,7 @@ def progress_handler(progress, total):
     """
 
     out_put = "%s%%" % str(int(float(progress) / float(total) * 100))
-    docker_data_log.info(out_put)
+    upload_info.info(out_put)
 
 
 def map_handler(_attachment):
@@ -66,8 +67,8 @@ def map_handler(_attachment):
     _suffix = Utils.get_info_by_path(_attachment.file_name)[2]
     _key_name = ''.join((uuid.uuid4().get_hex(), _suffix))
 
-    docker_data_log.info("=" * 80)
-    docker_data_log.info("正在上传:%s" % _attachment.file_name)
+    upload_info.info("=" * 80)
+    upload_info.info("正在上传:%s" % _attachment.file_name)
 
     try:
         # 上传文件到七牛
@@ -76,10 +77,10 @@ def map_handler(_attachment):
                                    file_path=_attachment.file_name,
                                    progress_handler=progress_handler)
     except Exception, ex:
-        docker_data_log.exception(ex)
+        upload_info.exception(ex)
     else:
-        docker_data_log.info(_ret)
-        docker_data_log.info(_info)
+        upload_info.info(_ret)
+        upload_info.info(_info)
         if _ret and _ret["key"] == _key_name:
             try:
                 attachment = _attachment.after_upload_action("")
@@ -87,15 +88,18 @@ def map_handler(_attachment):
                 robot_session.add(attachment)
                 robot_session.commit()
             except Exception, ex:
-                docker_data_log.exception(ex)
                 robot_session.rollback()
+                upload_info.exception(ex)
+                upload_error.log(upload_only_log % (_attachment.upload_datetime, _attachment.id))
             else:
                 # 移走成功的文件.
                 file_name_list = [attachment.file_name]
                 try:
                     fileFinished.batch_move(file_name_list)
                 except Exception, ex:
-                    docker_data_log.exception(ex)
+                    upload_info.exception(ex)
+            finally:
+                robot_session.close()
 
 
 def search_match_files(directory):
@@ -136,10 +140,10 @@ def search_match_files(directory):
             fid = redis_md5sum.get(md5sum)
             if fid:
                 Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).save(robot_session)
-                docker_data_log.info("skipping: %s ==> %s" % (author, sub_path))
+                record_info.info("skipping: %s ==> %s" % (author, sub_path))
                 continue
 
-            docker_data_log.info("indexing: %s ==> %s" % (author, sub_path))
+            record_info.info("indexing: %s ==> %s" % (author, sub_path))
 
             suffix = Utils.get_info_by_path(sub_path)[2]
             key_name = ''.join((uuid.uuid4().get_hex(), suffix))
@@ -163,8 +167,8 @@ def upload_match_files(limit=5, loops=True):
         # map(map_handler, attachment_entities)
         for attachment in attachment_entities:
             errors = False
-            docker_data_log.info("=" * 80)
-            docker_data_log.info("正在上传:%s" % attachment.file_name)
+            upload_info.info("=" * 80)
+            upload_info.info("正在上传:%s" % attachment.file_name)
 
             try:
                 # 上传文件到七牛
@@ -174,10 +178,10 @@ def upload_match_files(limit=5, loops=True):
                                          progress_handler=progress_handler)
             except Exception, ex:
                 errors = True
-                docker_data_log.exception(ex)
+                upload_info.exception(ex)
             else:
-                docker_data_log.info(ret)
-                docker_data_log.info(info)
+                upload_info.info(ret)
+                upload_info.info(info)
                 if ret and ret["key"] == attachment.key_name:
                     try:
                         attachment = attachment.after_upload_action("")
@@ -187,8 +191,8 @@ def upload_match_files(limit=5, loops=True):
                     except Exception, ex:
                         errors = True
                         robot_session.rollback()
-                        docker_data_log.exception(ex)
-                        docker_upload_only.log(upload_only_log % (attachment.upload_datetime, attachment.id))
+                        upload_info.exception(ex)
+                        upload_error.log(upload_only_log % (attachment.upload_datetime, attachment.id))
                     else:
                         # 移走成功的文件.
                         file_name_list = [attachment.file_name]
@@ -196,7 +200,7 @@ def upload_match_files(limit=5, loops=True):
                             fileFinished.batch_move(file_name_list)
                         except Exception, ex:
                             errors = True
-                            docker_data_log.exception(ex)
+                            upload_info.exception(ex)
                     finally:
                         robot_session.close()
 
@@ -205,6 +209,8 @@ def upload_match_files(limit=5, loops=True):
                 media_instance.play()
                 continue
     else:
+        # 如果无数据静默五分钟
+        time.sleep(5 * 60)
         if loops:
             search_match_files(SEEK_DIRECTORY)
 

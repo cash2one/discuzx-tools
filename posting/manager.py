@@ -11,7 +11,7 @@ import time
 import traceback
 
 from sqlalchemy.sql import text
-from conf.logger_config import posting_data_log
+from conf.logger_config import post_info
 from conf.data_config import forum_session, forum_engine
 from models.submeter import ModelFactory
 from models.remote import ForumPost, ForumThread, ForumAffixIndex
@@ -179,7 +179,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
                 forum_session.flush()
                 forum_session.refresh(forum_thread)
             tid = forum_thread.__tid
-        posting_data_log.info("1: 发主题 ==>> (%s)" % str(tid))
+        post_info.info("1: 发主题 ==>> (%s)" % str(tid))
 
         # 2:发帖子
         max_pid = alchemy_sql("select max(pid) from bbs_forum_post;", "scalar")
@@ -204,7 +204,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
             forum_session.flush()
             forum_session.refresh(forum_post)
         pid = forum_post.__pid
-        posting_data_log.info("2: 发帖子 ==>> (%s)" % str(pid))
+        post_info.info("2: 发帖子 ==>> (%s)" % str(pid))
 
         if attachment_enable:
             # 3: 发附件
@@ -241,7 +241,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
                 forum_session.flush()
                 forum_session.refresh(forum_attachment)
             aid = forum_attachment.__aid
-            posting_data_log.info("3: 发附件 ==>> (%s)" % str(aid))
+            post_info.info("3: 发附件 ==>> (%s)" % str(aid))
 
         forum_session.commit()
     except Exception, ex:

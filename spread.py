@@ -7,13 +7,14 @@
 from __future__ import unicode_literals, print_function
 
 import os
+import time
 import random
 
 from twisted.internet import task
 from twisted.internet import reactor
 
 from conf.data_config import robot_session
-from conf.logger_config import posting_data_log
+from conf.logger_config import post_info
 from conf.regular_config import USER_MAP_CONFIG
 from models.record import Attachment, Thread
 from posting.manager import spread_info
@@ -43,8 +44,8 @@ def spread_match_files(limit=5):
             author = author_uid_and_name(attachment.author)
             fid = attachment.plate
 
-            posting_data_log.info("=" * 80)
-            posting_data_log.info("正在发帖:%s" % file_base_name)
+            post_info.info("=" * 80)
+            post_info.info("正在发帖:%s" % file_base_name)
 
             tid, pid, aid = spread_info(subject, message, author, fid,
                                         file_name=file_base_name,
@@ -59,14 +60,17 @@ def spread_match_files(limit=5):
                     robot_session.add(attachment)
                     robot_session.add(robot_record)
                     robot_session.commit()
-                    posting_data_log.info("发帖成功: OK.")
+                    post_info.info("发帖成功: OK.")
                 except Exception, ex:
                     robot_session.rollback()
-                    posting_data_log.exception(ex)
+                    post_info.exception(ex)
                 finally:
                     robot_session.close()
             else:
-                posting_data_log.info("发帖失败: Error.")
+                post_info.info("发帖失败: Error.")
+    else:
+        # 如果无数据静默五分钟
+        time.sleep(5 * 60)
 
 
 action_data_config = (
