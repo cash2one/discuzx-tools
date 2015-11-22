@@ -21,7 +21,7 @@ class CommonMember(common_member, BaseModel):
         BaseModel.__init__(self, **kargs)
 
 
-class CenterMember(common_member, BaseModel):
+class CenterMember(center_member, BaseModel):
     def __init__(self, **kargs):
         BaseModel.__init__(self, **kargs)
 
