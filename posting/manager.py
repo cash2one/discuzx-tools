@@ -27,18 +27,23 @@ def alchemy_sql(sql, kind="list"):
         :parameter kind: ["list","first","scalar"]
     """
 
+    result = None
     sql = text(sql)
     kind = kind.lower()
     conn = forum_engine.connect()
 
-    if kind == "list":
-        result = conn.execute(sql).fetchall()
-    elif kind == "first":
-        result = conn.execute(sql).first()
-    elif kind == "scalar":
-        result = conn.execute(sql).scalar()
-    else:
-        result = None
+    try:
+        if kind == "list":
+            result = conn.execute(sql).fetchall()
+        elif kind == "first":
+            result = conn.execute(sql).first()
+        elif kind == "scalar":
+            result = conn.execute(sql).scalar()
+    except Exception, ex:
+        print(ex)
+        raise ex
+    finally:
+        conn.close()
 
     return result
 
