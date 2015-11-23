@@ -11,10 +11,11 @@ import time
 import traceback
 
 from sqlalchemy.sql import text
-from conf.logger_config import post_info
+
 from conf.data_config import forum_session, forum_engine
-from models.submeter import ModelFactory
+from conf.logger_config import post_info
 from models.remote import ForumPost, ForumThread, ForumAffixIndex
+from models.submeter import ModelFactory
 from posting import type_attachment, attachment_enable, download_link
 
 reload(sys)
@@ -24,7 +25,8 @@ sys.setdefaultencoding('utf8')
 def alchemy_sql(sql, kind="list"):
     """执行SQL语句.
 
-        :parameter kind: ["list","first","scalar"]
+        :parameter sql 可执行SQL语句
+        :parameter kind: ["list","first","scalar","execute"]
     """
 
     result = None
@@ -39,6 +41,8 @@ def alchemy_sql(sql, kind="list"):
             result = conn.execute(sql).first()
         elif kind == "scalar":
             result = conn.execute(sql).scalar()
+        elif kind == "execute":
+            result = conn.execute(sql)
     except Exception, ex:
         print(ex)
         raise ex
@@ -112,6 +116,8 @@ def spread_post(subject, message, author, fid, tid, first=0, attachment_type=0):
         :parameter tid      主题Id
     """
 
+    pid = 0
+
     try:
         # 处理 Data too long for column 'subject'错误
         subject_count = len(subject)
@@ -137,9 +143,12 @@ def spread_post(subject, message, author, fid, tid, first=0, attachment_type=0):
         ForumPost.add(forum_post)
     except Exception, ex:
         print(ex)
-        return 0
+        # raise ex
     else:
-        return forum_post.__pid
+        alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();", kind="execute")
+        pid = forum_post.__pid
+
+    return pid
 
 
 def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment=None):
@@ -253,6 +262,8 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
         traceback.print_exc()
         forum_session.rollback()
         raise ex
+    else:
+        alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();", kind="execute")
     finally:
         forum_session.close()
 
