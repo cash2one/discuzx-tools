@@ -52,6 +52,17 @@ def alchemy_sql(sql, kind="list"):
     return result
 
 
+def spread_repair_post(check=False):
+    """帖子pid自增键.
+
+        警告: 特殊危险, 请不要轻易运行, 除非你理解可能产生的风险.
+        :parameter check: 防止错误调用运行增加参数做安全阀.
+    """
+
+    if check:
+        alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();", kind="execute")
+
+
 def spread_attachment(tid, pid, author, file_name, attachment):
     """发附件操作.
 
@@ -145,7 +156,7 @@ def spread_post(subject, message, author, fid, tid, first=0, attachment_type=0):
         print(ex)
         # raise ex
     else:
-        alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();", kind="execute")
+        spread_repair_post(True)
         pid = forum_post.__pid
 
     return pid
@@ -263,7 +274,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
         forum_session.rollback()
         raise ex
     else:
-        alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();", kind="execute")
+        spread_repair_post(True)
     finally:
         forum_session.close()
 
