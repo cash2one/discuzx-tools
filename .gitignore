@@ -45,7 +45,7 @@ coverage.xml
 *,cover
 
 # Translations
-*.mo
+# *.mo
 *.pot
 
 # Vim

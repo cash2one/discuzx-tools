@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class BbsAttachment(models.Model):
@@ -21,6 +22,8 @@ class BbsAttachment(models.Model):
     class Meta:
         managed = False
         db_table = 'bbs_attachment'
+        verbose_name = _('bbs attachment')
+        verbose_name_plural = _('bbs attachment list')
 
 
 class BbsMember(models.Model):
@@ -34,6 +37,8 @@ class BbsMember(models.Model):
     class Meta:
         managed = False
         db_table = 'bbs_member'
+        verbose_name = _('bbs member')
+        verbose_name_plural = _('bbs member list')
 
 
 class BbsSurplus(models.Model):
@@ -48,6 +53,8 @@ class BbsSurplus(models.Model):
     class Meta:
         managed = False
         db_table = 'bbs_surplus'
+        verbose_name = _('bbs surplus')
+        verbose_name_plural = _('bbs surplus list')
 
 
 class BbsThread(models.Model):
@@ -61,3 +68,5 @@ class BbsThread(models.Model):
     class Meta:
         managed = False
         db_table = 'bbs_thread'
+        verbose_name = _('bbs thread')
+        verbose_name_plural = _('bbs thread list')

@@ -9,3 +9,5 @@ admin.site.register(BbsAttachment)
 admin.site.register(BbsMember)
 admin.site.register(BbsSurplus)
 admin.site.register(BbsThread)
+
+# admin.site.register(Message, MessageAdmin)

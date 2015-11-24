@@ -95,7 +95,8 @@ INSTALLED_APPS = (
 
     'debug_toolbar',
     'admin_honeypot',
-    # 'gunicorn',
+    'gunicorn',
+    'roboter',
 )
 
 MIDDLEWARE_CLASSES = (

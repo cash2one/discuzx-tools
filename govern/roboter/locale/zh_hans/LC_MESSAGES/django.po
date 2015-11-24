@@ -1,0 +1,50 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-24 22:10+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: models.py:25
+msgid "bbs attachment"
+msgstr "自动发附件"
+
+#: models.py:26
+msgid "bbs attachment list"
+msgstr "自动发附件列表"
+
+#: models.py:40
+msgid "bbs member"
+msgstr "自注用户"
+
+#: models.py:41
+msgid "bbs member list"
+msgstr "自注用户"
+
+#: models.py:56
+msgid "bbs surplus"
+msgstr "自发重复附件"
+
+#: models.py:57
+msgid "bbs surplus list"
+msgstr "自发重复附件列表"
+
+#: models.py:71
+msgid "bbs thread"
+msgstr "自发帖子"
+
+#: models.py:72
+msgid "bbs thread list"
+msgstr "自发帖子列表"

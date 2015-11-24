@@ -16,15 +16,21 @@ Including another URLconf
 
 from django.conf import settings
 from django.conf.urls import include, url, patterns
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.admindocs import urls as admindocs_urls
 from admin_honeypot import urls as honeypot_urls
 
+admin.autodiscover()
+
 urlpatterns = [
-    url(r'^superman/doc/', include(admindocs_urls)),
-    url(r'^superman/', include(admin.site.urls)),
-    url(r'^admin/', include(honeypot_urls, namespace='admin_honeypot')),
+    url(r'^govern/superman/doc/', include(admindocs_urls)),
+    url(r'^govern/superman/', include(admin.site.urls)),
+    url(r'^govern/admin/', include(honeypot_urls, namespace='admin_honeypot')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
