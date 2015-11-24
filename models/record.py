@@ -6,6 +6,7 @@
 
 from __future__ import unicode_literals, print_function
 
+import os
 import datetime
 from sqlalchemy import Column, INTEGER, VARCHAR, TIMESTAMP
 from models.base import BasicBase
@@ -57,6 +58,7 @@ class Attachment(BasicBase):
 
         self.down_link = down_link
         self.status = 1
+        self.file_name = os.path.basename(self.file_name)
         self.upload_datetime = datetime.datetime.now()
         return self
 
