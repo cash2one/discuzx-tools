@@ -61,6 +61,9 @@ def spread_repair_post(check=False):
 
     if check:
         alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();", kind="execute")
+    else:
+        max_pid = alchemy_sql("select max(pid) from bbs_forum_post_tableid;", "scalar")
+        return max_pid
 
 
 def spread_attachment(tid, pid, author, file_name, attachment):
@@ -125,6 +128,8 @@ def spread_post(subject, message, author, fid, tid, first=0, attachment_type=0):
         :parameter author   会员名
         :parameter fid      论坛Id
         :parameter tid      主题Id
+        :parameter first
+        :parameter attachment_type
     """
 
     pid = 0
@@ -135,7 +140,7 @@ def spread_post(subject, message, author, fid, tid, first=0, attachment_type=0):
         if subject_count > 80:
             subject = subject[:80]
 
-        max_pid = alchemy_sql("select max(pid) from bbs_forum_post;", "scalar")
+        max_pid = spread_repair_post()
 
         forum_post = ForumPost(
             __pid=max_pid + 1,
@@ -170,6 +175,8 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
         :parameter author   会员名
         :parameter fid      论坛Id
         :parameter tid      主题Id
+        :parameter file_name
+        :parameter attachment
     """
 
     aid = 0  # 使用DZ远程附件时附件Id
@@ -207,7 +214,7 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
         post_info.info("1: 发主题 ==>> (%s)" % str(tid))
 
         # 2:发帖子
-        max_pid = alchemy_sql("select max(pid) from bbs_forum_post;", "scalar")
+        max_pid = spread_repair_post()
 
         forum_post = ForumPost(
             __pid=max_pid + 1,
