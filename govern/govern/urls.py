@@ -14,16 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 
+from admin_honeypot import urls as honeypot_urls
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.admindocs import urls as admindocs_urls
-from admin_honeypot import urls as honeypot_urls
+
+# import xadmin
+# from xadmin.plugins import xversion
+
+# xadmin.autodiscover()
+# xversion.register_models()
 
 admin.autodiscover()
 
 urlpatterns = [
+    # url(r'^govern/xadmin/', include(xadmin.site.urls)),
     url(r'^govern/superman/doc/', include(admindocs_urls)),
     url(r'^govern/superman/', include(admin.site.urls)),
     url(r'^govern/admin/', include(honeypot_urls, namespace='admin_honeypot')),

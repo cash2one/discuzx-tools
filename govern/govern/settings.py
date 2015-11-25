@@ -97,6 +97,10 @@ INSTALLED_APPS = (
     'admin_honeypot',
     'gunicorn',
     'roboter',
+
+    # 'xadmin',
+    # 'crispy_forms',
+    # 'reversion',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -138,7 +142,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'govern.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -153,7 +156,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
