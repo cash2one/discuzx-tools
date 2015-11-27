@@ -31,6 +31,7 @@ admin.autodiscover()
 
 urlpatterns = [
     # url(r'^govern/xadmin/', include(xadmin.site.urls)),
+    url(r'^govern/grappelli/', include('grappelli.urls')),
     url(r'^govern/superman/doc/', include(admindocs_urls)),
     url(r'^govern/superman/', include(admin.site.urls)),
     url(r'^govern/admin/', include(honeypot_urls, namespace='admin_honeypot')),
