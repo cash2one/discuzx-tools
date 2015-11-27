@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-24 22:10+0800\n"
+"POT-Creation-Date: 2015-11-27 20:59+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,46 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: models.py:11 models.py:31 models.py:47 models.py:64
+msgid "id"
+msgstr "编号"
+
+#: models.py:12
+msgid "file name"
+msgstr "本地文件名"
+
+#: models.py:13
+msgid "key name"
+msgstr "存储文件名"
+
+#: models.py:14
+msgid "down link"
+msgstr "下载地址"
+
+#: models.py:15 models.py:50
+msgid "md5sum"
+msgstr "文件校验码"
+
+#: models.py:16 models.py:51
+msgid "plate"
+msgstr "版块"
+
+#: models.py:17
+msgid "status"
+msgstr "状态"
+
+#: models.py:18 models.py:52
+msgid "author"
+msgstr "所属人"
+
+#: models.py:19 models.py:36 models.py:53 models.py:69
+msgid "create datetime"
+msgstr "添入时间"
+
+#: models.py:20
+msgid "upload datetime"
+msgstr "上传时间"
 
 #: models.py:25
 msgid "bbs attachment"
@@ -25,26 +65,66 @@ msgstr "自动发附件"
 msgid "bbs attachment list"
 msgstr "自动发附件列表"
 
-#: models.py:40
+#: models.py:32
+msgid "username"
+msgstr "用户名"
+
+#: models.py:33
+msgid "password"
+msgstr "密码"
+
+#: models.py:34
+msgid "email"
+msgstr "邮箱"
+
+#: models.py:35
+msgid "dz uid"
+msgstr "论坛用户ID"
+
+#: models.py:41
 msgid "bbs member"
 msgstr "自注用户"
 
-#: models.py:41
+#: models.py:42
 msgid "bbs member list"
-msgstr "自注用户"
+msgstr "自注用户列表"
 
-#: models.py:56
+#: models.py:48
+msgid "fid"
+msgstr "版块ID"
+
+#: models.py:49
+msgid "path"
+msgstr "文件路径"
+
+#: models.py:58
 msgid "bbs surplus"
 msgstr "自发重复附件"
 
-#: models.py:57
+#: models.py:59
 msgid "bbs surplus list"
 msgstr "自发重复附件列表"
 
-#: models.py:71
+#: models.py:65
+msgid "thread id"
+msgstr "论坛主题ID"
+
+#: models.py:66
+msgid "post id"
+msgstr "论坛帖子ID"
+
+#: models.py:67
+msgid "attachment id"
+msgstr "论坛附件ID"
+
+#: models.py:68
+msgid "robot data id"
+msgstr "本地文件ID"
+
+#: models.py:74
 msgid "bbs thread"
 msgstr "自发帖子"
 
-#: models.py:72
+#: models.py:75
 msgid "bbs thread list"
 msgstr "自发帖子列表"
