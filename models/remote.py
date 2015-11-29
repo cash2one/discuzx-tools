@@ -14,6 +14,7 @@ center_member = generate_db_models('bbs_ucenter_members')
 forum_post = generate_db_models('bbs_forum_post')
 forum_thread = generate_db_models('bbs_forum_thread')
 forum_affix_index = generate_db_models('bbs_forum_attachment')
+forum_member_recommend = generate_db_models('bbs_forum_memberrecommend')
 
 
 class CommonMember(common_member, BaseModel):
@@ -37,5 +38,10 @@ class ForumPost(forum_post, BaseModel):
 
 
 class ForumAffixIndex(forum_affix_index, BaseModel):
+    def __init__(self, **kargs):
+        BaseModel.__init__(self, **kargs)
+
+
+class ForumMemberRecommend(forum_member_recommend, BaseModel):
     def __init__(self, **kargs):
         BaseModel.__init__(self, **kargs)
