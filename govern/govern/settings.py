@@ -88,6 +88,7 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 # Application definition
 INSTALLED_APPS = (
     'grappelli',
+    # 'filebrowser',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.admindocs',
@@ -192,3 +193,5 @@ DEBUG_TOOLBAR_PANELS = [
 DEBUG_TOOLBAR_CONFIG = {
     'JQUERY_URL': 'http://code.jquery.com/jquery-2.1.0.min.js',
 }
+
+# FILEBROWSER_UPLOAD_TEMPDIR = "uploads/"

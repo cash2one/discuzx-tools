@@ -15,6 +15,9 @@ sudo make install
 sudo rm libevent-2.0.22-stable.tar.gz
 sudo rm -R libevent-2.0.22-stable
 
+sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev
+sudo apt-get install liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+
 env=$1
 if [ "$env" = "remote" ]; then
     virtual_path="/opt/myenvs/kydjango/bin/"

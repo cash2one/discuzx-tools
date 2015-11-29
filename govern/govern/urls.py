@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.admindocs import urls as admindocs_urls
 
+# from filebrowser.sites import site
+
 # import xadmin
 # from xadmin.plugins import xversion
 
@@ -31,6 +33,7 @@ admin.autodiscover()
 
 urlpatterns = [
     # url(r'^govern/xadmin/', include(xadmin.site.urls)),
+    # url(r'^govern/filebrowser/', include(site.urls)),
     url(r'^govern/grappelli/', include('grappelli.urls')),
     url(r'^govern/superman/doc/', include(admindocs_urls)),
     url(r'^govern/superman/', include(admin.site.urls)),
