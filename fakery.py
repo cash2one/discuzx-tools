@@ -15,11 +15,11 @@ from twisted.internet import task
 from twisted.internet import reactor
 
 from conf.data_config import robot_session, forum_session
-from conf.logger_config import user_info
+from conf.logger_config import user_info, recommend_info
 from common.func import Utils
-from register.factory import FakeMember, FakePost
+from register.factory import FakeMember, FakeRecommend, FakePost
 from models.record import Member
-from models.remote import CommonMember, CenterMember
+from models.remote import CommonMember, CenterMember, ForumThread, ForumMemberRecommend
 
 
 def fake_member(gen_data_count=1):
@@ -82,6 +82,52 @@ def fake_member(gen_data_count=1):
             robot_session.close()
 
 
+def fake_recommend(gen_data_count=1):
+    """虚拟对主题回帖.
+
+        :parameter gen_data_count: 生成数据数量
+    """
+
+    for entity in FakeRecommend().generate(gen_data_count):
+        tid = entity["tid"]
+        uid = entity["uid"]
+        opinion = entity["opinion"]
+
+        recommend_info.info("=" * 80)
+        recommend_info.info("(%s)正在评帖(%s)" % (uid, tid))
+
+        # 查询是否顶过帖
+        recommend_entities = forum_session.query(ForumMemberRecommend).filter(
+            ForumMemberRecommend.__tid == tid,
+            ForumMemberRecommend.__recommenduid == uid).all()
+
+        if recommend_entities:
+            recommend_info.info("返回:之前已评过该帖！")
+            continue
+
+        try:
+            forum_member_recommend = ForumMemberRecommend(__tid=tid, __recommenduid=uid, __dateline=int(time.time()))
+            forum_thread = forum_session.query(ForumThread).filter(ForumThread.__tid == tid).first()
+            forum_thread.__views += 1  # 查看次数
+            forum_thread.__recommends += 1  # 推荐指数
+            if opinion < 85:
+                forum_thread.__recommend_add += 1  # 支持人数
+            else:
+                forum_thread.__recommend_sub += 1  # 反对人数
+
+            forum_session.add(forum_member_recommend)
+            forum_session.add(forum_thread)
+            forum_session.commit()
+        except Exception, ex:
+            recommend_info.exception(ex)
+            recommend_info.info("评帖失败: Error.")
+            forum_session.rollback()
+        else:
+            recommend_info.info("评帖成功: OK.")
+        finally:
+            forum_session.close()
+
+
 def fake_post(gen_data_count=1):
     """虚拟对主题回帖.
 
@@ -95,7 +141,7 @@ def fake_post(gen_data_count=1):
 action_data_config = (
     # 任务, 数据量, 时间间隔
     (fake_member, 1, 5.0),
-    (None, None, 5.0),
+    (fake_recommend, 1, 5.0),
 )
 
 
@@ -118,6 +164,7 @@ def minor():
     while True:
         print(datetime.datetime.now())
         fake_member(1)
+        fake_recommend(1)
         time.sleep(60)
 
 
@@ -134,7 +181,21 @@ def fake_member_only():
     reactor.run()
 
 
+def fake_recommend_only():
+    """仅仅顶贴部分.
+    """
+
+    interval = (20, 30, 50, 70, 100)
+    limit = (2, 3, 5, 7)
+
+    # 纳入间隔时间后再次执行
+    create_data = task.LoopingCall(fake_recommend, random.choice(limit))
+    create_data.start(random.choice(interval))
+    reactor.run()
+
+
 if __name__ == '__main__':
     # main()
     # minor()
-    fake_member_only()
+    # fake_member_only()
+    fake_recommend_only()

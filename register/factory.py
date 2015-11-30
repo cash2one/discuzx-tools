@@ -8,8 +8,11 @@ from __future__ import unicode_literals, print_function
 
 from faker import Factory
 from testdata import DictFactory, RandomInteger, RandomLengthStringFactory, FakeDataFactory
+from testdata.extra.mongodb import FieldFromCollection
+
 from common.common import ChinaProvider
 from control import SWITCH_ZH_CN
+from conf.data_config import cache_option
 
 if SWITCH_ZH_CN:
     china_factory = Factory.create('zh_CN')
@@ -28,8 +31,14 @@ else:
 class FakeMember(DictFactory):
     username = RandomLengthStringFactory(4, 10)
     password = RandomLengthStringFactory(6, 20)
-    assist_number = RandomInteger(10**2, 10**15)
+    assist_number = RandomInteger(10 ** 2, 10 ** 15)
     email = cn_email
+
+
+class FakeRecommend(DictFactory):
+    tid = FieldFromCollection(collection='forum_thread', field_name='tid', **cache_option)
+    uid = FieldFromCollection(collection='common_member', field_name='uid', **cache_option)
+    opinion = RandomInteger(0, 100)
 
 
 class FakePost(DictFactory):
