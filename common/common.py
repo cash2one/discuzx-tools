@@ -184,21 +184,6 @@ class ChinaProvider(BaseProvider):
         return self.random_element(self.cn_message_data)
 
 
-def mongodb_init(host, port, database):
-    """mongodb 初始化对象.
-
-        :param host: 主机
-        :param port: 端口
-        :param database: 数据库
-    """
-
-    client = pymongo.MongoClient(host, port)
-    database = client[database]
-
-    print(database.name)
-    return database
-
-
 def test():
     """测试新建Provider.
     """

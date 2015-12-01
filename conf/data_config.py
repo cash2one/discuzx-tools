@@ -8,6 +8,7 @@ from __future__ import unicode_literals, print_function
 
 import functools
 
+import pymongo
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
@@ -56,7 +57,9 @@ Base = declarative_base()
 # 是否启用Cache, False: 不启用; True: 启用
 CACHE_DB_ON = True
 
-cache_host = "localhost"
+cache_host = "127.0.0.1"
+# cache_host = "localhost"
+
 cache_port = 27017
 cache_database = "dz_gen_data"
 
@@ -65,6 +68,24 @@ cache_option = {
     'port': cache_port,
     'database': cache_database
 }
+
+
+def mongodb_init(host, port, database):
+    """mongodb 初始化对象.
+
+        :param host: 主机
+        :param port: 端口
+        :param database: 数据库
+    """
+
+    client = pymongo.MongoClient(host, port)
+    database = client[database]
+
+    print(database.name)
+    return database
+
+
+# ===================以下为Redis选项===================
 
 # redis配置项
 REDIS_CONFIG = dict(

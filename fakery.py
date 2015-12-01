@@ -12,14 +12,29 @@ import random
 import string
 
 from twisted.internet import task
+
 from twisted.internet import reactor
 
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import user_info, recommend_info
-from common.func import Utils
+from common.func import Utils, CacheService
 from register.factory import FakeMember, FakeRecommend, FakePost
 from models.record import Member
 from models.remote import CommonMember, CenterMember, ForumThread, ForumMemberRecommend
+
+
+def cache_thread_member():
+    """从数据库载入数据(thread,member).
+    """
+
+    CacheService.cache_data_delete_model("forum_thread")
+    CacheService.cache_data_delete_model("common_member")
+
+    forum_thread_entities = None
+    common_member_entities = None
+
+    CacheService.cache_data_import_model(forum_thread_entities, "forum_thread")
+    CacheService.cache_data_import_model(common_member_entities, "common_member")
 
 
 def fake_member(gen_data_count=1):
@@ -149,6 +164,8 @@ def main():
     """事件模拟任务调度.
     """
 
+    cache_thread_member()
+
     for data_item in action_data_config:
         if type(data_item[0]) == 'function':
             create_data = task.LoopingCall(data_item[0], data_item[1])
@@ -160,6 +177,8 @@ def main():
 def minor():
     """仅对已扫描的数据数据执行上传操作.
     """
+
+    cache_thread_member()
 
     while True:
         print(datetime.datetime.now())
@@ -184,6 +203,8 @@ def fake_member_only():
 def fake_recommend_only():
     """仅仅顶贴部分.
     """
+
+    cache_thread_member()
 
     interval = (20, 30, 50, 70, 100)
     limit = (2, 3, 5, 7)
