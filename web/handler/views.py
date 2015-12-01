@@ -4,6 +4,7 @@
 from tornado import gen
 from tornado.log import app_log
 from tornado.web import RequestHandler, asynchronous
+
 from upload.common import get_public_dl_url, get_shift_rs_url
 
 

@@ -7,6 +7,7 @@ import os
 
 from qiniu import Auth, BucketManager, put_data, put_file, put_stream
 from qiniu.compat import is_py2, is_py3
+
 from conf.store_config import *
 
 q = Auth(ACCESS_KEY, SECRET_KEY)

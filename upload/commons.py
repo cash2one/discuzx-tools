@@ -5,12 +5,12 @@ from __future__ import unicode_literals, print_function
 
 import sys
 import time
-import qiniu.conf
 
-from qiniu.io import put, put_file
 from qiniu.auth import digest
-from qiniu.rs import PutPolicy, GetPolicy, Client
 
+import qiniu.conf
+from qiniu.io import put, put_file
+from qiniu.rs import PutPolicy, GetPolicy, Client
 from conf.store_config import ACCESS_KEY, SECRET_KEY, \
     BUCKET_DOMAIN, BUCKET_NAME, PUBLIC_BUCKET_DOMAIN, PUBLIC_BUCKET_NAME, UNIX_TIME_TTL
 
