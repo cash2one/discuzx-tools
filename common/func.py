@@ -6,24 +6,25 @@
 
 from __future__ import unicode_literals, print_function
 
-import os
 import hashlib
+import os
 import shutil
 
 import redis
 
-from xpinyin import Pinyin
 from conf.data_config import cache_option, mongodb_init, REDIS_CONFIG
 from conf.logger_config import redis_data_log
+from xpinyin import Pinyin
 
 pinyin = Pinyin()
-cache_db = mongodb_init(**cache_option)
 redis_pool = redis.ConnectionPool(host=REDIS_CONFIG.get("redis_host"), port=REDIS_CONFIG.get("redis_port"))
 
 
 class CacheService(object):
-    @staticmethod
-    def cache_data_import_model(data_entities, cache_table):
+    cache_db = mongodb_init(**cache_option)
+
+    @classmethod
+    def cache_data_import_model(cls, data_entities, cache_table):
         """从MySQL数据塞入Cached.
 
             :parameter data_entities: 实体数据集
@@ -32,17 +33,17 @@ class CacheService(object):
 
         for _entity in data_entities:
             json_entity = _entity.json()
-            cache_db[cache_table].insert(json_entity)
+            cls.cache_db[cache_table].insert(json_entity)
             # cache_db[cache_table].save(json_entity)
 
-    @staticmethod
-    def cache_data_delete_model(cache_table):
+    @classmethod
+    def cache_data_delete_model(cls, cache_table):
         """删除塞入Cached的MySQL数据.
 
             :parameter cache_table: 表名
         """
 
-        cache_db[cache_table].drop()
+        cls.cache_db[cache_table].drop()
         # cache_db.drop_collection(cache_table)
 
 

@@ -81,7 +81,6 @@ def mongodb_init(host, port, database):
     client = pymongo.MongoClient(host, port)
     database = client[database]
 
-    print(database.name)
     return database
 
 
