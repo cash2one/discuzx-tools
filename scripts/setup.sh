@@ -15,7 +15,7 @@ sudo apt-get install -y mongodb-org
 
 # redis数据缓存
 if [ ! -d "/opt/program" ]; then
-  mkdir /opt/program
+  mkdir -p /opt/program
 fi
 
 cd /opt/program
