@@ -34,7 +34,6 @@ class CacheService(object):
         for _entity in data_entities:
             json_entity = _entity.__to_dict__()
             # cls.cache_db[cache_table].insert(json_entity)
-            print(json_entity)
             cls.cache_db[cache_table].insert_one(json_entity)
 
     @classmethod
