@@ -12,6 +12,7 @@ Base = declarative_base()
 class ForumMemberRecommend(Base):
     __tablename__ = "bbs_forum_memberrecommend"
 
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
     tid = Column(INTEGER)
     recommenduid = Column(INTEGER)
     dateline = Column(INTEGER)

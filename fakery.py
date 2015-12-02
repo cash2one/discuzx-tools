@@ -20,7 +20,7 @@ from conf.logger_config import user_info, recommend_info
 from common.func import Utils, CacheService
 from register.factory import FakeMember, FakeRecommend, FakePost
 from models.record import Member
-from models.models import ForumMemberRecommend
+from models.alchemy import ForumMemberRecommend
 from models.remote import CommonMember, CenterMember, ForumThread
 
 
