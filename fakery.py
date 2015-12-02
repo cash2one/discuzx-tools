@@ -185,8 +185,8 @@ def minor():
 
     while True:
         print(datetime.datetime.now())
-        # fake_member(1)
-        fake_recommend(1)
+        fake_member(1)
+        # fake_recommend(1)
         # time.sleep(60)
 
 
@@ -194,8 +194,8 @@ def fake_member_only():
     """仅仅注册部分.
     """
 
-    interval = (20, 30, 50, 70, 100)
-    limit = (2, 3, 5, 7)
+    interval = (30, 50, 70, 100, 150)
+    limit = (1, 2, 3, 4)
 
     # 纳入间隔时间后再次执行
     create_data = task.LoopingCall(fake_member, random.choice(limit))
@@ -209,8 +209,8 @@ def fake_recommend_only():
 
     cache_thread_member()
 
-    interval = (20, 30, 50, 70, 100)
-    limit = (2, 3, 5, 7)
+    interval = (30, 50, 70, 80, 110)
+    limit = (2, 3, 4, 5)
 
     # 纳入间隔时间后再次执行
     create_data = task.LoopingCall(fake_recommend, random.choice(limit))
@@ -220,6 +220,6 @@ def fake_recommend_only():
 
 if __name__ == '__main__':
     # main()
-    minor()
-    # fake_member_only()
-    # fake_recommend_only()
+    # minor()
+    fake_member_only()
+    fake_recommend_only()
