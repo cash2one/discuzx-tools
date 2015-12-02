@@ -32,9 +32,10 @@ class CacheService(object):
         """
 
         for _entity in data_entities:
-            json_entity = _entity.json()
-            cls.cache_db[cache_table].insert(json_entity)
-            # cache_db[cache_table].save(json_entity)
+            json_entity = _entity.__to_dict__()
+            # cls.cache_db[cache_table].insert(json_entity)
+            print(json_entity)
+            cls.cache_db[cache_table].insert_one(json_entity)
 
     @classmethod
     def cache_data_delete_model(cls, cache_table):
@@ -43,8 +44,8 @@ class CacheService(object):
             :parameter cache_table: 表名
         """
 
-        cls.cache_db[cache_table].drop()
-        # cache_db.drop_collection(cache_table)
+        # cls.cache_db[cache_table].drop()
+        cls.cache_db.drop_collection(cache_table)
 
 
 class RedisService(object):

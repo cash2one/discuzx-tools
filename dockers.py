@@ -139,7 +139,7 @@ def search_match_files(directory):
             md5sum = Utils.md5sum(sub_path)
             fid = redis_md5sum.get(md5sum)
             if fid:
-                Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).save(robot_session)
+                Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).__save(robot_session)
                 record_info.info("skipping: %s ==> %s" % (author, sub_path))
                 continue
 

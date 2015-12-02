@@ -36,8 +36,8 @@ class FakeMember(DictFactory):
 
 
 class FakeRecommend(DictFactory):
-    tid = FieldFromCollection(collection='forum_thread', field_name='tid', **cache_option)
-    uid = FieldFromCollection(collection='common_member', field_name='uid', **cache_option)
+    tid = FieldFromCollection(collection='forum_thread', field_name='thread_id', **cache_option)
+    uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)
     opinion = RandomInteger(0, 100)
 
 

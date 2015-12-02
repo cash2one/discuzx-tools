@@ -19,7 +19,7 @@ from conf.data_config import robot_session, forum_session
 from conf.logger_config import user_info, recommend_info
 from common.func import Utils, CacheService
 from register.factory import FakeMember, FakeRecommend, FakePost
-from models.record import Member
+from models.record import Member, Thread
 from models.alchemy import ForumMemberRecommend
 from models.remote import CommonMember, CenterMember, ForumThread
 
@@ -31,8 +31,8 @@ def cache_thread_member():
     CacheService.cache_data_delete_model("forum_thread")
     CacheService.cache_data_delete_model("common_member")
 
-    forum_thread_entities = None
-    common_member_entities = None
+    forum_thread_entities = robot_session.query(Thread).all()
+    common_member_entities = robot_session.query(Member).all()
 
     CacheService.cache_data_import_model(forum_thread_entities, "forum_thread")
     CacheService.cache_data_import_model(common_member_entities, "common_member")

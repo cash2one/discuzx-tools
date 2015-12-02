@@ -79,6 +79,7 @@ def mongodb_init(host, port, database):
     """
 
     client = pymongo.MongoClient(host, port)
+    # client = motor.MotorClient(host, port, max_pool_size=5)
     database = client[database]
 
     return database

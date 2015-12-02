@@ -4,6 +4,7 @@
 from __future__ import unicode_literals, print_function
 
 from autoloads import Entity, EntityHelper
+
 from conf.data_config import Base
 from conf.logger_config import model_record_log
 
@@ -24,11 +25,11 @@ class BasicBase(Base):
         """
         ret = {}
         for name in dir(self):
-            if not name.startswith('_'):
+            if not name.startswith('_') and name.lower() != "metadata":
                 ret[name] = getattr(self, name)
         return ret
 
-    def save(self, db_session, refresh=True):
+    def __save(self, db_session, refresh=True):
         """自保存, 暂不可用.
 
             :parameter db_session
@@ -48,7 +49,7 @@ class BasicBase(Base):
             db_session.close()
 
     @staticmethod
-    def batch_save(db_session, entities_list):
+    def __batch_save(db_session, entities_list):
         """批量保存, 暂不可用.
 
             :parameter db_session
