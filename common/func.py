@@ -46,6 +46,18 @@ class CacheService(object):
         # cls.cache_db[cache_table].drop()
         cls.cache_db.drop_collection(cache_table)
 
+    @classmethod
+    def cache_data_insert_model(cls, cache_table, entity):
+        """删除塞入Cached的MySQL数据.
+
+            :parameter cache_table: 表名
+            :parameter entity: 实体数据
+        """
+
+        json_entity = entity.__to_dict__()
+        # cls.cache_db[cache_table].insert(json_entity)
+        cls.cache_db[cache_table].insert_one(json_entity)
+
 
 class RedisService(object):
     def __init__(self, db=0, password=None):

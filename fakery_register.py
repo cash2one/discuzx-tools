@@ -12,11 +12,12 @@ import random
 import string
 
 from twisted.internet import task
+
 from twisted.internet import reactor
 
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import user_info
-from common.func import Utils
+from common.func import Utils, CacheService
 from register.factory import FakeMember, FakePost
 from models.record import Member
 from models.remote import CommonMember, CenterMember
@@ -77,6 +78,7 @@ def fake_member(gen_data_count=1):
             robot_session.rollback()
         else:
             user_info.info("注册账户成功: OK.")
+            CacheService.cache_data_insert_model("common_member", member)
         finally:
             forum_session.close()
             robot_session.close()
