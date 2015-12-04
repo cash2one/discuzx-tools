@@ -84,16 +84,6 @@ def fake_member(gen_data_count=1):
             robot_session.close()
 
 
-def fake_post(gen_data_count=1):
-    """虚拟对主题回帖.
-
-        :parameter gen_data_count: 生成数据数量
-    """
-
-    for post in FakePost().generate(gen_data_count):
-        print(post)
-
-
 action_data_config = (
     # 任务, 数据量, 时间间隔
     (fake_member, 1, 5.0),
@@ -113,7 +103,7 @@ def main():
 
 
 def minor():
-    """仅对已扫描的数据数据执行上传操作.
+    """仅仅注册部分.
     """
 
     while True:

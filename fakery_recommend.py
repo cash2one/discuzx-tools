@@ -36,7 +36,7 @@ def cache_thread_member():
 
 
 def fake_recommend(gen_data_count=1):
-    """虚拟对主题回帖.
+    """虚拟对主题顶帖.
 
         :parameter gen_data_count: 生成数据数量
     """
@@ -84,16 +84,6 @@ def fake_recommend(gen_data_count=1):
             forum_session.close()
 
 
-def fake_post(gen_data_count=1):
-    """虚拟对主题回帖.
-
-        :parameter gen_data_count: 生成数据数量
-    """
-
-    for post in FakePost().generate(gen_data_count):
-        print(post)
-
-
 action_data_config = (
     # 任务, 数据量, 时间间隔
     (fake_recommend, 1, 5.0),
@@ -115,7 +105,7 @@ def main():
 
 
 def minor():
-    """仅对已扫描的数据数据执行上传操作.
+    """仅仅顶贴部分.
     """
 
     cache_thread_member()
