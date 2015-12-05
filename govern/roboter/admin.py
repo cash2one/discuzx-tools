@@ -4,7 +4,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 
-from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost
+from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost, BbsPostContent
 
 
 class CustomModelAdmin(admin.ModelAdmin):
@@ -50,14 +50,23 @@ class PostAdmin(CustomModelAdmin):
     search_fields = ('uid', 'tid', 'fid')
 
 
+class BbsPostContentAdmin(CustomModelAdmin):
+    list_display = ('id', 'content', 'status', 'user', 'update_datetime', 'create_datetime')
+    ordering = ('-update_datetime', '-create_datetime')
+    date_hierarchy = 'create_datetime'
+    search_fields = ('user', 'status', 'update_datetime')
+
+
 # admin.site.register(BbsAttachment)
 # admin.site.register(BbsMember)
 # admin.site.register(BbsSurplus)
 # admin.site.register(BbsThread)
 # admin.site.register(BbsPost)
+# admin.site.register(BbsPostContent)
 
 admin.site.register(BbsMember, MemberAdmin)
 admin.site.register(BbsAttachment, AttachmentAdmin)
 admin.site.register(BbsSurplus, SurplusAdmin)
 admin.site.register(BbsThread, ThreadAdmin)
 admin.site.register(BbsPost, PostAdmin)
+admin.site.register(BbsPostContent, BbsPostContentAdmin)

@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
 
 
 class BbsAttachment(models.Model):
@@ -89,4 +90,19 @@ class BbsPost(models.Model):
         db_table = 'bbs_post'
         verbose_name = _('bbs post')
         verbose_name_plural = _('bbs post list')
+        permissions = (("read_only", "Can read only"),)
+
+
+class BbsPostContent(models.Model):
+    id = models.AutoField(_('id'), primary_key=True)
+    content = models.CharField(_('content'), max_length=800, blank=False, null=False)
+    status = models.IntegerField(_('status'))
+    user = models.ForeignKey(User)
+    update_datetime = models.DateTimeField(_('update datetime'), auto_now=True)
+    create_datetime = models.DateTimeField(_('create datetime'), auto_now_add=True)
+
+    class Meta:
+        db_table = 'bbs_post_content'
+        verbose_name = _('bbs post content')
+        verbose_name_plural = _('bbs post content list')
         permissions = (("read_only", "Can read only"),)

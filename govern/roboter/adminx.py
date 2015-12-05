@@ -76,6 +76,12 @@ class PostXAdmin(object):
     style_fields = {'hosts': 'checkbox-inline'}
 
 
+class BbsPostContentXAdmin(object):
+    list_display = ('id', 'content', 'status', 'user', 'update_datetime', 'create_datetime')
+    search_fields = ['user', 'status', 'update_datetime']
+    style_fields = {'hosts': 'checkbox-inline'}
+
+
 class SurplusXAdmin(object):
     list_display = ('id', 'fid', 'path', 'md5sum', 'plate', 'author', 'create_datetime')
     list_display_links = ('fid',)
@@ -89,4 +95,5 @@ xadmin.site.register(BbsMember, MemberXAdmin)
 xadmin.site.register(BbsAttachment, AttachmentXAdmin)
 xadmin.site.register(BbsSurplus, SurplusXAdmin)
 xadmin.site.register(BbsThread, ThreadXAdmin)
+xadmin.site.register(BbsPost, PostXAdmin)
 xadmin.site.register(BbsPost, PostXAdmin)
