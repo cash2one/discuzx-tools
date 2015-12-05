@@ -90,7 +90,7 @@ def map_handler(_attachment):
             except Exception, ex:
                 robot_session.rollback()
                 upload_info.exception(ex)
-                upload_error.log(upload_only_log % (_attachment.upload_datetime, _attachment.id))
+                upload_error.info(upload_only_log % (_attachment.upload_datetime, _attachment.id))
             else:
                 # 移走成功的文件.
                 file_name_list = [attachment.file_name]

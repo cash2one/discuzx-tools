@@ -20,7 +20,11 @@ upload_info = build_file_logs("upload_info", level)
 upload_error = build_file_logs("upload_error", level)
 
 post_info = build_file_logs("post_info", level)
-user_info = build_file_logs("user_info", level)
-recommend_info = build_file_logs("recommend_info", level)
+
+faker_post_info = build_file_logs("faker_post_info", level)
+faker_post_error = build_file_logs("faker_post_error", level)
+
+faker_user_info = build_file_logs("faker_user_info", level)
+faker_recommend_info = build_file_logs("faker_recommend_info", level)
 
 gateway_debug_log = build_file_logs("gateway_debug", level)

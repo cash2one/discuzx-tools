@@ -16,7 +16,7 @@ from twisted.internet import task
 from twisted.internet import reactor
 
 from conf.data_config import robot_session, forum_session
-from conf.logger_config import user_info
+from conf.logger_config import faker_user_info
 from common.func import Utils, CacheService
 from register.factory import FakeMember, FakePost
 from models.record import Member
@@ -45,8 +45,8 @@ def fake_member(gen_data_count=1):
         # 会员表md5后的伪密码.
         fake_password = Utils.md5(str(random.randint(10 * 9, 10 ** 10 - 1)))
 
-        user_info.info("=" * 80)
-        user_info.info("正在注册账户:%s" % username)
+        faker_user_info.info("=" * 80)
+        faker_user_info.info("正在注册账户:%s" % username)
 
         try:
             common_member = CommonMember(__groupid=10,
@@ -72,12 +72,12 @@ def fake_member(gen_data_count=1):
             robot_session.add(member)
             robot_session.commit()
         except Exception, ex:
-            user_info.exception(ex)
-            user_info.info("注册账户失败: Error.")
+            faker_user_info.exception(ex)
+            faker_user_info.info("注册账户失败: Error.")
             forum_session.rollback()
             robot_session.rollback()
         else:
-            user_info.info("注册账户成功: OK.")
+            faker_user_info.info("注册账户成功: OK.")
             CacheService.cache_data_insert_model("common_member", member)
         finally:
             forum_session.close()

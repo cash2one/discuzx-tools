@@ -14,7 +14,7 @@ from twisted.internet import task
 from twisted.internet import reactor
 
 from conf.data_config import robot_session, forum_session
-from conf.logger_config import recommend_info
+from conf.logger_config import faker_recommend_info
 from common.func import CacheService
 from register.factory import FakeRecommend, FakePost
 from models.record import Member, Thread
@@ -49,8 +49,8 @@ def fake_recommend(gen_data_count=1):
 
         print(tid, uid, opinion)
 
-        recommend_info.info("=" * 80)
-        recommend_info.info("(%s)正在评帖(%s)" % (uid, tid))
+        faker_recommend_info.info("=" * 80)
+        faker_recommend_info.info("(%s)正在评帖(%s)" % (uid, tid))
 
         # 查询是否顶过帖
         recommend_entities = forum_session.query(ForumMemberRecommend).filter(
@@ -58,7 +58,7 @@ def fake_recommend(gen_data_count=1):
             ForumMemberRecommend.__recommenduid == uid).all()
 
         if recommend_entities:
-            recommend_info.info("返回:之前已评过该帖！")
+            faker_recommend_info.info("返回:之前已评过该帖！")
             continue
 
         try:
@@ -75,11 +75,11 @@ def fake_recommend(gen_data_count=1):
             forum_session.add(forum_thread)
             forum_session.commit()
         except Exception, ex:
-            recommend_info.exception(ex)
-            recommend_info.info("评帖失败: Error.")
+            faker_recommend_info.exception(ex)
+            faker_recommend_info.info("评帖失败: Error.")
             forum_session.rollback()
         else:
-            recommend_info.info("评帖成功: OK.")
+            faker_recommend_info.info("评帖成功: OK.")
         finally:
             forum_session.close()
 
