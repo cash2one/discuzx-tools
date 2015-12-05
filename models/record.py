@@ -8,7 +8,9 @@ from __future__ import unicode_literals, print_function
 
 import os
 import datetime
+
 from sqlalchemy import Column, INTEGER, VARCHAR, TIMESTAMP
+
 from models.base import BasicBase
 
 
@@ -171,6 +173,7 @@ class Post(BasicBase):
       `uid` INT NOT NULL DEFAULT 0 COMMENT 'Dz用户Id',
       `tid` VARCHAR(45) NOT NULL DEFAULT 0 COMMENT 'Dz主题Id',
       `pid` INT NOT NULL DEFAULT 0 COMMENT 'Dz帖子Id',
+      `fid` INT DEFAULT 0 COMMENT '版块ID',
       `create_datetime` timestamp NOT NULL COMMENT '自动回帖时间',
       PRIMARY KEY (`id`) COMMENT '自动回帖');
     """
@@ -181,13 +184,15 @@ class Post(BasicBase):
     uid = Column(INTEGER)
     tid = Column(INTEGER)
     pid = Column(INTEGER)
+    fid = Column(INTEGER)
     create_datetime = Column(TIMESTAMP)
 
-    def __init__(self, uid, tid, pid):
+    def __init__(self, uid, tid, pid, fid):
         """存放回帖信息.
         """
 
         self.uid = uid
         self.tid = tid
         self.pid = pid
+        self.fid = fid
         self.create_datetime = datetime.datetime.now()

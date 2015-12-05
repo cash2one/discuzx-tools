@@ -171,7 +171,11 @@ LANGUAGE_CODE = 'zh-hans'
 TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False
+
+# USE_TZ = True 报以下错误:
+# Database returned an invalid value in QuerySet.datetimes().
+# Are time zone definitions for your database and pytz installed?
 
 # django-debug-toolbar
 DEBUG_TOOLBAR_PANELS = [
