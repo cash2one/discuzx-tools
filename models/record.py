@@ -159,3 +159,32 @@ class Thread(BasicBase):
         self.attachment_id = attachment_id
         self.robot_data_id = robot_data_id
         self.create_datetime = datetime.datetime.now()
+
+
+class Post(BasicBase):
+    """
+    CREATE TABLE `bbs_post` (
+      `id` INT NOT NULL AUTO_INCREMENT COMMENT '自动编号',
+      `uid` INT NOT NULL DEFAULT 0 COMMENT 'Dz用户Id',
+      `tid` VARCHAR(45) NOT NULL DEFAULT 0 COMMENT 'Dz主题Id',
+      `pid` INT NOT NULL DEFAULT 0 COMMENT 'Dz帖子Id',
+      `create_datetime` timestamp NOT NULL COMMENT '自动回帖时间',
+      PRIMARY KEY (`id`) COMMENT '自动回帖');
+    """
+
+    __tablename__ = "bbs_post"
+
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
+    uid = Column(INTEGER)
+    tid = Column(INTEGER)
+    pid = Column(INTEGER)
+    create_datetime = Column(TIMESTAMP)
+
+    def __init__(self, uid, tid, pid):
+        """存放回帖信息.
+        """
+
+        self.uid = uid
+        self.tid = tid
+        self.pid = pid
+        self.create_datetime = datetime.datetime.now()

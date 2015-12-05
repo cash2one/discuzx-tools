@@ -120,41 +120,30 @@ def spread_attachment(tid, pid, author, file_name, attachment):
         return forum_attachment.__aid
 
 
-def spread_post(subject, message, author, fid, tid, first=0, attachment_type=0):
-    """发帖子.
+def spread_post(uid, tid, fid, username, message):
+    """只适用于回帖子.
 
-        :parameter subject  标题
-        :parameter message  内容
-        :parameter author   会员名
+        :parameter uid      会员Id
         :parameter fid      论坛Id
         :parameter tid      主题Id
-        :parameter first
-        :parameter attachment_type
+        :parameter username 会员名称
+        :parameter message  内容
     """
 
     pid = 0
 
     try:
-        # 处理 Data too long for column 'subject'错误
-        subject_count = len(subject)
-        if subject_count > 80:
-            subject = subject[:80]
-
         max_pid = spread_repair_post()
 
         forum_post = ForumPost(
             __pid=max_pid + 1,
             __tid=tid,
             __fid=fid,
-            __subject=subject,
             __message=message,
-            __author=author[1],
-            __authorid=author[0],
-            __first=first,  # 是否是首贴
+            __author=username,
+            __authorid=uid,
             __usesig=1,
-            __attachment=attachment_type,
-            __dateline=int(time.time()),
-        )
+            __dateline=int(time.time()))
 
         ForumPost.add(forum_post)
     except Exception, ex:
@@ -228,7 +217,6 @@ def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment
             __usesig=1,
             __attachment=type_attachment,
             __dateline=int(time.time()),
-
         )
 
         forum_session.add(forum_post)

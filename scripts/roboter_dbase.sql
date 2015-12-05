@@ -46,4 +46,13 @@ CREATE TABLE `roboter`.`bbs_thread` (
   PRIMARY KEY (`id`)  COMMENT '自动发文件帖子');
 
 
+CREATE TABLE `roboter`.`bbs_post` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '自动编号',
+  `uid` INT NOT NULL DEFAULT 0 COMMENT 'Dz用户Id',
+  `tid` VARCHAR(45) NOT NULL DEFAULT 0 COMMENT 'Dz主题Id',
+  `pid` INT NOT NULL DEFAULT 0 COMMENT 'Dz帖子Id',
+  `create_datetime` timestamp NOT NULL COMMENT '自动回帖时间',
+  PRIMARY KEY (`id`) COMMENT '自动回帖');
+
+
 ALTER TABLE `roboter`.`bbs_attachment` ADD INDEX( `status`);
