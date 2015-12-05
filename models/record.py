@@ -135,7 +135,7 @@ class Thread(BasicBase):
       `id` INT NOT NULL AUTO_INCREMENT COMMENT '自动编号',
       `thread_id` INT NOT NULL COMMENT '主题ID',
       `post_id` INT NOT NULL COMMENT '帖子ID',
-      `plate_id` INT NOT NULL COMMENT '版块ID',
+      `plate_id` INT DEFAULT 0 COMMENT '版块ID',
       `attachment_id` INT DEFAULT 0 COMMENT '附件ID',
       `robot_data_id` INT DEFAULT 0 COMMENT '入库文件ID',
       `create_datetime` timestamp NOT NULL COMMENT '添入时间',
