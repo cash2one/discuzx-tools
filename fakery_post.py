@@ -46,8 +46,8 @@ def fake_post(gen_data_count=1):
 
         if pid:
             try:
-                member = Post(uid, tid, pid)
-                robot_session.add(member)
+                post = Post(uid, tid, pid)
+                robot_session.add(post)
                 robot_session.commit()
             except Exception, ex:
                 robot_session.rollback()

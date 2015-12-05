@@ -42,6 +42,9 @@ class FakeRecommend(DictFactory):
 
 
 class FakePost(DictFactory):
-    bio = cn_bio
-    tag = cn_tag
+    uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)
+    tid = FieldFromCollection(collection='forum_thread', field_name='thread_id', **cache_option)
+    fid = FieldFromCollection(collection='forum_thread', field_name='plate_id', **cache_option)
+    username = FieldFromCollection(collection='common_member', field_name='username', **cache_option)
+    # message = FieldFromCollection(collection='', field_name='', **cache_option)
     message = cn_message

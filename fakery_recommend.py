@@ -16,7 +16,7 @@ from twisted.internet import reactor
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_recommend_info
 from common.func import CacheService
-from register.factory import FakeRecommend, FakePost
+from register.factory import FakeRecommend
 from models.record import Member, Thread
 from models.remote import ForumThread, ForumMemberRecommend
 

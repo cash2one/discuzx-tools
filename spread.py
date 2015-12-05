@@ -55,7 +55,7 @@ def spread_match_files(limit=5):
                 try:
                     # 更新发帖成功的数据状态, 保存记录
                     attachment.status = 2
-                    robot_record = Thread(tid, pid, aid, attachment.id)
+                    robot_record = Thread(tid, pid, fid, aid, attachment.id)
 
                     robot_session.add(attachment)
                     robot_session.add(robot_record)
