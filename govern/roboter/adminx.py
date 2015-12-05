@@ -5,7 +5,7 @@ import xadmin
 from xadmin import views
 from xadmin.plugins.batch import BatchChangeAction
 
-from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread
+from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost
 
 
 class MainDashboard(object):
@@ -70,6 +70,12 @@ class ThreadXAdmin(object):
     style_fields = {'hosts': 'checkbox-inline'}
 
 
+class PostXAdmin(object):
+    list_display = ('id', 'uid', 'tid', 'pid', 'fid', 'create_datetime')
+    search_fields = ['uid', 'tid', 'fid']
+    style_fields = {'hosts': 'checkbox-inline'}
+
+
 class SurplusXAdmin(object):
     list_display = ('id', 'fid', 'path', 'md5sum', 'plate', 'author', 'create_datetime')
     list_display_links = ('fid',)
@@ -83,3 +89,4 @@ xadmin.site.register(BbsMember, MemberXAdmin)
 xadmin.site.register(BbsAttachment, AttachmentXAdmin)
 xadmin.site.register(BbsSurplus, SurplusXAdmin)
 xadmin.site.register(BbsThread, ThreadXAdmin)
+xadmin.site.register(BbsPost, PostXAdmin)

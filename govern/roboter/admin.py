@@ -3,7 +3,8 @@
 
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
-from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread
+
+from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost
 
 
 class CustomModelAdmin(admin.ModelAdmin):
@@ -42,12 +43,21 @@ class ThreadAdmin(CustomModelAdmin):
     search_fields = ('thread_id', 'post_id', 'robot_data_id')
 
 
+class PostAdmin(CustomModelAdmin):
+    list_display = ('id', 'uid', 'tid', 'pid', 'fid', 'create_datetime')
+    ordering = ('-create_datetime',)
+    date_hierarchy = 'create_datetime'
+    search_fields = ('uid', 'tid', 'fid')
+
+
 # admin.site.register(BbsAttachment)
 # admin.site.register(BbsMember)
 # admin.site.register(BbsSurplus)
 # admin.site.register(BbsThread)
+# admin.site.register(BbsPost)
 
 admin.site.register(BbsMember, MemberAdmin)
 admin.site.register(BbsAttachment, AttachmentAdmin)
 admin.site.register(BbsSurplus, SurplusAdmin)
 admin.site.register(BbsThread, ThreadAdmin)
+admin.site.register(BbsPost, PostAdmin)

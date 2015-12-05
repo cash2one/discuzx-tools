@@ -62,8 +62,8 @@ class BbsSurplus(models.Model):
 
 class BbsThread(models.Model):
     id = models.IntegerField(_('id'), primary_key=True)
-    thread_id = models.IntegerField(_('thread id'), )
-    post_id = models.IntegerField(_('post id'), )
+    thread_id = models.IntegerField(_('thread id'))
+    post_id = models.IntegerField(_('post id'))
     attachment_id = models.IntegerField(_('attachment id'), blank=True, null=True)
     robot_data_id = models.IntegerField(_('robot data id'), blank=True, null=True)
     create_datetime = models.DateTimeField(_('create datetime'))
@@ -73,4 +73,20 @@ class BbsThread(models.Model):
         db_table = 'bbs_thread'
         verbose_name = _('bbs thread')
         verbose_name_plural = _('bbs thread list')
+        permissions = (("read_only", "Can read only"),)
+
+
+class BbsPost(models.Model):
+    id = models.IntegerField(_('id'), primary_key=True)
+    uid = models.IntegerField(_('thread id'))
+    tid = models.IntegerField(_('thread id'))
+    pid = models.IntegerField(_('post id'))
+    fid = models.IntegerField(_('plate id'))
+    create_datetime = models.DateTimeField(_('create datetime'))
+
+    class Meta:
+        managed = False
+        db_table = 'bbs_post'
+        verbose_name = _('bbs post')
+        verbose_name_plural = _('bbs post list')
         permissions = (("read_only", "Can read only"),)
