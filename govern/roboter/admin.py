@@ -3,7 +3,7 @@
 
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
-
+from import_export.admin import ImportExportModelAdmin
 from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost, BbsPostContent
 
 
@@ -50,7 +50,8 @@ class PostAdmin(CustomModelAdmin):
     search_fields = ('uid', 'tid', 'fid')
 
 
-class BbsPostContentAdmin(CustomModelAdmin):
+class BbsPostContentAdmin(CustomModelAdmin, ImportExportModelAdmin):
+    resource_class = BbsPostContent
     list_display = ('id', 'content', 'status', 'user', 'update_datetime', 'create_datetime')
     ordering = ('-update_datetime', '-create_datetime')
     date_hierarchy = 'create_datetime'

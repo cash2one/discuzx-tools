@@ -100,6 +100,10 @@ INSTALLED_APPS = (
 
     'debug_toolbar',
     'admin_honeypot',
+
+    # widget modules
+    'import_export',
+
     'gunicorn',
     'roboter',
 
