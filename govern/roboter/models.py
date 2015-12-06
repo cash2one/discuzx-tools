@@ -27,6 +27,12 @@ class BbsAttachment(models.Model):
         verbose_name_plural = _('bbs attachment list')
         permissions = (("read_only", "Can read only"),)
 
+    def __str__(self):
+        return '%s' % self.id
+
+    def __unicode__(self):
+        return '%s' % self.id
+
 
 class BbsMember(models.Model):
     id = models.IntegerField(_('id'), primary_key=True)
@@ -65,9 +71,10 @@ class BbsThread(models.Model):
     id = models.IntegerField(_('id'), primary_key=True)
     thread_id = models.IntegerField(_('thread id'))
     post_id = models.IntegerField(_('post id'))
-    attachment_id = models.IntegerField(_('attachment id'), blank=True, null=True)
-    robot_data_id = models.IntegerField(_('robot data id'), blank=True, null=True)
     create_datetime = models.DateTimeField(_('create datetime'))
+    attachment_id = models.IntegerField(_('attachment id'), blank=True, null=True)
+    robot_data_id = models.ForeignKey(BbsAttachment, db_column='robot_data_id', verbose_name=_('robot data id'),
+                                      related_name='+', to_field='id', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -94,10 +101,12 @@ class BbsPost(models.Model):
 
 
 class BbsPostContent(models.Model):
+    choices_status = [(0, '未启用'), (1, '已启用')]
+
     id = models.AutoField(_('id'), primary_key=True)
     content = models.CharField(_('content'), max_length=800, blank=False, null=False)
-    status = models.IntegerField(_('status'))
-    user = models.ForeignKey(User)
+    status = models.IntegerField(_('status'), choices=choices_status, default=1)
+    user = models.ForeignKey(User, verbose_name=_('user'), blank=True, null=True, default=0)
     update_datetime = models.DateTimeField(_('update datetime'), auto_now=True)
     create_datetime = models.DateTimeField(_('create datetime'), auto_now_add=True)
 

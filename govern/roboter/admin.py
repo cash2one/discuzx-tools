@@ -4,6 +4,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from import_export.admin import ImportExportModelAdmin
+
 from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost, BbsPostContent
 
 
@@ -55,7 +56,14 @@ class BbsPostContentAdmin(CustomModelAdmin, ImportExportModelAdmin):
     list_display = ('id', 'content', 'status', 'user', 'update_datetime', 'create_datetime')
     ordering = ('-update_datetime', '-create_datetime')
     date_hierarchy = 'create_datetime'
+    list_display_links = ('id', 'content')
     search_fields = ('user', 'status', 'update_datetime')
+
+    def save_model(self, request, obj, form, change):
+        if obj.user == u'':
+            obj.user = request.user
+        obj.user = request.user
+        obj.save()
 
 
 # admin.site.register(BbsAttachment)
