@@ -22,6 +22,7 @@ redis_pool = redis.ConnectionPool(host=REDIS_CONFIG.get("redis_host"), port=REDI
 
 class CacheService(object):
     cache_db = mongodb_init(**cache_option)
+    cache_table_dict = {}
 
     @classmethod
     def cache_data_import_model(cls, data_entities, cache_table):
@@ -31,10 +32,16 @@ class CacheService(object):
             :parameter cache_table: 表名
         """
 
-        for _entity in data_entities:
-            json_entity = _entity.__to_dict__()
-            # cls.cache_db[cache_table].insert(json_entity)
-            cls.cache_db[cache_table].insert_one(json_entity)
+        if data_entities:
+            try:
+                for _entity in data_entities:
+                    json_entity = _entity.__to_dict__()
+                    # cls.cache_db[cache_table].insert(json_entity)
+                    cls.cache_db[cache_table].insert_one(json_entity)
+            except Exception, ex:
+                print(ex)
+            else:
+                cls.cache_table_dict[cache_table] = True
 
     @classmethod
     def cache_data_delete_model(cls, cache_table):
@@ -43,8 +50,10 @@ class CacheService(object):
             :parameter cache_table: 表名
         """
 
-        # cls.cache_db[cache_table].drop()
-        cls.cache_db.drop_collection(cache_table)
+        if cls.cache_table_dict.get(cache_table, False):
+            # cls.cache_db[cache_table].drop()
+            cls.cache_db.drop_collection(cache_table)
+            cls.cache_table_dict[cache_table] = False
 
     @classmethod
     def cache_data_insert_model(cls, cache_table, entity):
@@ -54,9 +63,10 @@ class CacheService(object):
             :parameter entity: 实体数据
         """
 
-        json_entity = entity.__to_dict__()
-        # cls.cache_db[cache_table].insert(json_entity)
-        cls.cache_db[cache_table].insert_one(json_entity)
+        if cls.cache_table_dict.get(cache_table, False):
+            json_entity = entity.__to_dict__()
+            # cls.cache_db[cache_table].insert(json_entity)
+            cls.cache_db[cache_table].insert_one(json_entity)
 
 
 class RedisService(object):

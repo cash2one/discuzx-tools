@@ -10,29 +10,13 @@ import time
 import datetime
 import random
 
-from twisted.internet import task
-from twisted.internet import reactor
+from twisted.internet import task, reactor
 
-from conf.data_config import robot_session, forum_session
+from conf.data_config import forum_session
 from conf.logger_config import faker_recommend_info
-from common.func import CacheService
 from register.factory import FakeRecommend
-from models.record import Member, Thread
 from models.remote import ForumThread, ForumMemberRecommend
-
-
-def cache_thread_member():
-    """从数据库载入数据(thread,member).
-    """
-
-    CacheService.cache_data_delete_model("forum_thread")
-    CacheService.cache_data_delete_model("common_member")
-
-    forum_thread_entities = robot_session.query(Thread).all()
-    common_member_entities = robot_session.query(Member).all()
-
-    CacheService.cache_data_import_model(forum_thread_entities, "forum_thread")
-    CacheService.cache_data_import_model(common_member_entities, "common_member")
+from models.submeter import cache_thread_member
 
 
 def fake_recommend(gen_data_count=1):

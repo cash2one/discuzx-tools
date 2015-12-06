@@ -9,14 +9,13 @@ from __future__ import unicode_literals, print_function
 import datetime
 import random
 
-from twisted.internet import task
-
-from twisted.internet import reactor
+from twisted.internet import task, reactor
 
 from conf.data_config import robot_session
 from conf.logger_config import faker_post_info, faker_post_error
 from register.factory import FakePost
 from models.record import Post
+from models.submeter import cache_thread_member
 from posting.manager import spread_post
 
 faker_post_only = "INSERT INTO bbs_post(uid,tid,pid,create_datetime) VALUES(%s,%s,%s,'%s');"
@@ -73,6 +72,8 @@ def main():
     """事件模拟任务调度.
     """
 
+    cache_thread_member()
+
     for data_item in action_data_config:
         if type(data_item[0]) == 'function':
             create_data = task.LoopingCall(data_item[0], data_item[1])
@@ -85,6 +86,8 @@ def minor():
     """仅回贴部分.
     """
 
+    cache_thread_member()
+
     while True:
         print(datetime.datetime.now())
         fake_post(1)
@@ -94,6 +97,8 @@ def minor():
 def fake_post_only():
     """仅仅回贴部分.
     """
+
+    cache_thread_member()
 
     interval = (30, 50, 70, 80)
     limit = (1, 2, 3)

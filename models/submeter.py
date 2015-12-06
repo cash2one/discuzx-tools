@@ -5,8 +5,10 @@
 """
 
 from __future__ import unicode_literals, print_function
-from conf.data_config import generate_db_models
+from conf.data_config import generate_db_models, robot_session
 from base import BaseModel
+from common.func import CacheService
+from models.record import Member, Thread
 
 
 class ModelFactory(object):
@@ -30,3 +32,19 @@ class ModelFactory(object):
             print(ex)
         else:
             return ForumAttachment
+
+
+def cache_thread_member():
+    """从数据库载入数据(thread,member).
+    """
+
+    CacheService.cache_data_delete_model("forum_thread")
+    CacheService.cache_data_delete_model("common_member")
+
+    if not CacheService.cache_table_dict.get("forum_thread", False):
+        forum_thread_entities = robot_session.query(Thread).all()
+        CacheService.cache_data_import_model(forum_thread_entities, "forum_thread")
+
+    if not CacheService.cache_table_dict.get("common_member", False):
+        common_member_entities = robot_session.query(Member).all()
+        CacheService.cache_data_import_model(common_member_entities, "common_member")

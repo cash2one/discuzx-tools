@@ -10,8 +10,7 @@ import os
 import time
 import random
 
-from twisted.internet import task
-from twisted.internet import reactor
+from twisted.internet import task, reactor
 
 from conf.data_config import robot_session
 from conf.logger_config import post_info

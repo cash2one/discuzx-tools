@@ -18,7 +18,7 @@ from twisted.internet import reactor
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_user_info
 from common.func import Utils, CacheService
-from register.factory import FakeMember, FakePost
+from register.factory import FakeMember
 from models.record import Member
 from models.remote import CommonMember, CenterMember
 
