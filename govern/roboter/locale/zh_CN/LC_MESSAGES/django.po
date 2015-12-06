@@ -159,3 +159,6 @@ msgstr "自动回帖内容"
 #: models.py:107
 msgid "bbs post content list"
 msgstr "自动回帖内容列表"
+
+msgid "Roboter"
+msgstr "机器人程序"
