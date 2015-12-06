@@ -1,0 +1,161 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-06 11:35+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: models.py:12 models.py:32 models.py:48 models.py:65 models.py:81
+#: models.py:97
+msgid "id"
+msgstr "编号"
+
+#: models.py:13
+msgid "file name"
+msgstr "本地文件名"
+
+#: models.py:14
+msgid "key name"
+msgstr "存储文件名"
+
+#: models.py:15
+msgid "down link"
+msgstr "下载地址"
+
+#: models.py:16 models.py:51
+msgid "md5sum"
+msgstr "文件校验码"
+
+#: models.py:17 models.py:52
+msgid "plate"
+msgstr "版块"
+
+#: models.py:18 models.py:99
+msgid "status"
+msgstr "状态"
+
+#: models.py:19 models.py:53
+msgid "author"
+msgstr "所属人"
+
+#: models.py:20 models.py:37 models.py:54 models.py:70 models.py:86
+#: models.py:102
+msgid "create datetime"
+msgstr "添入时间"
+
+#: models.py:21
+msgid "upload datetime"
+msgstr "上传时间"
+
+#: models.py:26
+msgid "bbs attachment"
+msgstr "自动发附件"
+
+#: models.py:27
+msgid "bbs attachment list"
+msgstr "自动发附件列表"
+
+#: models.py:33
+msgid "username"
+msgstr "用户名"
+
+#: models.py:34
+msgid "password"
+msgstr "密码"
+
+#: models.py:35
+msgid "email"
+msgstr "邮箱"
+
+#: models.py:36
+msgid "dz uid"
+msgstr "论坛用户ID"
+
+#: models.py:42
+msgid "bbs member"
+msgstr "自注用户"
+
+#: models.py:43
+msgid "bbs member list"
+msgstr "自注用户列表"
+
+#: models.py:49
+msgid "fid"
+msgstr "版块ID"
+
+#: models.py:50
+msgid "path"
+msgstr "文件路径"
+
+#: models.py:59
+msgid "bbs surplus"
+msgstr "自发重复附件"
+
+#: models.py:60
+msgid "bbs surplus list"
+msgstr "自发重复附件列表"
+
+#: models.py:66 models.py:82 models.py:83
+msgid "thread id"
+msgstr "论坛主题ID"
+
+#: models.py:67 models.py:84
+msgid "post id"
+msgstr "论坛帖子ID"
+
+#: models.py:68
+msgid "attachment id"
+msgstr "论坛附件ID"
+
+#: models.py:69
+msgid "robot data id"
+msgstr "本地文件ID"
+
+#: models.py:75
+msgid "bbs thread"
+msgstr "自发帖子"
+
+#: models.py:76
+msgid "bbs thread list"
+msgstr "自发帖子列表"
+
+#: models.py:85
+msgid "plate id"
+msgstr "版块ID"
+
+#: models.py:91
+msgid "bbs post"
+msgstr "自动回帖"
+
+#: models.py:92
+msgid "bbs post list"
+msgstr "自动回帖列表"
+
+#: models.py:98
+msgid "content"
+msgstr "内容"
+
+#: models.py:101
+msgid "update datetime"
+msgstr "更新时间"
+
+#: models.py:106
+msgid "bbs post content"
+msgstr "自动回帖内容"
+
+#: models.py:107
+msgid "bbs post content list"
+msgstr "自动回帖内容列表"
