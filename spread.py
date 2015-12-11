@@ -15,10 +15,12 @@ from twisted.internet import task, reactor
 from conf.data_config import robot_session
 from conf.logger_config import post_info
 from conf.regular_config import USER_MAP_CONFIG
+from common.scheduler import skip_hours
 from models.record import Attachment, Thread
 from posting.manager import spread_info
 
 
+@skip_hours
 def spread_match_files(limit=5):
     """对结果入库的数据扫描, 并文件上传.
 
@@ -30,6 +32,8 @@ def spread_match_files(limit=5):
 
     def author_uid_and_name(real_name):
         """由真实姓名拼音获取论坛账户(账户Id,账户名称)
+
+            :parameter real_name: 账户名称
         """
 
         authors = USER_MAP_CONFIG.get(real_name).split("|")

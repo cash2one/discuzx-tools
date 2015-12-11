@@ -13,6 +13,7 @@ from twisted.internet import task, reactor
 
 from conf.data_config import robot_session
 from conf.logger_config import faker_post_info, faker_post_error
+from common.scheduler import skip_hours
 from register.factory import FakePost
 from models.record import Post
 from models.submeter import cache_thread_member
@@ -21,6 +22,7 @@ from posting.manager import spread_post
 faker_post_only = "INSERT INTO bbs_post(uid,tid,pid,create_datetime) VALUES(%s,%s,%s,'%s');"
 
 
+@skip_hours
 def fake_post(gen_data_count=1):
     """虚拟对主题回帖.
 

@@ -2,8 +2,23 @@
 # coding: utf-8
 
 from __future__ import unicode_literals, print_function
-
 import time
+import datetime
+from functools import wraps
+
+hours = [23, 0, 1, 2, 3, 4, 5, 6, 7]
+
+
+def skip_hours(func):
+    @wraps(func)
+    def returned_wrapper(*args, **kwargs):
+        now = datetime.datetime.now().time()
+        if now.hour in hours:
+            time.sleep(60 * 60)
+        else:
+            func(*args, **kwargs)
+
+    return returned_wrapper
 
 
 class Scheduler(object):

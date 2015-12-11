@@ -33,6 +33,8 @@ upload_only_log = "update bbs_attachment set status = 1, upload_datetime = '%s' 
 
 def init_redis_data(kind="md5sum"):
     """初始化redis的数据.
+
+        :parameter kind: 操作类型
     """
 
     attachment_entities = robot_session.query(Attachment, Attachment.id, Attachment.md5sum, Attachment.key_name).all()
@@ -52,6 +54,9 @@ def init_redis_data(kind="md5sum"):
 
 def progress_handler(progress, total):
     """上传进度显示.
+
+        :parameter progress:
+        :parameter total
     """
 
     out_put = "%s%%" % str(int(float(progress) / float(total) * 100))
@@ -217,6 +222,8 @@ def upload_match_files(limit=5, loops=True):
 
 def update_name_files(limit=20):
     """更新导入库的索引文件.
+
+        :parameter limit: 每次限制数
     """
 
     attachment_entities = robot_session.query(Attachment).filter(

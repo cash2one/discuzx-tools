@@ -14,11 +14,13 @@ from twisted.internet import task, reactor
 
 from conf.data_config import forum_session
 from conf.logger_config import faker_recommend_info
+from common.scheduler import skip_hours
 from register.factory import FakeRecommend
 from models.remote import ForumThread, ForumMemberRecommend
 from models.submeter import cache_thread_member
 
 
+@skip_hours
 def fake_recommend(gen_data_count=1):
     """虚拟对主题顶帖.
 

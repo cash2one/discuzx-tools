@@ -11,18 +11,18 @@ import datetime
 import random
 import string
 
-from twisted.internet import task
-
-from twisted.internet import reactor
+from twisted.internet import task, reactor
 
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_user_info
+from common.scheduler import skip_hours
 from common.func import Utils, CacheService
 from register.factory import FakeMember
 from models.record import Member
 from models.remote import CommonMember, CenterMember
 
 
+@skip_hours
 def fake_member(gen_data_count=1):
     """创建虚拟账户.
 
