@@ -30,18 +30,13 @@ def fake_post(gen_data_count=1):
     """
 
     for entity in FakePost().generate(gen_data_count):
-        print(entity)
-
-        uid = entity["uid"]
-        tid = entity["tid"]
-        fid = entity["fid"]
-        username = entity["username"]
-        message = entity["message"]
-
-        print(uid, tid, fid, username, message)
+        uid, tid, fid = entity["uid"], entity["tid"], entity["fid"]
+        username, message = entity["username"], entity["message"]
 
         faker_post_info.info("=" * 80)
+        faker_post_info.info("message = %s" % message)
         faker_post_info.info("(%s)正在回帖(%s)" % (username, tid))
+        # print("uid = %s; tid = %s; fid = %s; username = %s;" % (uid, tid, fid, username))
 
         pid = spread_post(uid, tid, fid, username, message)
 

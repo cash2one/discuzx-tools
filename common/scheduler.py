@@ -16,7 +16,12 @@ def skip_hours(func):
         if now.hour in hours:
             time.sleep(60 * 60)
         else:
-            func(*args, **kwargs)
+            if args and not kwargs:
+                func(*args)
+            elif args and kwargs:
+                func(*args, **kwargs)
+            else:
+                func()
 
     return returned_wrapper
 
