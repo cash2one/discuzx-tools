@@ -124,4 +124,4 @@ if __name__ == '__main__':
     # minor()
     # spread_only()
     cb = partial(spread_match_files, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=random.choice(intervals))
+    NoInterval.demo(cb, intervals=intervals)

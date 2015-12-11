@@ -130,4 +130,4 @@ if __name__ == '__main__':
     # minor()
     # fake_member_only()
     cb = partial(fake_member, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=random.choice(intervals))
+    NoInterval.demo(cb, intervals=intervals)

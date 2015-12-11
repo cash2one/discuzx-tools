@@ -122,4 +122,4 @@ if __name__ == '__main__':
     # minor()
     # fake_recommend_only()
     cb = partial(fake_recommend, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=random.choice(intervals))
+    NoInterval.demo(cb, intervals=intervals)

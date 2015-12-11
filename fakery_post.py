@@ -110,4 +110,4 @@ if __name__ == '__main__':
     # minor()
     # fake_post_only()
     cb = partial(fake_post, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=random.choice(intervals))
+    NoInterval.demo(cb, intervals=intervals)
