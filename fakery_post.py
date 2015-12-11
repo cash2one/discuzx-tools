@@ -13,12 +13,14 @@ from twisted.internet import task, reactor
 
 from conf.data_config import robot_session
 from conf.logger_config import faker_post_info, faker_post_error
-from common.scheduler import skip_hours
+from common.scheduler import partial, skip_hours, NoInterval
 from register.factory import FakePost
 from models.record import Post
 from models.submeter import cache_thread_member
 from posting.manager import spread_post
 
+limits = (1, 2, 3)
+intervals = (30, 50, 70, 80)
 faker_post_only = "INSERT INTO bbs_post(uid,tid,pid,create_datetime) VALUES(%s,%s,%s,'%s');"
 
 
@@ -97,16 +99,15 @@ def fake_post_only():
 
     cache_thread_member()
 
-    interval = (30, 50, 70, 80)
-    limit = (1, 2, 3)
-
     # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(fake_post, random.choice(limit))
-    create_data.start(random.choice(interval))
+    create_data = task.LoopingCall(fake_post, limits[0])
+    create_data.start(intervals[0])
     reactor.run()
 
 
 if __name__ == '__main__':
     # main()
     # minor()
-    fake_post_only()
+    # fake_post_only()
+    cb = partial(fake_post, gen_data_count=random.choice(limits))
+    NoInterval.demo(cb, intervals=random.choice(intervals))

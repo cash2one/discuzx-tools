@@ -15,9 +15,12 @@ from twisted.internet import task, reactor
 from conf.data_config import robot_session
 from conf.logger_config import post_info
 from conf.regular_config import USER_MAP_CONFIG
-from common.scheduler import skip_hours
+from common.scheduler import partial, skip_hours, NoInterval
 from models.record import Attachment, Thread
 from posting.manager import spread_info
+
+limits = (2, 3, 5, 7)
+intervals = (20, 30, 50, 70, 100)
 
 
 @skip_hours
@@ -107,12 +110,9 @@ def spread_only():
     """仅仅发帖部分.
     """
 
-    interval = (20, 30, 50, 70, 100)
-    limit = (2, 3, 5, 7)
-
     # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(spread_match_files, random.choice(limit))
-    create_data.start(random.choice(interval))
+    create_data = task.LoopingCall(spread_match_files, limits[0])
+    create_data.start(intervals[0])
     reactor.run()
 
 
@@ -122,4 +122,6 @@ if __name__ == '__main__':
 
     # main()
     # minor()
-    spread_only()
+    # spread_only()
+    cb = partial(spread_match_files, gen_data_count=random.choice(limits))
+    NoInterval.demo(cb, intervals=random.choice(intervals))

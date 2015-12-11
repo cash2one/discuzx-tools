@@ -2,9 +2,13 @@
 # coding: utf-8
 
 from __future__ import unicode_literals, print_function
+
 import time
+import random
 import datetime
-from functools import wraps
+from functools import wraps, partial
+
+from twisted.internet import reactor
 
 hours = [23, 0, 1, 2, 3, 4, 5, 6, 7]
 
@@ -24,6 +28,40 @@ def skip_hours(func):
                 func()
 
     return returned_wrapper
+
+
+class NoInterval(object):
+    """没固定间隔的间隔执行.
+    """
+
+    def __init__(self, intervals):
+        self.intervals = intervals
+
+    def echo(self, timeout):
+        self.work()
+        cb = partial(self.echo, timeout=random.choice(self.intervals))
+        reactor.callLater(timeout, cb)
+
+    def run(self):
+        self.echo(timeout=random.choice(self.intervals))
+        reactor.run()
+
+    def work(self):
+        """子类实现.
+        """
+        pass
+
+    @staticmethod
+    def demo(func, intervals):
+        """仅实际操作.
+        """
+
+        class _Demo(NoInterval):
+            def work(self):
+                func()
+
+        _demo = _Demo(intervals)
+        _demo.run()
 
 
 class Scheduler(object):

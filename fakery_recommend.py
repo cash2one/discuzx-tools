@@ -14,10 +14,13 @@ from twisted.internet import task, reactor
 
 from conf.data_config import forum_session
 from conf.logger_config import faker_recommend_info
-from common.scheduler import skip_hours
+from common.scheduler import partial, skip_hours, NoInterval
 from register.factory import FakeRecommend
 from models.remote import ForumThread, ForumMemberRecommend
 from models.submeter import cache_thread_member
+
+limits = (1, 2, 3)
+intervals = (30, 50, 70, 80)
 
 
 @skip_hours
@@ -108,16 +111,15 @@ def fake_recommend_only():
 
     cache_thread_member()
 
-    interval = (30, 50, 70, 80)
-    limit = (1, 2, 3)
-
     # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(fake_recommend, random.choice(limit))
-    create_data.start(random.choice(interval))
+    create_data = task.LoopingCall(fake_recommend, limits[0])
+    create_data.start(intervals[0])
     reactor.run()
 
 
 if __name__ == '__main__':
     # main()
     # minor()
-    fake_recommend_only()
+    # fake_recommend_only()
+    cb = partial(fake_recommend, gen_data_count=random.choice(limits))
+    NoInterval.demo(cb, intervals=random.choice(intervals))

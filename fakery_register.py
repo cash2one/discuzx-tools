@@ -15,11 +15,14 @@ from twisted.internet import task, reactor
 
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_user_info
-from common.scheduler import skip_hours
+from common.scheduler import partial, skip_hours, NoInterval
 from common.func import Utils, CacheService
 from register.factory import FakeMember
 from models.record import Member
 from models.remote import CommonMember, CenterMember
+
+limits = (1, 2, 3)
+intervals = (30, 50, 70, 100)
 
 
 @skip_hours
@@ -116,16 +119,15 @@ def fake_member_only():
     """仅仅注册部分.
     """
 
-    interval = (30, 50, 70, 100)
-    limit = (1, 2, 3)
-
     # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(fake_member, random.choice(limit))
-    create_data.start(random.choice(interval))
+    create_data = task.LoopingCall(fake_member, limits[0])
+    create_data.start(intervals[0])
     reactor.run()
 
 
 if __name__ == '__main__':
     # main()
     # minor()
-    fake_member_only()
+    # fake_member_only()
+    cb = partial(fake_member, gen_data_count=random.choice(limits))
+    NoInterval.demo(cb, intervals=random.choice(intervals))
