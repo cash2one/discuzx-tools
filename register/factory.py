@@ -35,6 +35,11 @@ class FakeMember(DictFactory):
     email = cn_email
 
 
+class FakeMemberStatus(DictFactory):
+    reg_ip = FakeDataFactory('ipv4')
+    last_ip = FakeDataFactory('ipv4')
+
+
 class FakeRecommend(DictFactory):
     tid = FieldFromCollection(collection='forum_thread', field_name='thread_id', **cache_option)
     uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)

@@ -17,9 +17,9 @@ from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_user_info
 from common.scheduler import partial, skip_hours, NoInterval
 from common.func import Utils, CacheService
-from register.factory import FakeMember
+from register.factory import FakeMember, FakeMemberStatus
 from models.record import Member
-from models.remote import CommonMember, CenterMember
+from models.remote import CommonMember, CenterMember, CommonMemberStatus
 
 limits = (1, 2, 3)
 intervals = (30, 50, 70, 100)
@@ -33,7 +33,10 @@ def fake_member(gen_data_count=1):
         :parameter gen_data_count: 生成数据数量
     """
 
-    for entity in FakeMember().generate(gen_data_count):
+    member_status_data = FakeMemberStatus().generate(gen_data_count)
+    member_status_list = [entity for entity in member_status_data]
+
+    for index, entity in enumerate(FakeMember().generate(gen_data_count)):
         username = entity["username"].lower()
 
         length = random.randint(6, 20)
@@ -67,8 +70,15 @@ def fake_member(gen_data_count=1):
                                          __email=entity["email"],
                                          __regdate=int(time.time()),
                                          __uid=uid)
-
             forum_session.add(center_member)
+
+            status_data = member_status_list[index]
+            member_status = CommonMemberStatus(__uid=uid,
+                                               __regip=status_data['reg_ip'],
+                                               __lastip=status_data['last_ip'],
+                                               __lastvisit=int(time.time()),
+                                               __lastactivity=int(time.time()))
+            forum_session.add(member_status)
             forum_session.commit()
 
             member = Member(username, password, entity["email"], uid)
