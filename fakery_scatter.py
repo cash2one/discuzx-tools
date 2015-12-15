@@ -6,11 +6,13 @@
 
 from __future__ import unicode_literals, print_function
 
+import time
 import random
 import traceback
 from conf.data_config import robot_session, forum_session
 from models.record import Thread, Member
-from models.remote import ForumThread, ForumPost
+from register.factory import FakeMemberStatus
+from models.remote import ForumThread, ForumPost, CommonMemberStatus
 
 
 def scat_content_to_user():
@@ -103,8 +105,53 @@ def scat_content_to_user():
         print("=" * 80)
 
 
+def fix_member_miss_status():
+    """修复自动注册的用户缺失状态数据.
+    """
+
+    print("=" * 80)
+    try:
+        print("Info: Work is now being prepared.")
+
+        # 自动注册用户.
+        robot_member_entities = robot_session.query(Member).all()
+        gen_data_count = len(robot_member_entities)
+
+        # 补充自注册数据.
+        member_status_data = FakeMemberStatus().generate(gen_data_count)
+        member_status_list = [entity for entity in member_status_data]
+
+        print("Info: member_entities_total = %s." % gen_data_count)
+
+        member_status_entities = []
+        for index, member_entity in enumerate(robot_member_entities):
+            print("Info: %s %s%%." % (index, str(int(float(index) / float(gen_data_count) * 100))))
+
+            status_data = member_status_list[index]
+            member_status = CommonMemberStatus(__uid=member_entity.dz_uid,
+                                               __regip=status_data['reg_ip'],
+                                               __lastip=status_data['last_ip'],
+                                               __lastvisit=int(time.time()),
+                                               __lastactivity=int(time.time()))
+            member_status_entities.append(member_status)
+
+        forum_session.add_all(member_status_entities)
+        forum_session.commit()
+    except Exception, ex:
+        print(ex)
+        traceback.print_exc()
+        forum_session.rollback()
+    else:
+        print("Info: Well Done.")
+    finally:
+        forum_session.close()
+        print("All Work Have Finished.")
+        print("=" * 80)
+
+
 if __name__ == '__main__':
     """执行模块任务.
     """
 
-    scat_content_to_user()
+    # scat_content_to_user()
+    fix_member_miss_status()

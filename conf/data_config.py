@@ -24,22 +24,22 @@ if robot_environ:
     robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@127.0.0.1/%s?charset=utf8"
 
     MYSQL_CONFIG = dict(
-        host="127.0.0.1",
-        port=3306,
-        user="operate",
-        password="4F9dE8IWB8pf0f2927PfEb9b7",
-        charset="utf8",
+            host="127.0.0.1",
+            port=3306,
+            user="operate",
+            password="4F9dE8IWB8pf0f2927PfEb9b7",
+            charset="utf8",
     )
 else:
     forum_conn = 'mysql+pymysql://operate:4F9dE8IWB8pf0f2927PfEb9b7@123.57.176.248/%s?charset=utf8mb4'
     robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@123.57.176.248/%s?charset=utf8mb4"
 
     MYSQL_CONFIG = dict(
-        host="123.57.176.248",
-        port=3306,
-        user="operate",
-        password="4F9dE8IWB8pf0f2927PfEb9b7",
-        charset="utf8",
+            host="123.57.176.248",
+            port=3306,
+            user="operate",
+            password="4F9dE8IWB8pf0f2927PfEb9b7",
+            charset="utf8",
     )
 
 forum_url = forum_conn % "discuzx"
@@ -89,8 +89,8 @@ def mongodb_init(host, port, database):
 
 # redis配置项
 REDIS_CONFIG = dict(
-    redis_host="127.0.0.1",
-    redis_port=6379)
+        redis_host="127.0.0.1",
+        redis_port=6379)
 
 
 # password="E8IWB8pf0PfE4F9df2927b9b7")
@@ -130,10 +130,10 @@ def generate_models(mysql_config, databases_config, database_name, column_prefix
 
 
 MYSQL_DATABASES_TABLES = dict(
-    discuzx=[
-        "bbs_common_member", "bbs_ucenter_members", "bbs_forum_thread", "bbs_forum_post",
-        "bbs_forum_attachment", "bbs_forum_memberrecommend",
-    ]
+        discuzx=[
+            "bbs_common_member", "bbs_common_member_status", "bbs_ucenter_members", "bbs_forum_thread",
+            "bbs_forum_post", "bbs_forum_attachment", "bbs_forum_memberrecommend",
+        ]
 )
 
 # 增加相关的分表
