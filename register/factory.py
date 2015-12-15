@@ -40,6 +40,10 @@ class FakeMemberStatus(DictFactory):
     last_ip = FakeDataFactory('ipv4')
 
 
+class FakeVisitor(DictFactory):
+    uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)
+
+
 class FakeRecommend(DictFactory):
     tid = FieldFromCollection(collection='forum_thread', field_name='thread_id', **cache_option)
     uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)

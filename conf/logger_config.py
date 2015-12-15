@@ -26,5 +26,6 @@ faker_post_error = build_file_logs("faker_post_error", level)
 
 faker_user_info = build_file_logs("faker_user_info", level)
 faker_recommend_info = build_file_logs("faker_recommend_info", level)
+faker_user_status_info = build_file_logs("faker_user_status_info", level)
 
 gateway_debug_log = build_file_logs("gateway_debug", level)
