@@ -93,21 +93,25 @@ def minor():
         # time.sleep(60)
 
 
-def fake_post_only():
+def fake_post_only(always=False):
     """仅仅回贴部分.
+
+        :param always: 是否一直运行
     """
 
     cache_thread_member()
 
-    # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(fake_post, limits[0])
-    create_data.start(intervals[0])
-    reactor.run()
+    if always:
+        # 纳入间隔时间后再次执行
+        create_data = task.LoopingCall(fake_post, limits[0])
+        create_data.start(intervals[0])
+        reactor.run()
+    else:
+        cb = partial(fake_post, gen_data_count=random.choice(limits))
+        NoInterval.demo(cb, intervals=intervals)
 
 
 if __name__ == '__main__':
     # main()
     # minor()
-    # fake_post_only()
-    cb = partial(fake_post, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=intervals)
+    fake_post_only()

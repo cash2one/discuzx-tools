@@ -43,8 +43,8 @@ def fake_recommend(gen_data_count=1):
 
         # 查询是否顶过帖
         recommend_entities = forum_session.query(ForumMemberRecommend).filter(
-            ForumMemberRecommend.__tid == tid,
-            ForumMemberRecommend.__recommenduid == uid).all()
+                ForumMemberRecommend.__tid == tid,
+                ForumMemberRecommend.__recommenduid == uid).all()
 
         if recommend_entities:
             faker_recommend_info.info("返回:之前已评过该帖！")
@@ -105,21 +105,25 @@ def minor():
         # time.sleep(60)
 
 
-def fake_recommend_only():
+def fake_recommend_only(always=False):
     """仅仅顶贴部分.
+
+        :param always: 是否一直运行
     """
 
     cache_thread_member()
 
-    # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(fake_recommend, limits[0])
-    create_data.start(intervals[0])
-    reactor.run()
+    if always:
+        # 纳入间隔时间后再次执行
+        create_data = task.LoopingCall(fake_recommend, limits[0])
+        create_data.start(intervals[0])
+        reactor.run()
+    else:
+        cb = partial(fake_recommend, gen_data_count=random.choice(limits))
+        NoInterval.demo(cb, intervals=intervals)
 
 
 if __name__ == '__main__':
     # main()
     # minor()
-    # fake_recommend_only()
-    cb = partial(fake_recommend, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=intervals)
+    fake_recommend_only()

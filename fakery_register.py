@@ -125,19 +125,23 @@ def minor():
         # time.sleep(60)
 
 
-def fake_member_only():
+def fake_member_only(always=False):
     """仅仅注册部分.
+
+        :param always: 是否一直运行
     """
 
-    # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(fake_member, limits[0])
-    create_data.start(intervals[0])
-    reactor.run()
+    if always:
+        # 纳入间隔时间后再次执行
+        create_data = task.LoopingCall(fake_member, limits[0])
+        create_data.start(intervals[0])
+        reactor.run()
+    else:
+        cb = partial(fake_member, gen_data_count=random.choice(limits))
+        NoInterval.demo(cb, intervals=intervals)
 
 
 if __name__ == '__main__':
     # main()
     # minor()
-    # fake_member_only()
-    cb = partial(fake_member, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=intervals)
+    fake_member_only()

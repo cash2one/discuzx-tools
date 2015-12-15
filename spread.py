@@ -31,7 +31,7 @@ def spread_match_files(limit=5):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-        Attachment.status == 1).order_by(Attachment.id).limit(limit).all()
+            Attachment.status == 1).order_by(Attachment.id).limit(limit).all()
 
     def author_uid_and_name(real_name):
         """由真实姓名拼音获取论坛账户(账户Id,账户名称)
@@ -106,22 +106,25 @@ def minor():
         spread_match_files(1)
 
 
-def spread_only():
+def spread_only(always=False):
     """仅仅发帖部分.
+
+        :param always: 是否一直运行
     """
 
-    # 纳入间隔时间后再次执行
-    create_data = task.LoopingCall(spread_match_files, limits[0])
-    create_data.start(intervals[0])
-    reactor.run()
+    if always:
+        # 纳入间隔时间后再次执行
+        create_data = task.LoopingCall(spread_match_files, limits[0])
+        create_data.start(intervals[0])
+        reactor.run()
+    else:
+        cb = partial(spread_match_files, gen_data_count=random.choice(limits))
+        NoInterval.demo(cb, intervals=intervals)
 
 
 if __name__ == '__main__':
     """测试并跑任务, 注意以下三者的区别.
     """
-
     # main()
     # minor()
-    # spread_only()
-    cb = partial(spread_match_files, gen_data_count=random.choice(limits))
-    NoInterval.demo(cb, intervals=intervals)
+    spread_only()
