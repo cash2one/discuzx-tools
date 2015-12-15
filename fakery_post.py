@@ -6,16 +6,18 @@
 
 from __future__ import unicode_literals, print_function
 
+import time
 import datetime
 import random
 
 from twisted.internet import task, reactor
 
-from conf.data_config import robot_session
+from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_post_info, faker_post_error
 from common.scheduler import partial, skip_hours, NoInterval
 from register.factory import FakePost
 from models.record import Post
+from models.remote import ForumThread
 from models.submeter import cache_thread_member
 from posting.manager import spread_post
 
@@ -44,6 +46,13 @@ def fake_post(gen_data_count=1):
 
         if pid:
             try:
+                # 更新主题帖最后回帖信息
+                forum_thread = forum_session.query(ForumThread).filter(ForumThread.__tid == tid).first()
+                forum_thread.__lastposter = username
+                forum_thread.__lastpost = int(time.time())
+                forum_session.add(forum_thread)
+                forum_session.commit()
+
                 post = Post(uid, tid, pid, fid)
                 robot_session.add(post)
                 robot_session.commit()
