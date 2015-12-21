@@ -1,14 +1,14 @@
-qiniu>=7.0.5
-tornado>=4.2.1
+qiniu>=7.0.6
+tornado>=4.3
 Twisted>=15.5.0
-requests>=2.8.1
-SQLAlchemy>=1.0.9
+requests>=2.9.0
+SQLAlchemy>=1.0.10
 supervisor>=3.2.0
 
 pyglet>=1.2.4
 
-redis>=2.10.3
-pymongo>=3.1.1
+redis>=2.10.5
+pymongo>=3.2
 PyMySQL>=0.6.7
 MySQL-python>=1.2.5
 
