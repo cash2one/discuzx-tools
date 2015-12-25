@@ -14,6 +14,7 @@ class SitePush(object):
         self._site = site
         self._token = token
         self._type = kind if kind else 'original'
+        self._urls_list = []
 
     def _get_push_api(self):
         push_api = "http://data.zz.baidu.com/urls?site=%s&token=%s&type=%s"
@@ -29,4 +30,10 @@ class SitePush(object):
         """
 
         self.gen_data()
-        os.system("curl -H 'Content-Type:text/plain' --data-binary @urls.txt %s" % self._get_push_api())
+        if self._urls_list:
+            push_api = self._get_push_api()
+            command_format = "curl -H 'Content-Type:text/plain' --data-binary @%s %s"
+            for urls in self._urls_list:
+                str_command = command_format % (urls, push_api)
+                print(str_command)
+                # os.system(str_command)

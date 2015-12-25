@@ -39,6 +39,7 @@ class BroadSite(SitePush):
 
     site = "www.ikuanyu.com"
     token = 'KG922tmSgsnuYsaq'
+    urls_size = 500
 
     def gen_data(self):
         """生成数据.
@@ -49,14 +50,24 @@ class BroadSite(SitePush):
             site_url = "http://%s/thread-%s-1-1.html\n"
             threads_total = len(thread_entities)
 
-            if os.path.exists('urls.txt'):
-                os.remove('urls.txt')
+            urls_file = {}
+            times = int(threads_total / self.urls_size) + 1
+            for index in xrange(0, times):
+                urls = 'urls_%d.txt' % index
+                if os.path.exists(urls):
+                    os.remove(urls)
 
-            with open('urls.txt', 'ab') as f:
-                for index, entity in enumerate(thread_entities):
-                    entity = json.loads(str(entity))
-                    f.write(site_url % (self.site, str(entity.get("tid"))))
-                    broad_site_info.info("Info: Reach up to (%s / %s)" % (index, threads_total))
+                self._urls_list.append(urls)
+                urls_file[index] = open(urls, 'ab')
+
+            for index, entity in enumerate(thread_entities):
+                entity = json.loads(str(entity))
+                current_index = int(index / self.urls_size)
+                urls_file[current_index].write(site_url % (self.site, str(entity.get("tid"))))
+                broad_site_info.info("Info: Reach up to (%s / %s)" % (index, threads_total))
+
+            for index in xrange(0, times):
+                urls_file[index].close()
 
 
 if __name__ == '__main__':
