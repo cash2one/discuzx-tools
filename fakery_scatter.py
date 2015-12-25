@@ -6,13 +6,14 @@
 
 from __future__ import unicode_literals, print_function
 
-import time
 import random
+import time
 import traceback
+
 from conf.data_config import robot_session, forum_session
 from models.record import Thread, Member
-from register.factory import FakeMemberStatus
 from models.remote import ForumThread, ForumPost, CommonMemberStatus
+from register.factory import FakeMemberStatus
 
 
 def scat_content_to_user():
@@ -32,6 +33,12 @@ def scat_content_to_user():
     datetime_range = ('2015-11-20 00:00:00', '2015-11-21 23:00:00')
 
     try:
+        # 分发用户(荣堂)数据.
+        thread_entities = forum_session.query(ForumThread).filter(ForumThread.__author == username).all()
+        if not thread_entities:
+            print("Info: No Data.")
+            return
+
         # 查询出分发用户数据.
         author_entities = robot_session.query(Member).filter(
                 Member.dz_uid.between(thread_range[0], thread_range[1])).all()
@@ -45,11 +52,7 @@ def scat_content_to_user():
         thread_ids = [thread_entity.thread_id for thread_entity in thread_logs]
 
         unit_entities = []
-
-        # 分发用户(荣堂)数据.
-        thread_entities = forum_session.query(ForumThread).filter(ForumThread.__author == username).all()
         threads_total = len(thread_entities)
-
         thread_normal, thread_moved, thread_retain = 0, 0, 0
         print("Info: threads_total = %s." % threads_total)
         print("=" * 80)
@@ -115,6 +118,10 @@ def fix_member_miss_status():
 
         # 自动注册用户.
         robot_member_entities = robot_session.query(Member).all()
+        if not robot_member_entities:
+            print("Info: No Data.")
+            return
+
         gen_data_count = len(robot_member_entities)
 
         # 补充自注册数据.

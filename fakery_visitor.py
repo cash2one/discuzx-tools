@@ -6,18 +6,18 @@
 
 from __future__ import unicode_literals, print_function
 
-import time
-import datetime
 import random
+import time
 import traceback
 
 from twisted.internet import task, reactor
+
+from common.scheduler import partial, skip_hours, NoInterval
 from conf.data_config import forum_session
 from conf.logger_config import faker_user_status_info
-from common.scheduler import partial, skip_hours, NoInterval
 from models.remote import CommonMemberStatus
-from register.factory import FakeVisitor
 from models.submeter import cache_thread_member
+from register.factory import FakeVisitor
 
 limits = (5, 10, 15,)
 intervals = (20, 30, 40)
@@ -39,6 +39,10 @@ def fake_visitor(gen_data_count=1):
         # 查出uid的会员状态更新数据
         member_status_entities = forum_session.query(CommonMemberStatus).filter(
                 CommonMemberStatus.__uid.in_(user_ids)).all()
+
+        if not member_status_entities:
+            print("Info: No Data.")
+            return
 
         member_status_list = []
         for member_status in member_status_entities:
