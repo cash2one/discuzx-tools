@@ -9,10 +9,10 @@ from __future__ import unicode_literals, print_function
 import functools
 
 import pymongo
-from sqlalchemy.engine import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy.ext.declarative import declarative_base
 from autoloads import Models
+from sqlalchemy.engine import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 is_echo = False
 db_pool_recycle = 60
@@ -60,26 +60,35 @@ CACHE_DB_ON = True
 cache_host = "127.0.0.1"
 # cache_host = "localhost"
 
-cache_port = 27017
+cache_port = 27027
+cache_user = "wuuuang",
+cache_password = "WJGFd9E6IWBWpf0f7HzEb2929b7",
 cache_database = "dz_gen_data"
 
 cache_option = {
     'host': cache_host,
     'port': cache_port,
-    'database': cache_database
+    'database': cache_database,
+    'username': cache_user,
+    'password': cache_password,
 }
 
 
-def mongodb_init(host, port, database):
+def mongodb_init(host, port, database, username=None, password=None):
     """mongodb 初始化对象.
 
         :param host: 主机
         :param port: 端口
         :param database: 数据库
+        :param username: 账户
+        :param password: 密码
     """
-
-    client = pymongo.MongoClient(host, port)
-    # client = motor.MotorClient(host, port, max_pool_size=5)
+    if username and password:
+        connection_string = "mongodb://%s:%s@%s:%d/%s" % (username, password, host, port, database)
+        client = pymongo.MongoClient(connection_string)
+    else:
+        client = pymongo.MongoClient(host, port)
+        # client = motor.MotorClient(host, port, max_pool_size=5)
     database = client[database]
 
     return database
@@ -90,10 +99,9 @@ def mongodb_init(host, port, database):
 # redis配置项
 REDIS_CONFIG = dict(
         redis_host="127.0.0.1",
-        redis_port=6379)
-
-
-# password="E8IWB8pf0PfE4F9df2927b9b7")
+        redis_port=6389,
+        password="E8IWB8pf0PfE4F9df2927b9b7",
+)
 
 
 # ===================以下为从数据库到ORM的映射===================

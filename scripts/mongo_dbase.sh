@@ -1,9 +1,8 @@
 #!/bin/sh env
 
 if [ ! -d "/data/db/" ]; then
-    sudo mkdir -p /data/db/
-    echo "Info: create directory /data/db/"
+    sudo mkdir -pv /data/db/
 fi
 
 service mongod stop
-mongod --dbpath=/data/db/
+mongod --config mongod.conf
