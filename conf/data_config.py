@@ -14,36 +14,35 @@ from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
+from conf.env_conf import mysql_host, mysql_port, mysql_user, mysql_password, mysql_charset
+
 is_echo = False
 db_pool_recycle = 60
 
 robot_environ = False  # local/server数据库连接, False: local; True: server.
+conn = 'mysql+pymysql://%(user)s:%(password)s@%(host)s:%(port)s/%(database)s?charset=%(charset)s'
 
 if robot_environ:
-    forum_conn = 'mysql+pymysql://operate:4F9dE8IWB8pf0f2927PfEb9b7@127.0.0.1/%s?charset=utf8'
-    robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@127.0.0.1/%s?charset=utf8"
-
     MYSQL_CONFIG = dict(
             host="127.0.0.1",
             port=3306,
             user="operate",
             password="4F9dE8IWB8pf0f2927PfEb9b7",
-            charset="utf8",
-    )
+            charset="utf8")
 else:
-    forum_conn = 'mysql+pymysql://operate:4F9dE8IWB8pf0f2927PfEb9b7@123.57.176.248/%s?charset=utf8mb4'
-    robot_conn = "mysql+pymysql://develop:f0f2927PfEb9b74F9dE8IWB8p@123.57.176.248/%s?charset=utf8mb4"
-
     MYSQL_CONFIG = dict(
-            host="123.57.176.248",
-            port=3306,
-            user="operate",
-            password="4F9dE8IWB8pf0f2927PfEb9b7",
-            charset="utf8",
-    )
+            host=mysql_host if mysql_host else "123.57.176.248",
+            port=mysql_port if mysql_port else 3306,
+            user=mysql_user if mysql_user else "operate",
+            password=mysql_password if mysql_password else "4F9dE8IWB8pf0f2927PfEb9b7",
+            charset=mysql_charset if mysql_charset else "utf8")
 
-forum_url = forum_conn % "discuzx"
-robot_url = robot_conn % "roboter"
+MYSQL_CONFIG_NEW = MYSQL_CONFIG.copy()
+
+MYSQL_CONFIG_NEW.update(database="discuzx")
+forum_url = conn % MYSQL_CONFIG_NEW
+MYSQL_CONFIG_NEW.update(database="roboter")
+robot_url = conn % MYSQL_CONFIG_NEW
 
 forum_engine = create_engine(forum_url, echo=is_echo, pool_recycle=db_pool_recycle)
 robot_engine = create_engine(robot_url, echo=is_echo, pool_recycle=db_pool_recycle)

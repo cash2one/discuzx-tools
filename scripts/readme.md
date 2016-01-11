@@ -21,4 +21,5 @@
 
 ## redis-server:
     redis-cli -h 127.0.0.1 -p 6389 -a E8IWB8pf0PfE4F9df2927b9b7
+    redis-cli -h 127.0.0.1 -p 6379 keys '*' >> /opt/redis_keys.txt
 
