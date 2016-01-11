@@ -56,7 +56,7 @@ Base = declarative_base()
 # 是否启用Cache, False: 不启用; True: 启用
 CACHE_DB_ON = True
 
-cache_host = "127.0.0.1"
+cache_host = "123.57.176.248"
 # cache_host = "localhost"
 
 cache_port = 27027
@@ -97,7 +97,7 @@ def mongodb_init(host, port, database, username=None, password=None):
 
 # redis配置项
 REDIS_CONFIG = dict(
-        redis_host="127.0.0.1",
+        redis_host="123.57.176.248",
         redis_port=6389,
         password="E8IWB8pf0PfE4F9df2927b9b7",
 )
