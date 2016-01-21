@@ -64,12 +64,13 @@ cache_user = "wuuuang",
 cache_password = "WJGFd9E6IWBWpf0f7HzEb2929b7",
 cache_database = "dz_gen_data"
 
+if cache_user and cache_password:
+    cache_host = "mongodb://%s:%s@%s:%s" % (cache_user, cache_password, cache_host, cache_port)
+
 cache_option = {
     'host': cache_host,
     'port': cache_port,
     'database': cache_database,
-    'username': cache_user,
-    'password': cache_password,
 }
 
 
