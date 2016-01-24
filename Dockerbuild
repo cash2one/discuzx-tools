@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+sudo docker build -t="service:dockers" ./
+sudo docker run -d "service:dockers"
