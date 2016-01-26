@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
-base_path=$(cd `dirname $0`; pwd)
-/home/kylin/MyEnvs/kydiscuzx/bin/supervisord -c ${base_path}/conf/supervisor_run.conf
+docker=$1
+
+if [ "$docker" -eq 0 ]; then
+    supervisord -c /home/kylin/Luntan/service-quant/conf/supervisor_run.conf
+else
+    /home/kylin/MyEnvs/kydiscuzx/bin/supervisord -c /home/kylin/Luntan/service-quant/conf/supervisor_run.conf
+fi
