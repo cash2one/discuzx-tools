@@ -5,6 +5,7 @@
 """
 
 from __future__ import unicode_literals, print_function
+
 from common.func import Utils
 
 # 计划跳过的文件列表
@@ -19,9 +20,6 @@ ENABLE_FOLDER_RULE = True
 # 搜索目录
 SEEK_DIRECTORY = "/media/kylin/Kevin Xie/uploads/ready"
 
-# 移到的目录
-DONE_DIRECTORY = "/media/kylin/Kevin Xie/uploads/done"
-
 # 每次扫描数据数量
 MATCH_FILES_LIMIT = 5
 
@@ -30,17 +28,17 @@ MATCH_FILES_INTERVAL = 1 * 60
 
 # 用户映射配置
 USER_MAP_CONFIG = dict(
-    wujuguang="1|kylinfish@126.com|kylinfish",
-    liaochunping="2|liaocp1976@126.com|haifei",
-    zhangzongqi="3|zzq-bryan@hotmail.com|zzq-bryan",
-    xierongtang="4|923508831@qq.com|rongtang",
-    liyucheng="5|12777104180@qq.com|yucheng",
-    yangbaoyuan="6|ybychem@gmail.com|moonlight",
-    gaoxiaosheng="11|453696043@qq.com|Allen",
-    zhoufangge="12|305672105@qq.com|fangge",
-    zouchen="13|zouchen@pku.edu.cn|Laplace",
-    zhaohuan="15|773721166.@qq.com|作战地图",
-    dingke="21|dingkecrown2010@163.com|dingkecrown")
+        wujuguang="1|kylinfish@126.com|kylinfish",
+        liaochunping="2|liaocp1976@126.com|haifei",
+        zhangzongqi="3|zzq-bryan@hotmail.com|zzq-bryan",
+        xierongtang="4|923508831@qq.com|rongtang",
+        liyucheng="5|12777104180@qq.com|yucheng",
+        yangbaoyuan="6|ybychem@gmail.com|moonlight",
+        gaoxiaosheng="11|453696043@qq.com|Allen",
+        zhoufangge="12|305672105@qq.com|fangge",
+        zouchen="13|zouchen@pku.edu.cn|Laplace",
+        zhaohuan="15|773721166.@qq.com|作战地图",
+        dingke="21|dingkecrown2010@163.com|dingkecrown")
 
 # 从数据库导出的原版数据
 __plate_map_string = """

@@ -10,24 +10,28 @@ import uuid
 
 from twisted.internet import reactor, task
 
-from common.warning import WarnMedia
 from common.func import FileFinished, Utils, RedisService
+from common.warning import WarnMedia
 from conf.data_config import robot_session, REDIS_CONFIG
 from conf.logger_config import record_info, upload_info, upload_error
-from conf.regular_config import SEEK_DIRECTORY, DONE_DIRECTORY, \
-    IGNORE_FILE_LIST, SKIP_README_FILE, ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, \
-    MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
+from conf.regular_config import SEEK_DIRECTORY, IGNORE_FILE_LIST, SKIP_README_FILE, \
+    ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
 from models.record import Attachment, Surplus
 from upload import put_up_datum
 
-fileFinished = FileFinished(SEEK_DIRECTORY, DONE_DIRECTORY)
 
+def build_file_finished():
+    if os.path.exists(SEEK_DIRECTORY):
+        done_directory = os.path.join(os.path.dirname(SEEK_DIRECTORY), 'done')
+        return FileFinished(SEEK_DIRECTORY, done_directory)
+
+
+fileFinished = build_file_finished()
 redis_md5sum = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
 redis_unique = RedisService(db="files_unique", password=REDIS_CONFIG.get("password"))
 
 media_path = os.path.dirname(os.path.abspath(__file__))
 media_instance = WarnMedia(os.path.join(media_path, "media", "warn_pig.mp3"))
-
 upload_only_log = "update bbs_attachment set status = 1, upload_datetime = '%s' where id = %d;"
 
 
@@ -166,7 +170,7 @@ def upload_match_files(limit=5, loops=True):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-        Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
+            Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
 
     if attachment_entities:
         # map(map_handler, attachment_entities)
@@ -227,7 +231,7 @@ def update_name_files(limit=20):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-        Attachment.key_name == "", Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
+            Attachment.key_name == "", Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
 
     result = False
     if attachment_entities:
