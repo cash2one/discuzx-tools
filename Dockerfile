@@ -13,16 +13,11 @@ MAINTAINER wujuguang wujuguang@126.com
 # Commands to update the image
 RUN echo "deb http://mirrors.aliyun.com/ubuntu/ trusty main universe" >> /etc/apt/sources.list
 RUN apt-get update && apt-get upgrade
-RUN apt-get install -y coreutils
+RUN apt-get install -y coreutils vim
 
 # Pip安装Python包的依赖项
-RUN apt-get install -y libmysqlclient-dev
-RUN apt-get install -y libxslt1-dev
-RUN apt-get install -y python-dev
-RUN apt-get install -y python-pip
-RUN apt-get install -y vim
-RUN apt-get clean && apt-get autoclean
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y libmysqlclient-dev libxslt1-dev python-dev python-pip
+RUN apt-get clean && apt-get autoclean && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/kylin/Luntan/service-quant
 ADD ./requirements.txt /home/kylin

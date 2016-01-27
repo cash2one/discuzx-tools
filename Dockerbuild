@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 
-sudo docker build -t="service:dockers" ./
-sudo docker run -d "service:dockers"
+docker_name=wujuguang/service:dockers
+docker_dir=/home/kylin/Luntan/service-quant
+local_dir=/home/kylin/Luntan/service-quant
+
+docker build -t="${docker_name}" ./
+
+docker run -d -v ${local_dir}:${docker_dir} ${docker_name} /bin/bash ${docker_dir}/scripts/dockers.start.sh 0
+docker run -d -v ${local_dir}:${docker_dir} ${docker_name} /bin/bash ${docker_dir}/scripts/dockers.restart.sh 0
