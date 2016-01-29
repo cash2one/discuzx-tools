@@ -50,6 +50,17 @@ class BroadSite(SitePush):
             site_url = "http://%s/thread-%s-1-1.html\n"
             threads_total = len(thread_entities)
 
+            # data_splinter:生成访问配置数据
+            current_dir = os.path.join(os.path.dirname(__file__), 'conf')
+            gen_file = os.path.join(current_dir, 'data_splinter.py')
+            if os.path.exists(gen_file):
+                os.remove(gen_file)
+
+            pages_list = []
+            data_robots = open(gen_file, 'wb')
+            site_format = "        'http://%s/thread-%s-1-1.html',"
+            tpl_content = open(os.path.join(current_dir, 'data_splinter.tpl'), 'rb').read()
+
             urls_file = {}
             times = int(threads_total / self.urls_size) + 1
             for index in xrange(0, times):
@@ -65,6 +76,11 @@ class BroadSite(SitePush):
                 current_index = int(index / self.urls_size)
                 urls_file[current_index].write(site_url % (self.site, str(entity.get("tid"))))
                 broad_site_info.info("Info: Reach up to (%s / %s)" % (index, threads_total))
+                pages_list.append(site_format % (self.site, str(entity.get("tid"))))
+
+            # data_splinter:写入配置数据
+            data_robots.write(str(tpl_content % '\n'.join(pages_list)))
+            data_robots.close()
 
             for index in xrange(0, times):
                 urls_file[index].close()
@@ -74,5 +90,11 @@ if __name__ == '__main__':
     """实例调度.
     """
 
+    # 仅仅生成数据
+    only_gen_data = True
+
     broad_site = BroadSite(BroadSite.site, BroadSite.token)
-    broad_site.push_site()
+    if only_gen_data:
+        broad_site.gen_data()
+    else:
+        broad_site.push_site()

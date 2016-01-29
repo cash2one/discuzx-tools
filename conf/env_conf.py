@@ -15,3 +15,6 @@ mysql_port = os.getenv('mysql_port')
 mysql_user = os.getenv('mysql_user')
 mysql_password = os.getenv('mysql_password')
 mysql_charset = os.getenv('mysql_charset')
+
+discuss_username = os.getenv('discuss_username', '')
+discuss_password = os.getenv('discuss_password', '')
