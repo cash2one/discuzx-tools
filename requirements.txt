@@ -1,0 +1,3 @@
+splinter>=0.7.3
+PyInstaller>=3.1
+
