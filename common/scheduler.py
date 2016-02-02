@@ -3,14 +3,15 @@
 
 from __future__ import unicode_literals, print_function
 
-import time
-import random
 import datetime
+import logging
+import random
+import time
 from functools import wraps, partial
 
 from twisted.internet import reactor
 
-hours = [23, 0, 1, 2, 3, 4, 5, 6, 7]
+hours = [0, 1, 2, 3, 4, 5]
 
 
 def skip_hours(func):
@@ -28,6 +29,13 @@ def skip_hours(func):
                 func()
 
     return returned_wrapper
+
+
+def compatible(tup, ind):
+    try:
+        return tup[ind]
+    except IndexError:
+        return 0
 
 
 class NoInterval(object):
@@ -54,6 +62,9 @@ class NoInterval(object):
     @staticmethod
     def demo(func, intervals):
         """仅实际操作.
+
+            :parameter func:
+            :parameter intervals:
         """
 
         class _Demo(NoInterval):
@@ -68,10 +79,14 @@ class Scheduler(object):
     """任务计划.
     """
 
-    def __init__(self, time_list):
+    def __init__(self, time_list, logger=None):
         """
-            :parameter time_list: 形式如:[(18, 30, 00), (19, 00, 00)]
+            :parameter time_list: 形式如:[(18, 30, 0), (19, 0, 0)] / [(18, 30), (19, 0)]
+            :parameter logger: logger日志对象.
         """
+
+        self.logger = logger
+        self._print = self.logger.info if self.logger and isinstance(self.logger, logging.Logger) else print
 
         if isinstance(time_list, list):
             time_list.sort()
@@ -83,14 +98,20 @@ class Scheduler(object):
         """用于从时间列表中选当前时间的下个时间执行点.
         """
 
-        index = 0
-        time_origin = time.localtime()
-        ss = (time_origin.tm_hour, time_origin.tm_min, time_origin.tm_sec)
+        index, count, time_origin = 0, len(self.time_list), datetime.datetime.now()
+
+        def get_time(tuple_time):
+            return datetime.datetime(time_origin.year, time_origin.month, time_origin.day,
+                                     tuple_time[0], tuple_time[1], compatible(tuple_time, 2), 0)
+
         while True:
-            if self.time_list[index] < ss:
+            if get_time(self.time_list[index]) < time_origin:
                 index += 1
+                if index == count:
+                    index = 0
+                    return index, self.time_list[index]
             else:
-                yield index, self.time_list[index]
+                return index, self.time_list[index]
 
     def _generate_time_point(self, index=0, break_loop=False):
         """轮询到每个时间点.
@@ -120,8 +141,8 @@ class Scheduler(object):
         """
         now_time = time.localtime()
         _time = time.mktime(time.strptime(
-            "%s-%s-%s %s:%s:%s" % (now_time.tm_year, now_time.tm_mon, now_time.tm_mday, hour, minute, second),
-            "%Y-%m-%d %H:%M:%S"))
+                "%s-%s-%s %s:%s:%s" % (now_time.tm_year, now_time.tm_mon, now_time.tm_mday, hour, minute, second),
+                "%Y-%m-%d %H:%M:%S"))
 
         return int(_time)
 
@@ -133,45 +154,51 @@ class Scheduler(object):
         """子类启动入口.
         """
 
-        time_index = self._time_origin().next()[0]
+        time_index = self._time_origin()[0]
+        time_yield = self._generate_time_point(index=time_index)  # 不传入break_loop的参数.
+        time_next = time_yield.next()
 
         while True:
             now_time = time.localtime()
-            time_next = self._generate_time_point(index=time_index).next()  # 不传入break_loop的参数.
             unix_time = int(time.mktime(now_time))
-            unix_next = self.make_timestamp(time_next[0], time_next[1], time_next[2])
+            unix_next = self.make_timestamp(time_next[0], time_next[1], compatible(time_next, 2))
 
             interval = unix_next - unix_time
             if interval < 0:
                 interval += 86400
 
+            self._print("next_time => %s" % str(time_next))
+            self._print("interval => %s" % interval)
+
             time.sleep(interval)
             self.work()
+            time.sleep(60)
+            time_next = time_yield.next()
 
     def test(self):
         """测试.
         """
 
         now_time = time.localtime()
-        time_index = self._time_origin().next()[0]
+        time_index = self._time_origin()[0]
 
         for time_next in self._generate_time_point(index=time_index, break_loop=True):  # 传入break_loop = True的参数.
             unix_time = int(time.mktime(now_time))
-            unix_next = self.make_timestamp(time_next[0], time_next[1], time_next[2])
+            unix_next = self.make_timestamp(time_next[0], time_next[1], compatible(time_next, 2))
 
             interval = unix_next - unix_time
             if interval < 0:
                 interval += 86400
 
-            print(unix_next - unix_time)
+            self._print(unix_next - unix_time)
             self.work()
 
     def origin(self):
         """测试, 仅为测试时间执行计划列表中的起点时间而用.
         """
 
-        print(self.time_list)
-        time_index = self._time_origin().next()[0]
+        self._print(self.time_list)
+        time_index = self._time_origin()[0]
         # for x in self._generate_time_point(index=time_index, break_loop=True):  # 传入break_loop = True的参数.
 
         counter = 0
@@ -179,14 +206,14 @@ class Scheduler(object):
             if counter == 20:
                 break
 
-            print("%s:%s:%s" % x)
+            self._print("%s:%s:%s" % x)
             self.work()
             counter += 1
 
 
 class Demo(Scheduler):
     def work(self):
-        print("I'am Working...\n")
+        self._print("I'am Working...\n")
 
 
 if __name__ == "__main__":
