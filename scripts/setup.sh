@@ -3,6 +3,7 @@
 sudo apt-get install coreutils
 
 # Pip安装Python包的依赖项
+sudo apt-get install python-mysqldb
 sudo apt-get install libmysqlclient-dev
 sudo apt-get install libxslt1-dev
 sudo apt-get install python-dev
