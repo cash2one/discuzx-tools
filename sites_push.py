@@ -12,6 +12,7 @@ from baidu.site_push import SitePush
 from conf.data_config import forum_session
 from conf.logger_config import broad_site_info
 from models.remote import ForumThread
+from conf.env_conf import dz_site, dz_push_token
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -37,8 +38,8 @@ class BroadSite(SitePush):
     """宽语站点.
     """
 
-    site = "www.ikuanyu.com"
-    token = 'KG922tmSgsnuYsaq'
+    site = dz_site
+    token = dz_push_token
     urls_size = 500
 
     def gen_data(self):

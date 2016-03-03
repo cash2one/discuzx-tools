@@ -14,7 +14,8 @@ from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from conf.env_conf import mysql_host, mysql_port, mysql_user, mysql_password, mysql_charset
+from conf.env_conf import mysql_host, mysql_port, mysql_user, mysql_password, mysql_charset, \
+    redis_host, redis_port, redis_password, cache_host, cache_port, cache_user, cache_password, cache_database
 
 is_echo = False
 db_pool_recycle = 60
@@ -24,18 +25,18 @@ conn = 'mysql+pymysql://%(user)s:%(password)s@%(host)s:%(port)s/%(database)s?cha
 
 if robot_environ:
     MYSQL_CONFIG = dict(
-            host="127.0.0.1",
-            port=3306,
-            user="operate",
-            password="4F9dE8IWB8pf0f2927PfEb9b7",
-            charset="utf8")
+        host=mysql_host if mysql_host else "127.0.0.1",
+        port=mysql_port if mysql_port else 3306,
+        user=mysql_user if mysql_user else "operate",
+        password=mysql_password if mysql_password else "4F9dE8IWB8pf0f2927PfEb9b7",
+        charset=mysql_charset if mysql_charset else "utf8")
 else:
     MYSQL_CONFIG = dict(
-            host=mysql_host if mysql_host else "123.57.176.248",
-            port=mysql_port if mysql_port else 3306,
-            user=mysql_user if mysql_user else "operate",
-            password=mysql_password if mysql_password else "4F9dE8IWB8pf0f2927PfEb9b7",
-            charset=mysql_charset if mysql_charset else "utf8")
+        host=mysql_host if mysql_host else "123.57.176.248",
+        port=mysql_port if mysql_port else 3306,
+        user=mysql_user if mysql_user else "operate",
+        password=mysql_password if mysql_password else "4F9dE8IWB8pf0f2927PfEb9b7",
+        charset=mysql_charset if mysql_charset else "utf8")
 
 MYSQL_CONFIG_NEW = MYSQL_CONFIG.copy()
 
@@ -56,13 +57,11 @@ Base = declarative_base()
 # 是否启用Cache, False: 不启用; True: 启用
 CACHE_DB_ON = True
 
-cache_host = "123.57.176.248"
-# cache_host = "localhost"
-
-cache_port = 27027
-cache_user = "wuuuang",
-cache_password = "WJGFd9E6IWBWpf0f7HzEb2929b7",
-cache_database = "dz_gen_data"
+cache_host = cache_host if cache_host else "123.57.176.248"  # cache_host = "localhost"
+cache_port = cache_port if cache_port else 27027
+cache_user = cache_user if cache_user else "wuuuang",
+cache_password = cache_password if cache_password else "WJGFd9E6IWBWpf0f7HzEb2929b7",
+cache_database = cache_database if cache_database else "dz_gen_data"
 
 if cache_user and cache_password:
     cache_host = "mongodb://%s:%s@%s:%s" % (cache_user, cache_password, cache_host, cache_port)
@@ -98,9 +97,9 @@ def mongodb_init(host, port, database, username=None, password=None):
 
 # redis配置项
 REDIS_CONFIG = dict(
-        redis_host="123.57.176.248",
-        redis_port=6389,
-        password="E8IWB8pf0PfE4F9df2927b9b7",
+    redis_host=redis_host if redis_host else "123.57.176.248",
+    redis_port=redis_port if redis_port else 6389,
+    password=redis_password if redis_password else "E8IWB8pf0PfE4F9df2927b9b7",
 )
 
 
@@ -138,10 +137,10 @@ def generate_models(mysql_config, databases_config, database_name, column_prefix
 
 
 MYSQL_DATABASES_TABLES = dict(
-        discuzx=[
-            "bbs_common_member", "bbs_common_member_status", "bbs_ucenter_members", "bbs_forum_thread",
-            "bbs_forum_post", "bbs_forum_attachment", "bbs_forum_memberrecommend",
-        ]
+    discuzx=[
+        "bbs_common_member", "bbs_common_member_status", "bbs_ucenter_members", "bbs_forum_thread",
+        "bbs_forum_post", "bbs_forum_attachment", "bbs_forum_memberrecommend",
+    ]
 )
 
 # 增加相关的分表
