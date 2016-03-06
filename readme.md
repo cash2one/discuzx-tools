@@ -10,3 +10,13 @@
     ./*.py      服务脚本
     ./web       七牛文件下载代理
     ./govern    数据管理后台
+
+# 安全
+    注意：账户密码信息的存放，建议对Demo默认值的更改，放置在系统的环境变量中。相关配置信息的数据，分类存放在以下配置文件里：
+
+    ./conf/env_conf.py          # 从环境变量中读取敏感配置信息
+    ./conf/data_config.py       # 数据相关配置信息 (MySQL\Redis\MongoDB)
+    ./conf/store_conf.py        # 存储相关配置信息
+    ./conf/regular_conf.py      # 业务规则配置信息
+
+    提醒：./conf/data_config.py 里 Redis\MongoDB 账户或密码的更改，请注意与 ./conf/redis_server.conf 或 ./conf/mongod.conf 一致。

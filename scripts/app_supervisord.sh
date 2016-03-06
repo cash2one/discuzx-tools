@@ -1,3 +1,4 @@
 #!/bin/bash
 
-/opt/myenvs/kydiscuzx/bin/supervisord -c /opt/websites/service-quant/conf/supervisor_app.conf
+base_path=$(cd `dirname $0`; pwd)
+/opt/myenvs/kydiscuzx/bin/supervisord -c ${base_path}/conf/supervisor_app.conf
