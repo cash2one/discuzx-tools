@@ -18,5 +18,8 @@
     ./conf/data_config.py       # 数据相关配置信息 (MySQL\Redis\MongoDB)
     ./conf/store_conf.py        # 存储相关配置信息
     ./conf/regular_conf.py      # 业务规则配置信息
+    
+    ./scripts/readme.md         # MongoDb可能使用的DBA账户
+    ./govern/govern/settings.py # 管理后台配置信息 (Email\MySQL)
 
     提醒：./conf/data_config.py 里 Redis\MongoDB 账户或密码的更改，请注意与 ./conf/redis_server.conf 或 ./conf/mongod.conf 一致。

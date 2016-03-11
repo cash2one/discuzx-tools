@@ -22,7 +22,7 @@ redis_port = os.getenv('redis_port')
 redis_password = os.getenv('redis_password')
 
 # mongodb设置
-cache_host = os.getenv('redis_host')
+cache_host = os.getenv('cache_host')
 cache_port = os.getenv('cache_port')
 cache_user = os.getenv('cache_user')
 cache_password = os.getenv('cache_password')
