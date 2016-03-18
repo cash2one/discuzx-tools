@@ -5,4 +5,4 @@ if [ ! -d "/data/db/mongodb/" ]; then
 fi
 
 # service mongod stop
-nohup mongod --config ../conf/mongod.conf &
+mongod --config ../conf/mongod.conf &
