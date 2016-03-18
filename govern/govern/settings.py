@@ -62,7 +62,7 @@ EMAIL_PORT = '25'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.mxhichina.com'
 EMAIL_HOST_USER = 'administrator@ikuanyu.com'
-EMAIL_HOST_PASSWORD = 'WDS926haichuantiandiHi157wjg'
+EMAIL_HOST_PASSWORD = os.getenv('email_host_password')
 
 # Default email address to use for various automated correspondence from
 # the site managers.
@@ -161,10 +161,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'roboter',
-        'USER': 'develop',
-        'PASSWORD': 'f0f2927PfEb9b74F9dE8IWB8p',
-        'HOST': '123.57.176.248',
-        'PORT': '',
+        'USER': os.getenv('mysql_user'),
+        'PASSWORD': os.getenv('mysql_password'),
+        'HOST': os.getenv('mysql_host'),
+        'PORT': os.getenv('mysql_port'),
     }
 }
 

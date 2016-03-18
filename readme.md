@@ -23,3 +23,6 @@
     ./govern/govern/settings.py # 管理后台配置信息 (Email\MySQL)
 
     提醒：./conf/data_config.py 里 Redis\MongoDB 账户或密码的更改，请注意与 ./conf/redis_server.conf 或 ./conf/mongod.conf 一致。
+    
+# 环境变量设置
+    ./env_conf_init.txt 分两部分
