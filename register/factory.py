@@ -7,7 +7,8 @@
 from __future__ import unicode_literals, print_function
 
 from faker import Factory
-from testdata import DictFactory, RandomInteger, RandomLengthStringFactory, FakeDataFactory
+from testdata import DictFactory, RandomInteger, RandomLengthStringFactory, \
+    FakeDataFactory
 from testdata.extra.mongodb import FieldFromCollection
 
 from common.common import ChinaProvider
@@ -25,7 +26,8 @@ if SWITCH_ZH_CN:
     cn_message = FakeDataFactory('cn_message')
 else:
     cn_bio = cn_tag = RandomLengthStringFactory(min_chars=5, max_chars=30)
-    cn_message = cn_email = RandomLengthStringFactory(min_chars=5, max_chars=30)
+    cn_message = cn_email = RandomLengthStringFactory(min_chars=5,
+                                                      max_chars=30)
 
 
 class FakeMember(DictFactory):
@@ -41,19 +43,40 @@ class FakeMemberStatus(DictFactory):
 
 
 class FakeVisitor(DictFactory):
-    uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)
+    uid = FieldFromCollection(
+        collection='common_member',
+        field_name='dz_uid',
+        **cache_option)
 
 
 class FakeRecommend(DictFactory):
-    tid = FieldFromCollection(collection='forum_thread', field_name='thread_id', **cache_option)
-    uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)
+    tid = FieldFromCollection(
+        collection='forum_thread',
+        field_name='thread_id',
+        **cache_option)
+    uid = FieldFromCollection(
+        collection='common_member',
+        field_name='dz_uid',
+        **cache_option)
     opinion = RandomInteger(0, 100)
 
 
 class FakePost(DictFactory):
-    uid = FieldFromCollection(collection='common_member', field_name='dz_uid', **cache_option)
-    tid = FieldFromCollection(collection='forum_thread', field_name='thread_id', **cache_option)
-    fid = FieldFromCollection(collection='forum_thread', field_name='plate_id', **cache_option)
-    username = FieldFromCollection(collection='common_member', field_name='username', **cache_option)
-    # message = FieldFromCollection(collection='', field_name='', **cache_option)
+    uid = FieldFromCollection(
+        collection='common_member',
+        field_name='dz_uid',
+        **cache_option)
+    tid = FieldFromCollection(
+        collection='forum_thread',
+        field_name='thread_id', **cache_option)
+    fid = FieldFromCollection(
+        collection='forum_thread', field_name='plate_id',
+        **cache_option)
+    username = FieldFromCollection(
+        collection='common_member',
+        field_name='username', **cache_option)
+    # message = FieldFromCollection(
+    #     collection='',
+    #     field_name='',
+    #     **cache_option)
     message = cn_message

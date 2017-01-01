@@ -60,9 +60,11 @@ def spread_repair_post(check=False):
     """
 
     if check:
-        alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();", kind="execute")
+        alchemy_sql("INSERT INTO bbs_forum_post_tableid() VALUES();",
+                    kind="execute")
     else:
-        max_pid = alchemy_sql("select max(pid) from bbs_forum_post_tableid;", "scalar")
+        max_pid = alchemy_sql(
+            "select max(pid) from bbs_forum_post_tableid;", "scalar")
         return max_pid
 
 
@@ -156,7 +158,8 @@ def spread_post(uid, tid, fid, username, message):
     return pid
 
 
-def spread_info(subject, message, author, fid, tid=0, file_name=None, attachment=None):
+def spread_info(subject, message, author, fid, tid=0,
+                file_name=None, attachment=None):
     """发信息.
 
         :parameter subject  标题

@@ -23,7 +23,8 @@ def build_file_logs(logger_name, level=logging.INFO):
     if not os.path.exists(logs_path):
         os.makedirs(logs_path)
 
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh = logging.FileHandler(log_path)
     fh.setFormatter(formatter)
 

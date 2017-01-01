@@ -31,7 +31,7 @@ def spread_match_files(limit=5):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-            Attachment.status == 1).order_by(Attachment.id).limit(limit).all()
+        Attachment.status == 1).order_by(Attachment.id).limit(limit).all()
 
     def author_uid_and_name(real_name):
         """由真实姓名拼音获取论坛账户(账户Id,账户名称)

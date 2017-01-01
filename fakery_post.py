@@ -23,7 +23,8 @@ from posting.manager import spread_post
 
 limits = (1, 2, 3)
 intervals = (30, 50, 70, 80)
-faker_post_only = "INSERT INTO bbs_post(uid,tid,pid,create_datetime) VALUES(%s,%s,%s,'%s');"
+faker_post_only = ("INSERT INTO bbs_post(uid,tid,pid,create_datetime) "
+                   "VALUES(%s,%s,%s,'%s');")
 
 
 @skip_hours
@@ -40,14 +41,16 @@ def fake_post(gen_data_count=1):
         faker_post_info.info("=" * 80)
         faker_post_info.info("message = %s" % message)
         faker_post_info.info("(%s)正在回帖(%s)" % (username, tid))
-        # print("uid = %s; tid = %s; fid = %s; username = %s;" % (uid, tid, fid, username))
+        # print("uid = %s; tid = %s; fid = %s; username = %s;" % (
+        # uid, tid, fid, username))
 
         pid = spread_post(uid, tid, fid, username, message)
 
         if pid:
             try:
                 # 更新主题帖最后回帖信息
-                forum_thread = forum_session.query(ForumThread).filter(ForumThread.__tid == tid).first()
+                forum_thread = forum_session.query(ForumThread).filter(
+                    ForumThread.__tid == tid).first()
                 forum_thread.__lastposter = username
                 forum_thread.__lastpost = int(time.time())
                 forum_session.add(forum_thread)
@@ -61,7 +64,8 @@ def fake_post(gen_data_count=1):
                 faker_post_info.exception(ex)
                 faker_post_info.info("回帖成功但记录失败: OK.")
                 time_now = datetime.datetime.now().strftime("%Y-%m-%d %X")
-                faker_post_error.info(faker_post_only % (uid, tid, pid, time_now))
+                faker_post_error.info(
+                    faker_post_only % (uid, tid, pid, time_now))
             else:
                 faker_post_info.info("回帖成功: OK.")
             finally:

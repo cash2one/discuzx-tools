@@ -14,8 +14,10 @@ from common.func import FileFinished, Utils, RedisService
 from common.warning import WarnMedia
 from conf.data_config import robot_session, REDIS_CONFIG
 from conf.logger_config import record_info, upload_info, upload_error
-from conf.regular_config import SEEK_DIRECTORY, IGNORE_FILE_LIST, SKIP_README_FILE, \
-    ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG
+from conf.regular_config import SEEK_DIRECTORY, IGNORE_FILE_LIST, \
+    SKIP_README_FILE, \
+    ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, \
+    USER_MAP_CONFIG, PLATE_MAP_CONFIG
 from models.record import Attachment, Surplus
 from upload import put_up_datum
 
@@ -27,12 +29,15 @@ def build_file_finished():
 
 
 fileFinished = build_file_finished()
-redis_md5sum = RedisService(db="files_md5sum", password=REDIS_CONFIG.get("password"))
-redis_unique = RedisService(db="files_unique", password=REDIS_CONFIG.get("password"))
+redis_md5sum = RedisService(db="files_md5sum",
+                            password=REDIS_CONFIG.get("password"))
+redis_unique = RedisService(db="files_unique",
+                            password=REDIS_CONFIG.get("password"))
 
 media_path = os.path.dirname(os.path.abspath(__file__))
 media_instance = WarnMedia(os.path.join(media_path, "media", "warn_pig.mp3"))
-upload_only_log = "update bbs_attachment set status = 1, upload_datetime = '%s' where id = %d;"
+upload_only_log = ("update bbs_attachment set status = 1, "
+                   "upload_datetime = '%s' where id = %d;")
 
 
 def init_redis_data(kind="md5sum"):
@@ -41,7 +46,9 @@ def init_redis_data(kind="md5sum"):
         :parameter kind: 操作类型
     """
 
-    attachment_entities = robot_session.query(Attachment, Attachment.id, Attachment.md5sum, Attachment.key_name).all()
+    attachment_entities = robot_session.query(Attachment, Attachment.id,
+                                              Attachment.md5sum,
+                                              Attachment.key_name).all()
 
     # 清除既有数据.
     if kind.lower() == "md5sum":
@@ -99,7 +106,8 @@ def map_handler(_attachment):
             except Exception, ex:
                 robot_session.rollback()
                 upload_info.exception(ex)
-                upload_error.info(upload_only_log % (_attachment.upload_datetime, _attachment.id))
+                upload_error.info(upload_only_log % (
+                    _attachment.upload_datetime, _attachment.id))
             else:
                 # 移走成功的文件.
                 file_name_list = [attachment.file_name]
@@ -125,7 +133,9 @@ def search_match_files(directory):
             # 跳过未适配的版块和作者.
             if ENABLE_FOLDER_RULE:
                 base_name = os.path.basename(sub_path).lower()
-                if base_name not in itertools.chain(PLATE_MAP_CONFIG.keys(), USER_MAP_CONFIG.keys()):
+                if base_name not in itertools.chain(
+                        PLATE_MAP_CONFIG.keys(),
+                        USER_MAP_CONFIG.keys()):
                     continue
 
             search_match_files(sub_path)
@@ -134,7 +144,8 @@ def search_match_files(directory):
             # 跳过计划的文件列表.
             if SKIP_README_FILE:
                 ignore_file_list = map(lambda x: x.lower(), IGNORE_FILE_LIST)
-                if ignore_file_list and os.path.basename(sub_path).lower() in ignore_file_list:
+                if ignore_file_list and os.path.basename(
+                        sub_path).lower() in ignore_file_list:
                     continue
 
             # 版块与作者(plate=0, author='')的对应.
@@ -148,7 +159,8 @@ def search_match_files(directory):
             md5sum = Utils.md5sum(sub_path)
             fid = redis_md5sum.get(md5sum)
             if fid:
-                Surplus(sub_path, plate=plate, author=author, md5sum=md5sum, fid=fid).__save(robot_session)
+                Surplus(sub_path, plate=plate, author=author, md5sum=md5sum,
+                        fid=fid).__save(robot_session)
                 record_info.info("skipping: %s ==> %s" % (author, sub_path))
                 continue
 
@@ -156,7 +168,8 @@ def search_match_files(directory):
 
             suffix = Utils.get_info_by_path(sub_path)[2]
             key_name = ''.join((uuid.uuid4().get_hex(), suffix))
-            entity = Attachment(sub_path, key_name, plate=plate, author=author, md5sum=md5sum)
+            entity = Attachment(
+                sub_path, key_name, plate=plate, author=author, md5sum=md5sum)
             robot_session.add(entity)
             robot_session.commit()
             redis_md5sum.set(entity.md5sum, entity.id)
@@ -170,7 +183,7 @@ def upload_match_files(limit=5, loops=True):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-            Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
+        Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
 
     if attachment_entities:
         # map(map_handler, attachment_entities)
@@ -181,10 +194,11 @@ def upload_match_files(limit=5, loops=True):
 
             try:
                 # 上传文件到七牛
-                ret, info = put_up_datum(key=attachment.key_name,
-                                         kind="file",
-                                         file_path=attachment.file_name,
-                                         progress_handler=progress_handler)
+                ret, info = put_up_datum(
+                    key=attachment.key_name,
+                    kind="file",
+                    file_path=attachment.file_name,
+                    progress_handler=progress_handler)
             except Exception, ex:
                 errors = True
                 upload_info.exception(ex)
@@ -201,7 +215,8 @@ def upload_match_files(limit=5, loops=True):
                         errors = True
                         robot_session.rollback()
                         upload_info.exception(ex)
-                        upload_error.log(upload_only_log % (attachment.upload_datetime, attachment.id))
+                        upload_error.log(upload_only_log % (
+                            attachment.upload_datetime, attachment.id))
                     else:
                         # 移走成功的文件.
                         file_name_list = [attachment.file_name]
@@ -231,7 +246,8 @@ def update_name_files(limit=20):
     """
 
     attachment_entities = robot_session.query(Attachment).filter(
-            Attachment.key_name == "", Attachment.status == 0).order_by(Attachment.id).limit(limit).all()
+        Attachment.key_name == "", Attachment.status == 0).order_by(
+        Attachment.id).limit(limit).all()
 
     result = False
     if attachment_entities:

@@ -65,8 +65,11 @@ target/
 
 # PyCharm
 .idea
+.env
 
 # Mine
 kylin_*
 nohup.out
 testing.py
+govern/static/*
+*.tar.gz

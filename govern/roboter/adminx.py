@@ -10,8 +10,10 @@ from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost
 
 class MainDashboard(object):
     widgets = [
-        [{"type": "html", "title": "Test Widget", "content": "<h3> Welcome to ikuanyu.com! </h3>"}, ],
-        [{"type": "qbutton", "title": "Quick Start", "btns": [{'model': BbsAttachment}, {'model': BbsMember}, ]}, ]
+        [{"type": "html", "title": "Test Widget",
+          "content": "<h3> Welcome to ikuanyu.com! </h3>"}, ],
+        [{"type": "qbutton", "title": "Quick Start",
+          "btns": [{'model': BbsAttachment}, {'model': BbsMember}, ]}, ]
     ]
 
 
@@ -44,7 +46,8 @@ class ThreadInline(object):
 
 
 class MemberXAdmin(object):
-    list_display = ('id', 'username', 'password', 'email', 'dz_uid', 'create_datetime')
+    list_display = ('id', 'username', 'password',
+                    'email', 'dz_uid', 'create_datetime')
     search_fields = ['username', 'email', 'dzuid']
     relfield_style = 'fk-ajax'
     reversion_enable = True
@@ -54,8 +57,8 @@ class MemberXAdmin(object):
 
 
 class AttachmentXAdmin(object):
-    list_display = ('id', 'file_name', 'key_name', 'md5sum', 'plate', 'status',
-                    'author', 'create_datetime', 'upload_datetime')
+    list_display = ('id', 'file_name', 'key_name', 'md5sum', 'plate',
+                    'status', 'author', 'create_datetime', 'upload_datetime')
 
     list_filter = ['author', 'file_name']
     search_fields = ['status', 'author', 'file_name']
@@ -63,7 +66,9 @@ class AttachmentXAdmin(object):
 
 
 class ThreadXAdmin(object):
-    list_display = ('id', 'thread_id', 'post_id', 'attachment_id', 'robot_data_id', 'create_datetime')
+    list_display = (
+        'id', 'thread_id', 'post_id', 'attachment_id', 'robot_data_id',
+        'create_datetime')
     list_display_links = ('robot_data_id',)
 
     search_fields = ['thread_id', 'post_id', 'robot_data_id']
@@ -77,13 +82,16 @@ class PostXAdmin(object):
 
 
 class BbsPostContentXAdmin(object):
-    list_display = ('id', 'content', 'status', 'user', 'update_datetime', 'create_datetime')
+    list_display = (
+        'id', 'content', 'status', 'user', 'update_datetime',
+        'create_datetime')
     search_fields = ['user', 'status', 'update_datetime']
     style_fields = {'hosts': 'checkbox-inline'}
 
 
 class SurplusXAdmin(object):
-    list_display = ('id', 'fid', 'path', 'md5sum', 'plate', 'author', 'create_datetime')
+    list_display = (
+        'id', 'fid', 'path', 'md5sum', 'plate', 'author', 'create_datetime')
     list_display_links = ('fid',)
 
     list_filter = ['fid', 'author', 'plate']

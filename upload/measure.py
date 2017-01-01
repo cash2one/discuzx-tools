@@ -6,7 +6,7 @@ from __future__ import unicode_literals, print_function
 from qiniu.auth import Auth
 from qiniu import BucketManager
 
-from conf.store_config import *
+from conf.store_config import ACCESS_KEY, SECRET_KEY, BUCKET_DOMAIN
 
 q = Auth(ACCESS_KEY, SECRET_KEY)
 bucket_instance = BucketManager(q)

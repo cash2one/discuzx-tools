@@ -20,12 +20,14 @@ class CountFromCollection(Factory):
         (from testdata.extra.mongodb import FieldFromCollection)
     """
 
-    def __init__(self, database, collection, field_name, filter_query={}, **connection_kw):
+    def __init__(self, database, collection, field_name, filter_query=None,
+                 **connection_kw):
         super(CountFromCollection, self).__init__()
         with pymongo.MongoClient(**connection_kw) as client:
             db = client[database]
             collection = db[collection]
-            self._possible_values = collection.find(filter_query).distinct(field_name)
+            self._possible_values = collection.find(filter_query).distinct(
+                field_name)
 
     def __call__(self):
         return self._possible_values[self.current_index]
@@ -156,7 +158,8 @@ class ChinaProvider(BaseProvider):
         "人只有经历自己的渺小，才能到达高尚。——卡夫卡《箴言》",
         "以前愁能不能吃饱，现在愁会不会吃倒。——感悟",
         "中国高考有万千毛病，却是目前最公平的一种方式。没有高考，你拼得过富二代吗？——白岩松在郑州大学演讲时说",
-        "5岁：我给你报少年宫。7岁：我给你报奥数班。15岁：我给你报重点中学。18岁：我给你报高考突击班。23岁：我给你报考公务员。32岁：我给你报了《非诚勿扰》",
+        ("5岁：我给你报少年宫。7岁：我给你报奥数班。15岁：我给你报重点中学。"
+         "18岁：我给你报高考突击班。23岁：我给你报考公务员。32岁：我给你报了《非诚勿扰》"),
         "正确结论来自多元的声音，而不是权威的选择。——《批评官员的尺度》",
         "错的事情我们都敢做，对的事情反而不敢做了，那还活着干吗，还不如去死。——影片《窃听风云》台词",
         "国人现在不是根据菜单吃饭，而是按照“元素周期表”吃饭。——时寒冰",

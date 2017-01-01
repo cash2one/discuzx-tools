@@ -34,19 +34,23 @@ def scat_content_to_user():
 
     try:
         # 分发用户(荣堂)数据.
-        thread_entities = forum_session.query(ForumThread).filter(ForumThread.__author == username).all()
+        thread_entities = forum_session.query(ForumThread).filter(
+            ForumThread.__author == username).all()
         if not thread_entities:
             print("Info: No Data.")
             return
 
         # 查询出分发用户数据.
         author_entities = robot_session.query(Member).filter(
-                Member.dz_uid.between(thread_range[0], thread_range[1])).all()
-        author_list = [(author.dz_uid, author.username) for author in author_entities]
+            Member.dz_uid.between(thread_range[0], thread_range[1])).all()
+        author_list = [(author.dz_uid, author.username) for author in
+                       author_entities]
 
         # 查询出自动发帖数据.
-        thread_logs = robot_session.query(Thread.thread_id, Thread.post_id).filter(
-                Thread.create_datetime.between(datetime_range[0], datetime_range[1])).all()
+        thread_logs = robot_session.query(Thread.thread_id,
+                                          Thread.post_id).filter(
+            Thread.create_datetime.between(datetime_range[0],
+                                           datetime_range[1])).all()
 
         post_ids = [thread_entity.post_id for thread_entity in thread_logs]
         thread_ids = [thread_entity.thread_id for thread_entity in thread_logs]
@@ -58,7 +62,8 @@ def scat_content_to_user():
         print("=" * 80)
 
         for index, thread_entity in enumerate(thread_entities):
-            print("Info: %s %s%%." % (index, str(int(float(index) / float(threads_total) * 100))))
+            print("Info: %s %s%%." % (
+                index, str(int(float(index) / float(threads_total) * 100))))
 
             # 只分发自动发帖数据, 跳过正常从网站发出数据.
             if thread_entity.__tid not in thread_ids:
@@ -77,7 +82,7 @@ def scat_content_to_user():
 
             # 更新帖子用户信息
             post_entity = forum_session.query(ForumPost).filter(
-                    ForumPost.__tid == thread_entity.__tid).first()
+                ForumPost.__tid == thread_entity.__tid).first()
 
             if not post_entity or post_entity.__pid not in post_ids:
                 continue
@@ -132,14 +137,16 @@ def fix_member_miss_status():
 
         member_status_entities = []
         for index, member_entity in enumerate(robot_member_entities):
-            print("Info: %s %s%%." % (index, str(int(float(index) / float(gen_data_count) * 100))))
+            print("Info: %s %s%%." % (
+                index, str(int(float(index) / float(gen_data_count) * 100))))
 
             status_data = member_status_list[index]
-            member_status = CommonMemberStatus(__uid=member_entity.dz_uid,
-                                               __regip=status_data['reg_ip'],
-                                               __lastip=status_data['last_ip'],
-                                               __lastvisit=int(time.time()),
-                                               __lastactivity=int(time.time()))
+            member_status = CommonMemberStatus(
+                __uid=member_entity.dz_uid,
+                __regip=status_data['reg_ip'],
+                __lastip=status_data['last_ip'],
+                __lastvisit=int(time.time()),
+                __lastactivity=int(time.time()))
             member_status_entities.append(member_status)
 
         forum_session.add_all(member_status_entities)

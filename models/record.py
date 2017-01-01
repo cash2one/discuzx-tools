@@ -154,7 +154,8 @@ class Thread(BasicBase):
     robot_data_id = Column(INTEGER)
     create_datetime = Column(TIMESTAMP)
 
-    def __init__(self, thread_id, post_id, plate_id, attachment_id=0, robot_data_id=0):
+    def __init__(self, thread_id, post_id, plate_id,
+                 attachment_id=0, robot_data_id=0):
         """存放发帖信息.
         """
 

@@ -21,6 +21,8 @@ gevent>=1.0.2
 xlwt
 xlsxwriter
 
+python-envcfg>=0.2.0
+
 # django-reversion>=1.10.0
 
 git+https://github.com/wujuguang/django-admin-honeypot.git

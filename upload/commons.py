@@ -12,7 +12,8 @@ import qiniu.conf
 from qiniu.io import put, put_file
 from qiniu.rs import PutPolicy, GetPolicy, Client
 from conf.store_config import ACCESS_KEY, SECRET_KEY, \
-    BUCKET_DOMAIN, BUCKET_NAME, PUBLIC_BUCKET_DOMAIN, PUBLIC_BUCKET_NAME, UNIX_TIME_TTL
+    BUCKET_DOMAIN, BUCKET_NAME, PUBLIC_BUCKET_DOMAIN, PUBLIC_BUCKET_NAME, \
+    UNIX_TIME_TTL
 
 qiniu.conf.ACCESS_KEY = ACCESS_KEY
 qiniu.conf.SECRET_KEY = SECRET_KEY
@@ -78,7 +79,8 @@ def get_dl_token(file_name, unix_time=None):
     if not unix_time:
         unix_time = int(time.time()) + UNIX_TIME_TTL
 
-    down_load_url = 'http://%s/%s?e=%s' % (BUCKET_DOMAIN, file_name, unix_time)
+    down_load_url = 'http://%s/%s?e=%s' % (
+        BUCKET_DOMAIN, file_name, unix_time)
     dl_token = digest.Mac().sign(down_load_url)
 
     return dl_token, unix_time
@@ -114,7 +116,8 @@ def get_public_dl_url(file_name, suffix=None):
     if suffix:
         file_name += suffix
 
-    base_url = PUBLIC_BUCKET_DOMAIN or 'http://%s.qiniudn.com/' % PUBLIC_BUCKET_NAME
+    default_url = 'http://%s.qiniudn.com/' % PUBLIC_BUCKET_NAME
+    base_url = PUBLIC_BUCKET_DOMAIN or default_url
     return urljoin(base_url, file_name)
 
 

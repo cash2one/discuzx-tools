@@ -8,4 +8,5 @@ attachment_enable = False
 type_attachment = 1 if attachment_enable else 0
 
 # DZ内置下载链接格式
-download_link = '\r\n[url=http://file.ikuanyu.com/source/private/download?file=%s]%s[/url]'
+download_link = ('\r\n[url=http://file.ikuanyu.com/'
+                 'source/private/download?file=%s]%s[/url]')

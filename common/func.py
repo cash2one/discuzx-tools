@@ -17,7 +17,9 @@ from conf.logger_config import redis_data_log
 from xpinyin import Pinyin
 
 pinyin = Pinyin()
-redis_pool = redis.ConnectionPool(host=REDIS_CONFIG.get("redis_host"), port=REDIS_CONFIG.get("redis_port"))
+redis_pool = redis.ConnectionPool(
+    host=REDIS_CONFIG.get("redis_host"),
+    port=REDIS_CONFIG.get("redis_port"))
 
 
 class CacheService(object):
@@ -72,7 +74,9 @@ class CacheService(object):
 class RedisService(object):
     def __init__(self, db=0, password=None):
         try:
-            self._redis_cli = redis.Redis(connection_pool=redis_pool, db=db, password=password)
+            self._redis_cli = redis.Redis(
+                connection_pool=redis_pool, db=db,
+                password=password)
         except Exception, ex:
             self._redis_cli = None
             redis_data_log.error("redis连接失败：%s" % (str(ex)))
@@ -164,7 +168,8 @@ class Utils(object):
 
         dz_info = os.path.dirname(file_path).rsplit(os.sep, 2)[-2:]
         if len(dz_info) != 2:
-            raise Exception("文件存放路径异常! 必须放在[plate%sauthor]之下!" % os.sep)
+            raise Exception(
+                "文件存放路径异常! 必须放在[plate%sauthor]之下!" % os.sep)
 
         suffix = os.path.splitext(file_path)[-1]
         suffix = suffix if suffix else ""
@@ -174,7 +179,9 @@ class Utils(object):
     def get_plate_map_conf(plate_map_string):
         """转换从数据库导出的数据.
 
-            SELECT fid, name FROM `bbs_forum_forum` WHERE status=1 AND type= 'forum';
+            SELECT fid, name FROM `bbs_forum_forum`
+            WHERE status=1 AND type= 'forum';
+
             :parameter plate_map_string:
         """
 
@@ -235,9 +242,11 @@ class FileProcess(object):
         # 复制文件
         if os.path.isfile(self.path):
             new_file = os.path.join(new_path, os.path.basename(self.path))
-            shutil.copyfile(self.path, new_file)  # 参数A和B都只能是文件
+            # 参数A和B都只能是文件
+            shutil.copyfile(self.path, new_file)
         elif os.path.isdir(self.path):
-            shutil.copy(self.path, new_path)  # 参数A只能是文件夹, 参数B可是文件或目标目录
+            # 参数A只能是文件夹, 参数B可是文件或目标目录
+            shutil.copy(self.path, new_path)
         else:
             pass
 
@@ -283,7 +292,8 @@ class FileFinished(object):
         make_dirs(self.done_directory)
         for entity in entities_list:
             dir_name = os.path.dirname(entity)
-            new_path = dir_name.replace(self.seek_directory, self.done_directory)
+            new_path = dir_name.replace(self.seek_directory,
+                                        self.done_directory)
             make_dirs(new_path)
             shutil.move(entity, new_path)
 

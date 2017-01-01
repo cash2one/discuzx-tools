@@ -22,7 +22,8 @@ class Pinyin(object):
     .. _chinese\_pinyin: https://github.com/flyerhzm/chinese_pinyin
     """
 
-    data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Mandarin.dat')
+    data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'Mandarin.dat')
 
     def __init__(self):
         self.dict = {}

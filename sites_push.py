@@ -60,7 +60,8 @@ class BroadSite(SitePush):
             pages_list = []
             data_robots = open(gen_file, 'wb')
             site_format = "        'http://%s/thread-%s-1-1.html',"
-            tpl_content = open(os.path.join(current_dir, 'data_splinter.tpl'), 'rb').read()
+            tpl_content = open(os.path.join(current_dir, 'data_splinter.tpl'),
+                               'rb').read()
 
             urls_file = {}
             times = int(threads_total / self.urls_size) + 1
@@ -75,9 +76,12 @@ class BroadSite(SitePush):
             for index, entity in enumerate(thread_entities):
                 entity = json.loads(str(entity))
                 current_index = int(index / self.urls_size)
-                urls_file[current_index].write(site_url % (self.site, str(entity.get("tid"))))
-                broad_site_info.info("Info: Reach up to (%s / %s)" % (index, threads_total))
-                pages_list.append(site_format % (self.site, str(entity.get("tid"))))
+                urls_file[current_index].write(
+                    site_url % (self.site, str(entity.get("tid"))))
+                broad_site_info.info(
+                    "Info: Reach up to (%s / %s)" % (index, threads_total))
+                pages_list.append(
+                    site_format % (self.site, str(entity.get("tid"))))
 
             # data_splinter:写入配置数据
             data_robots.write(str(tpl_content % '\n'.join(pages_list)))

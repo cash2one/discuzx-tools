@@ -32,8 +32,11 @@ class SitePush(object):
         self.gen_data()
         if self._urls_list:
             push_api = self._get_push_api()
-            command_format = "curl -H 'Content-Type:text/plain' --data-binary @%s %s"
+            command_format = (
+                "curl -H 'Content-Type:text/plain'"
+                " --data-binary @%s %s")
+
             for urls in self._urls_list:
                 str_command = command_format % (urls, push_api)
                 print(str_command)
-                # os.system(str_command)
+                os.system(str_command)

@@ -14,29 +14,32 @@ from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from conf.env_conf import mysql_host, mysql_port, mysql_user, mysql_password, mysql_charset, \
-    redis_host, redis_port, redis_password, cache_host, cache_port, cache_user, cache_password, cache_database
+from conf.env_conf import (
+    mysql_host, mysql_port, mysql_user, mysql_password, mysql_charset,
+    redis_host, redis_port, redis_password,
+    cache_host, cache_port, cache_user, cache_password, cache_database)
 
 is_echo = False
 db_pool_recycle = 60
 
 robot_environ = False  # local/server数据库连接, False: local; True: server.
-conn = 'mysql+pymysql://%(user)s:%(password)s@%(host)s:%(port)s/%(database)s?charset=%(charset)s'
+conn = ('mysql+pymysql://%(user)s:%(password)s@'
+        '%(host)s:%(port)s/%(database)s?charset=%(charset)s')
 
 if robot_environ:
     MYSQL_CONFIG = dict(
-        host=mysql_host if mysql_host else "127.0.0.1",
-        port=mysql_port if mysql_port else 3306,
-        user=mysql_user if mysql_user else "operate",
-        password=mysql_password if mysql_password else "4F9dE8IWB8pf0f2927PfEb9b7",
-        charset=mysql_charset if mysql_charset else "utf8")
+        host=mysql_host or '127.0.0.1',
+        port=mysql_port or 3306,
+        user=mysql_user,
+        password=mysql_password,
+        charset=mysql_charset or "utf8")
 else:
     MYSQL_CONFIG = dict(
-        host=mysql_host if mysql_host else "123.57.176.248",
-        port=mysql_port if mysql_port else 3306,
-        user=mysql_user if mysql_user else "operate",
-        password=mysql_password if mysql_password else "4F9dE8IWB8pf0f2927PfEb9b7",
-        charset=mysql_charset if mysql_charset else "utf8")
+        host=mysql_host or '127.0.0.1',
+        port=mysql_port or 3306,
+        user=mysql_user,
+        password=mysql_password,
+        charset=mysql_charset or "utf8")
 
 MYSQL_CONFIG_NEW = MYSQL_CONFIG.copy()
 
@@ -45,8 +48,10 @@ forum_url = conn % MYSQL_CONFIG_NEW
 MYSQL_CONFIG_NEW.update(database="roboter")
 robot_url = conn % MYSQL_CONFIG_NEW
 
-forum_engine = create_engine(forum_url, echo=is_echo, pool_recycle=db_pool_recycle)
-robot_engine = create_engine(robot_url, echo=is_echo, pool_recycle=db_pool_recycle)
+forum_engine = create_engine(forum_url, echo=is_echo,
+                             pool_recycle=db_pool_recycle)
+robot_engine = create_engine(robot_url, echo=is_echo,
+                             pool_recycle=db_pool_recycle)
 
 forum_session = scoped_session(sessionmaker(bind=forum_engine))()
 robot_session = scoped_session(sessionmaker(bind=robot_engine))()
@@ -57,14 +62,15 @@ Base = declarative_base()
 # 是否启用Cache, False: 不启用; True: 启用
 CACHE_DB_ON = True
 
-cache_host = cache_host if cache_host else "123.57.176.248"  # cache_host = "localhost"
-cache_port = cache_port if cache_port else 27027
-cache_user = cache_user if cache_user else "wuuuang",
-cache_password = cache_password if cache_password else "WJGFd9E6IWBWpf0f7HzEb2929b7",
-cache_database = cache_database if cache_database else "dz_gen_data"
+cache_host = cache_host  # cache_host = "localhost"
+cache_port = cache_port or 27027
+cache_user = cache_user,
+cache_password = cache_password,
+cache_database = cache_database or "dz_gen_data"
 
 if cache_user and cache_password:
-    cache_host = "mongodb://%s:%s@%s:%s" % (cache_user, cache_password, cache_host, cache_port)
+    cache_host = "mongodb://%s:%s@%s:%s" % (
+        cache_user, cache_password, cache_host, cache_port)
 
 cache_option = {
     'host': cache_host,
@@ -83,7 +89,8 @@ def mongodb_init(host, port, database, username=None, password=None):
         :param password: 密码
     """
     if username and password:
-        connection_string = "mongodb://%s:%s@%s:%d/%s" % (username, password, host, port, database)
+        connection_string = "mongodb://%s:%s@%s:%d/%s" % (
+            username, password, host, port, database)
         client = pymongo.MongoClient(connection_string)
     else:
         client = pymongo.MongoClient(host, port)
@@ -97,16 +104,17 @@ def mongodb_init(host, port, database, username=None, password=None):
 
 # redis配置项
 REDIS_CONFIG = dict(
-    redis_host=redis_host if redis_host else "123.57.176.248",
-    redis_port=redis_port if redis_port else 6389,
-    password=redis_password if redis_password else "E8IWB8pf0PfE4F9df2927b9b7",
+    redis_host=redis_host,
+    redis_port=redis_port or 6389,
+    password=redis_password,
 )
 
 
 # ===================以下为从数据库到ORM的映射===================
 
 
-def generate_models(mysql_config, databases_config, database_name, column_prefix='__'):
+def generate_models(mysql_config, databases_config, database_name,
+                    column_prefix='__'):
     """"从数据库表生成模型.
 
         :parameter mysql_config:        MySQL配置
@@ -138,16 +146,21 @@ def generate_models(mysql_config, databases_config, database_name, column_prefix
 
 MYSQL_DATABASES_TABLES = dict(
     discuzx=[
-        "bbs_common_member", "bbs_common_member_status", "bbs_ucenter_members", "bbs_forum_thread",
+        "bbs_common_member", "bbs_common_member_status", "bbs_ucenter_members",
+        "bbs_forum_thread",
         "bbs_forum_post", "bbs_forum_attachment", "bbs_forum_memberrecommend",
     ]
 )
 
 # 增加相关的分表
-bbs_forum_attachment_list = ["bbs_forum_attachment_%d" % i for i in range(0, 10)]
+bbs_forum_attachment_list = ["bbs_forum_attachment_%d" %
+                             i for i in range(0, 10)]
+
 MYSQL_DATABASES_TABLES["discuzx"].extend(bbs_forum_attachment_list)
 
-generate_models = functools.partial(generate_models, MYSQL_CONFIG, MYSQL_DATABASES_TABLES)
+generate_models = functools.partial(
+    generate_models, MYSQL_CONFIG, MYSQL_DATABASES_TABLES)
+
 generate_db_models = generate_models("discuzx")
 
 if __name__ == "__main__":

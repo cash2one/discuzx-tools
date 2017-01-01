@@ -5,7 +5,8 @@ from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from import_export.admin import ImportExportModelAdmin
 
-from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost, BbsPostContent
+from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost, \
+    BbsPostContent
 
 
 class CustomModelAdmin(admin.ModelAdmin):
@@ -19,7 +20,8 @@ class CustomModelAdmin(admin.ModelAdmin):
             if self.has_change:
                 return True
 
-        return super(CustomModelAdmin, self).has_change_permission(request, obj)
+        return super(CustomModelAdmin, self).has_change_permission(
+            request, obj)
 
     def get_model_perms(self, request):
         value = super(CustomModelAdmin, self).get_model_perms(request)
@@ -29,7 +31,8 @@ class CustomModelAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         if self.has_view_permission(request, None):
             self.has_change = True
-        result = super(CustomModelAdmin, self).changelist_view(request, extra_context)
+        result = super(CustomModelAdmin, self).changelist_view(
+            request, extra_context)
         self.has_change = False
         return result
 
@@ -43,21 +46,25 @@ class AttachmentAdmin(CustomModelAdmin):
 
 
 class MemberAdmin(CustomModelAdmin):
-    list_display = ('id', 'username', 'password', 'email', 'dz_uid', 'create_datetime')
+    list_display = (
+        'id', 'username', 'password', 'email', 'dz_uid', 'create_datetime')
     ordering = ('-create_datetime',)
     date_hierarchy = 'create_datetime'
     search_fields = ('username', 'dz_uid')
 
 
 class SurplusAdmin(CustomModelAdmin):
-    list_display = ('id', 'fid', 'path', 'md5sum', 'plate', 'author', 'create_datetime')
+    list_display = (
+        'id', 'fid', 'path', 'md5sum', 'plate', 'author', 'create_datetime')
     ordering = ('-create_datetime',)
     date_hierarchy = 'create_datetime'
     search_fields = ('author', 'plate')
 
 
 class ThreadAdmin(CustomModelAdmin):
-    list_display = ('id', 'thread_id', 'post_id', 'attachment_id', 'robot_data_id', 'create_datetime')
+    list_display = (
+        'id', 'thread_id', 'post_id', 'attachment_id', 'robot_data_id',
+        'create_datetime')
     ordering = ('-create_datetime',)
     date_hierarchy = 'create_datetime'
     search_fields = ('thread_id', 'post_id', 'robot_data_id')
@@ -72,7 +79,9 @@ class PostAdmin(CustomModelAdmin):
 
 class BbsPostContentAdmin(CustomModelAdmin, ImportExportModelAdmin):
     resource_class = BbsPostContent
-    list_display = ('id', 'content', 'status', 'user', 'update_datetime', 'create_datetime')
+    list_display = (
+        'id', 'content', 'status', 'user', 'update_datetime',
+        'create_datetime')
     ordering = ('-update_datetime', '-create_datetime')
     date_hierarchy = 'create_datetime'
     list_display_links = ('id', 'content')

@@ -40,12 +40,15 @@ def fake_member(gen_data_count=1):
         username = entity["username"].lower()
 
         length = random.randint(6, 20)
-        random_string = ''.join((entity["password"], str(entity["assist_number"])))
+        random_string = ''.join(
+            (entity["password"], str(entity["assist_number"])))
         random_string = [random.choice(random_string) for _ in range(length)]
         password = ''.join(random_string)
 
         # 用户中心md5后的实际密码.
-        salt = "".join([random.choice(string.ascii_lowercase + string.digits) for _ in range(6)])
+        salt = "".join(
+            [random.choice(string.ascii_lowercase + string.digits) for _ in
+             range(6)])
         hash_password = Utils.dz_uc_md5(password, salt)
 
         # 会员表md5后的伪密码.

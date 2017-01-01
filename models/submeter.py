@@ -23,7 +23,8 @@ class ModelFactory(object):
         """
 
         try:
-            forum_attachment = generate_db_models('bbs_forum_attachment_%d' % index)
+            forum_attachment = generate_db_models(
+                'bbs_forum_attachment_%d' % index)
 
             class ForumAttachment(forum_attachment, BaseModel):
                 def __init__(self, **kargs):
@@ -43,8 +44,10 @@ def cache_thread_member():
 
     if not CacheService.cache_table_dict.get("forum_thread", False):
         forum_thread_entities = robot_session.query(Thread).all()
-        CacheService.cache_data_import_model(forum_thread_entities, "forum_thread")
+        CacheService.cache_data_import_model(
+            forum_thread_entities, "forum_thread")
 
     if not CacheService.cache_table_dict.get("common_member", False):
         common_member_entities = robot_session.query(Member).all()
-        CacheService.cache_data_import_model(common_member_entities, "common_member")
+        CacheService.cache_data_import_model(
+            common_member_entities, "common_member")

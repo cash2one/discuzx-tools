@@ -8,7 +8,9 @@ import os
 from qiniu import Auth, BucketManager, put_data, put_file, put_stream
 from qiniu.compat import is_py2, is_py3
 
-from conf.store_config import *
+from conf.store_config import (
+    ACCESS_KEY, SECRET_KEY, BUCKET_NAME, BUCKET_DOMAIN, UNIX_TIME_TTL,
+    PUBLIC_BUCKET_NAME, PUBLIC_BUCKET_DOMAIN)
 
 q = Auth(ACCESS_KEY, SECRET_KEY)
 bucket_instance = BucketManager(q)
@@ -44,31 +46,35 @@ def put_up_datum(file_path, key, kind="file", progress_handler=None):
         :parameter file_path
         :parameter key
         :parameter kind
+        :parameter progress_handler
     """
 
     up_token = get_up_token(key)
     if kind == "data":
         with open(file_path, 'rb') as input_stream:
             data = input_stream.read()
-            ret, info = put_data(key=key,
-                                 data=data,
-                                 check_crc=True,
-                                 up_token=up_token,
-                                 mime_type="application/octet-stream",
-                                 progress_handler=progress_handler)
+            ret, info = put_data(
+                key=key,
+                data=data,
+                check_crc=True,
+                up_token=up_token,
+                mime_type="application/octet-stream",
+                progress_handler=progress_handler)
     elif kind == "stream":
         size = os.stat(file_path).st_size
         with open(file_path, 'rb') as input_stream:
-            ret, info = put_stream(key=key,
-                                   up_token=up_token,
-                                   input_stream=input_stream,
-                                   data_size=size,
-                                   progress_handler=progress_handler)
+            ret, info = put_stream(
+                key=key,
+                up_token=up_token,
+                input_stream=input_stream,
+                data_size=size,
+                progress_handler=progress_handler)
     else:
-        ret, info = put_file(key=key,
-                             up_token=up_token,
-                             file_path=file_path,
-                             progress_handler=progress_handler)
+        ret, info = put_file(
+            key=key,
+            up_token=up_token,
+            file_path=file_path,
+            progress_handler=progress_handler)
 
     return ret, info
 
@@ -101,7 +107,8 @@ def get_public_dl_url(file_name, suffix=None):
     if suffix:
         file_name += suffix
 
-    base_url = PUBLIC_BUCKET_DOMAIN or 'http://%s.qiniudn.com/' % PUBLIC_BUCKET_NAME
+    default_url = 'http://%s.qiniudn.com/' % PUBLIC_BUCKET_NAME
+    base_url = PUBLIC_BUCKET_DOMAIN or default_url
     return urljoin(base_url, file_name)
 
 

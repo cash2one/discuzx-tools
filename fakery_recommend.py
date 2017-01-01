@@ -43,16 +43,21 @@ def fake_recommend(gen_data_count=1):
 
         # 查询是否顶过帖
         recommend_entities = forum_session.query(ForumMemberRecommend).filter(
-                ForumMemberRecommend.__tid == tid,
-                ForumMemberRecommend.__recommenduid == uid).all()
+            ForumMemberRecommend.__tid == tid,
+            ForumMemberRecommend.__recommenduid == uid).all()
 
         if recommend_entities:
             faker_recommend_info.info("返回:之前已评过该帖！")
             continue
 
         try:
-            forum_member_recommend = ForumMemberRecommend(__tid=tid, __recommenduid=uid, __dateline=int(time.time()))
-            forum_thread = forum_session.query(ForumThread).filter(ForumThread.__tid == tid).first()
+            forum_member_recommend = ForumMemberRecommend(
+                __tid=tid,
+                __recommenduid=uid,
+                __dateline=int(
+                    time.time()))
+            forum_thread = forum_session.query(ForumThread).filter(
+                ForumThread.__tid == tid).first()
             forum_thread.__views += 1  # 查看次数
             forum_thread.__recommends += 1  # 推荐指数
             if opinion < 85:

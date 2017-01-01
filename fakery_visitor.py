@@ -34,11 +34,13 @@ def fake_visitor(gen_data_count=1):
         faker_user_status_info.info("=" * 80)
 
         # 随便从cache里找出uid
-        user_ids = [member_status["uid"] for member_status in FakeVisitor().generate(gen_data_count)]
+        user_ids = [member_status["uid"] for member_status in
+                    FakeVisitor().generate(gen_data_count)]
 
         # 查出uid的会员状态更新数据
-        member_status_entities = forum_session.query(CommonMemberStatus).filter(
-                CommonMemberStatus.__uid.in_(user_ids)).all()
+        member_status_entities = forum_session.query(
+            CommonMemberStatus).filter(
+            CommonMemberStatus.__uid.in_(user_ids)).all()
 
         if not member_status_entities:
             print("Info: No Data.")

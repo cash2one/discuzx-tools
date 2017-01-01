@@ -81,12 +81,14 @@ class Scheduler(object):
 
     def __init__(self, time_list, logger=None):
         """
-            :parameter time_list: 形式如:[(18, 30, 0), (19, 0, 0)] / [(18, 30), (19, 0)]
+            :parameter time_list: 形式如:[
+            (18, 30, 0), (19, 0, 0)] / [(18, 30), (19, 0)]
             :parameter logger: logger日志对象.
         """
 
         self.logger = logger
-        self._print = self.logger.info if self.logger and isinstance(self.logger, logging.Logger) else print
+        self._print = self.logger.info if self.logger and isinstance(
+            self.logger, logging.Logger) else print
 
         if isinstance(time_list, list):
             time_list.sort()
@@ -98,11 +100,14 @@ class Scheduler(object):
         """用于从时间列表中选当前时间的下个时间执行点.
         """
 
-        index, count, time_origin = 0, len(self.time_list), datetime.datetime.now()
+        index, count, time_origin = 0, len(
+            self.time_list), datetime.datetime.now()
 
         def get_time(tuple_time):
-            return datetime.datetime(time_origin.year, time_origin.month, time_origin.day,
-                                     tuple_time[0], tuple_time[1], compatible(tuple_time, 2), 0)
+            return datetime.datetime(time_origin.year, time_origin.month,
+                                     time_origin.day,
+                                     tuple_time[0], tuple_time[1],
+                                     compatible(tuple_time, 2), 0)
 
         while True:
             if get_time(self.time_list[index]) < time_origin:
@@ -116,8 +121,9 @@ class Scheduler(object):
     def _generate_time_point(self, index=0, break_loop=False):
         """轮询到每个时间点.
 
-            :parameter index            时间列表起始执行点.
-            :parameter break_loop       用于time_list时间点执行完毕是否退出, 默认False不退出, 循环每一天.
+            :parameter index       时间列表起始执行点.
+            :parameter break_loop  用于time_list时间点执行完毕是否退出,
+            默认False不退出, 循环每一天.
         """
 
         count = len(self.time_list)
@@ -141,8 +147,11 @@ class Scheduler(object):
         """
         now_time = time.localtime()
         _time = time.mktime(time.strptime(
-                "%s-%s-%s %s:%s:%s" % (now_time.tm_year, now_time.tm_mon, now_time.tm_mday, hour, minute, second),
-                "%Y-%m-%d %H:%M:%S"))
+            "%s-%s-%s %s:%s:%s" % (
+                now_time.tm_year, now_time.tm_mon, now_time.tm_mday, hour,
+                minute,
+                second),
+            "%Y-%m-%d %H:%M:%S"))
 
         return int(_time)
 
@@ -155,13 +164,15 @@ class Scheduler(object):
         """
 
         time_index = self._time_origin()[0]
-        time_yield = self._generate_time_point(index=time_index)  # 不传入break_loop的参数.
+        time_yield = self._generate_time_point(
+            index=time_index)  # 不传入break_loop的参数.
         time_next = time_yield.next()
 
         while True:
             now_time = time.localtime()
             unix_time = int(time.mktime(now_time))
-            unix_next = self.make_timestamp(time_next[0], time_next[1], compatible(time_next, 2))
+            unix_next = self.make_timestamp(time_next[0], time_next[1],
+                                            compatible(time_next, 2))
 
             interval = unix_next - unix_time
             if interval < 0:
@@ -182,9 +193,15 @@ class Scheduler(object):
         now_time = time.localtime()
         time_index = self._time_origin()[0]
 
-        for time_next in self._generate_time_point(index=time_index, break_loop=True):  # 传入break_loop = True的参数.
+        for time_next in self._generate_time_point(
+                index=time_index,
+                break_loop=True):  # 传入break_loop = True的参数.
+
             unix_time = int(time.mktime(now_time))
-            unix_next = self.make_timestamp(time_next[0], time_next[1], compatible(time_next, 2))
+            unix_next = self.make_timestamp(
+                time_next[0],
+                time_next[1],
+                compatible(time_next, 2))
 
             interval = unix_next - unix_time
             if interval < 0:
@@ -199,7 +216,10 @@ class Scheduler(object):
 
         self._print(self.time_list)
         time_index = self._time_origin()[0]
-        # for x in self._generate_time_point(index=time_index, break_loop=True):  # 传入break_loop = True的参数.
+        # 传入break_loop = True的参数.
+        # for x in self._generate_time_point(
+        #         index=time_index,
+        #         break_loop=True):
 
         counter = 0
         for x in self._generate_time_point(index=time_index):
