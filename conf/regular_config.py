@@ -6,7 +6,7 @@
 
 from __future__ import unicode_literals, print_function
 
-from common.func import Utils
+from libs.common import Utils
 
 # 计划跳过的文件列表
 IGNORE_FILE_LIST = ["readme.txt", "README"]

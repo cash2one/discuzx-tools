@@ -11,9 +11,9 @@ import time
 import traceback
 
 from conf.data_config import robot_session, forum_session
-from models.record import Thread, Member
-from models.remote import ForumThread, ForumPost, CommonMemberStatus
-from register.factory import FakeMemberStatus
+from libs.models.record import Thread, Member
+from libs.models.remote import ForumThread, ForumPost, CommonMemberStatus
+from libs.register.factory import FakeMemberStatus
 
 
 def scat_content_to_user():

@@ -6,20 +6,20 @@
 
 from __future__ import unicode_literals, print_function
 
-import time
 import datetime
 import random
 import string
+import time
 
 from twisted.internet import task, reactor
 
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_user_info
-from common.scheduler import partial, skip_hours, NoInterval
-from common.func import Utils, CacheService
-from register.factory import FakeMember, FakeMemberStatus
-from models.record import Member
-from models.remote import CommonMember, CenterMember, CommonMemberStatus
+from libs.common.func import Utils, CacheService
+from libs.common.scheduler import partial, skip_hours, NoInterval
+from libs.models.record import Member
+from libs.models.remote import CommonMember, CenterMember, CommonMemberStatus
+from libs.register.factory import FakeMember, FakeMemberStatus
 
 limits = (1, 2, 3)
 intervals = (30, 50, 70, 100)

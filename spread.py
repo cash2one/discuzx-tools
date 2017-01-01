@@ -7,17 +7,17 @@
 from __future__ import unicode_literals, print_function
 
 import os
-import time
 import random
+import time
 
 from twisted.internet import task, reactor
 
 from conf.data_config import robot_session
 from conf.logger_config import post_info
 from conf.regular_config import USER_MAP_CONFIG
-from common.scheduler import partial, skip_hours, NoInterval
-from models.record import Attachment, Thread
-from posting.manager import spread_info
+from libs.common.scheduler import partial, skip_hours, NoInterval
+from libs.models.record import Attachment, Thread
+from libs.posting.manager import spread_info
 
 limits = (2, 3, 5, 7)
 intervals = (20, 30, 50, 70, 100)

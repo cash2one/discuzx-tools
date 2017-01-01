@@ -5,10 +5,12 @@
 """
 
 from __future__ import unicode_literals, print_function
-from conf.data_config import generate_db_models, robot_session
-from base import BaseModel
+
 from common.func import CacheService
-from models.record import Member, Thread
+
+from base import BaseModel
+from conf.data_config import generate_db_models, robot_session
+from libs.models import Member, Thread
 
 
 class ModelFactory(object):

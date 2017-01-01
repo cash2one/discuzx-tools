@@ -5,7 +5,7 @@ from __future__ import unicode_literals, print_function
 
 import logging
 
-from common.logger import build_file_logs
+from libs.common.logger import build_file_logs
 
 level = logging.INFO  # logging.DEBUG
 

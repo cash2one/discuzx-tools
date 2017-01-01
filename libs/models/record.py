@@ -6,12 +6,12 @@
 
 from __future__ import unicode_literals, print_function
 
-import os
 import datetime
+import os
 
 from sqlalchemy import Column, INTEGER, VARCHAR, TIMESTAMP
 
-from models.base import BasicBase
+from libs.models import BasicBase
 
 
 class Attachment(BasicBase):

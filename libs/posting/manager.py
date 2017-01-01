@@ -10,13 +10,13 @@ import sys
 import time
 import traceback
 
+from models.remote import ForumPost, ForumThread, ForumAffixIndex
+from models.submeter import ModelFactory
 from sqlalchemy.sql import text
 
 from conf.data_config import forum_session, forum_engine
 from conf.logger_config import post_info
-from models.remote import ForumPost, ForumThread, ForumAffixIndex
-from models.submeter import ModelFactory
-from posting import type_attachment, attachment_enable, download_link
+from libs.posting import type_attachment, attachment_enable, download_link
 
 reload(sys)
 sys.setdefaultencoding('utf8')

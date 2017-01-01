@@ -10,16 +10,16 @@ import uuid
 
 from twisted.internet import reactor, task
 
-from common.func import FileFinished, Utils, RedisService
-from common.warning import WarnMedia
 from conf.data_config import robot_session, REDIS_CONFIG
 from conf.logger_config import record_info, upload_info, upload_error
 from conf.regular_config import SEEK_DIRECTORY, IGNORE_FILE_LIST, \
     SKIP_README_FILE, \
     ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, \
     USER_MAP_CONFIG, PLATE_MAP_CONFIG
-from models.record import Attachment, Surplus
-from upload import put_up_datum
+from libs.common.func import FileFinished, Utils, RedisService
+from libs.common.warning import WarnMedia
+from libs.models.record import Attachment, Surplus
+from libs.upload import put_up_datum
 
 
 def build_file_finished():

@@ -12,12 +12,12 @@ import traceback
 
 from twisted.internet import task, reactor
 
-from common.scheduler import partial, skip_hours, NoInterval
 from conf.data_config import forum_session
 from conf.logger_config import faker_user_status_info
-from models.remote import CommonMemberStatus
-from models.submeter import cache_thread_member
-from register.factory import FakeVisitor
+from libs.common.scheduler import partial, skip_hours, NoInterval
+from libs.models.remote import CommonMemberStatus
+from libs.models.submeter import cache_thread_member
+from libs.register.factory import FakeVisitor
 
 limits = (5, 10, 15,)
 intervals = (20, 30, 40)

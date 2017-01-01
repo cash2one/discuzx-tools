@@ -11,9 +11,9 @@ from testdata import DictFactory, RandomInteger, RandomLengthStringFactory, \
     FakeDataFactory
 from testdata.extra.mongodb import FieldFromCollection
 
-from common.common import ChinaProvider
-from control import SWITCH_ZH_CN
 from conf.data_config import cache_option
+from control import SWITCH_ZH_CN
+from libs.common.common import ChinaProvider
 
 if SWITCH_ZH_CN:
     china_factory = Factory.create('zh_CN')
