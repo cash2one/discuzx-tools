@@ -15,5 +15,6 @@ MySQL-python>=1.2.5
 
 fake-factory>=0.5.3
 python-testdata>=1.0.5
+python-envcfg>=0.2.0
 
 git+https://github.com/wujuguang/autoloads.git
