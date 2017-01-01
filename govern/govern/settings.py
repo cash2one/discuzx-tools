@@ -48,7 +48,7 @@ STATICFILES_FINDERS = (
 
 SITE_ID = 1
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'r$c=k7w2uat-vfk7*m9li-+g34x9yb$&&u&%5g!b)@-zzoo3hl'
+SECRET_KEY = os.getenv('secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -60,21 +60,20 @@ ALLOWED_HOSTS = []
 
 EMAIL_PORT = '25'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.mxhichina.com'
-EMAIL_HOST_USER = 'administrator@ikuanyu.com'
+EMAIL_HOST = os.getenv('email_host')
+EMAIL_HOST_USER = os.getenv('email_host_user')
 EMAIL_HOST_PASSWORD = os.getenv('email_host_password')
 
 # Default email address to use for various automated correspondence from
 # the site managers.
-DEFAULT_FROM_EMAIL = 'administrator@ikuanyu.com'
+DEFAULT_FROM_EMAIL = os.getenv('default_from_email')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Subject-line prefix for email messages send with django.core.mail.mail_admins
 # or ...mail_managers.  Make sure to include the trailing space.
 EMAIL_SUBJECT_PREFIX = '[Django] '
 
-ADMINS = MANAGERS = (
-    ('wujuguang', 'wujuguang@ikuanyu.com'),)
+ADMINS = MANAGERS = os.getenv('admins_email')
 
 # Email address that error messages come from.
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
