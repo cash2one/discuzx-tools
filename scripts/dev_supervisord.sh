@@ -1,4 +1,4 @@
 #!/bin/bash
 
 base_path=$(cd `dirname $0`; pwd)
-/home/kylin/MyEnvs/kydiscuzx/bin/supervisord -c ${base_path}/conf/supervisor_dev.conf
+/home/kylin/Program/myenvs/quant_tools/bin/supervisord -c ${base_path}/conf/supervisor_dev.conf
