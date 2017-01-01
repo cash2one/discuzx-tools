@@ -42,7 +42,7 @@ class BasicBase(Base):
                 db_session.flush()
                 db_session.refresh(self)
             db_session.commit()
-        except Exception, ex:
+        except Exception as ex:
             model_record_log.exception(ex)
             db_session.rollback()
         finally:
@@ -60,7 +60,7 @@ class BasicBase(Base):
         try:
             db_session.add_all(entities_list)
             db_session.commit()
-        except Exception, ex:
+        except Exception as ex:
             model_record_log.exception(ex)
             db_session.rollback()
         else:

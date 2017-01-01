@@ -10,11 +10,12 @@ import hashlib
 import os
 import shutil
 
+import six
 import redis
 
 from conf.data_config import cache_option, mongodb_init, REDIS_CONFIG
 from conf.logger_config import redis_data_log
-from xpinyin import Pinyin
+from .xpinyin import Pinyin
 
 pinyin = Pinyin()
 redis_pool = redis.ConnectionPool(
@@ -40,7 +41,7 @@ class CacheService(object):
                     json_entity = _entity.__to_dict__()
                     # cls.cache_db[cache_table].insert(json_entity)
                     cls.cache_db[cache_table].insert_one(json_entity)
-            except Exception, ex:
+            except Exception as ex:
                 print(ex)
             else:
                 cls.cache_table_dict[cache_table] = True
@@ -77,7 +78,7 @@ class RedisService(object):
             self._redis_cli = redis.Redis(
                 connection_pool=redis_pool, db=db,
                 password=password)
-        except Exception, ex:
+        except Exception as ex:
             self._redis_cli = None
             redis_data_log.error("redis连接失败：%s" % (str(ex)))
 
@@ -128,7 +129,7 @@ class Utils(object):
         try:
             with open(file_path, "rb") as f:
                 return Utils.md5(f.read())
-        except Exception, ex:
+        except Exception as ex:
             print(ex)
             return ""
 
@@ -150,7 +151,8 @@ class Utils(object):
                 _fh.seek(0)
 
         m = hashlib.md5()
-        if isinstance(file_path, basestring) and os.path.exists(file_path):
+        if isinstance(file_path, six.string_types) and os.path.exists(
+                file_path):
             with open(file_path, "rb") as fh:
                 for chunk in read_chunks(fh):
                     m.update(chunk)

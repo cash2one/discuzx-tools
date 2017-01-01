@@ -3,31 +3,24 @@
 
 from __future__ import unicode_literals, print_function
 
+import sys
 import os
+import six
 
 from qiniu import Auth, BucketManager, put_data, put_file, put_stream
-from qiniu.compat import is_py2, is_py3
 
 from conf.store_config import (
     ACCESS_KEY, SECRET_KEY, BUCKET_NAME, BUCKET_DOMAIN, UNIX_TIME_TTL,
     PUBLIC_BUCKET_NAME, PUBLIC_BUCKET_DOMAIN)
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 q = Auth(ACCESS_KEY, SECRET_KEY)
 bucket_instance = BucketManager(q)
 
-if is_py2:
-    import sys
-    import StringIO
-    from urlparse import urljoin
-
-    reload(sys)
-    sys.setdefaultencoding('utf8')
-    StringIO = StringIO.StringIO
-elif is_py3:
-    import io
-    from urllib.parse import urljoin
-
-    StringIO = io.StringIO
+urljoin = six.moves.urljoin
+StringIO = six.StringIO
 
 
 def get_up_token(file_name):

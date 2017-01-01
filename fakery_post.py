@@ -59,7 +59,7 @@ def fake_post(gen_data_count=1):
                 post = Post(uid, tid, pid, fid)
                 robot_session.add(post)
                 robot_session.commit()
-            except Exception, ex:
+            except Exception as ex:
                 robot_session.rollback()
                 faker_post_info.exception(ex)
                 faker_post_info.info("回帖成功但记录失败: OK.")

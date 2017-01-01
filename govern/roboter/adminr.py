@@ -3,8 +3,8 @@
 
 import django_databrowse
 
-from models import (BbsAttachment, BbsMember, BbsSurplus,
-                    BbsThread, BbsPost, BbsPostContent)
+from .models import (BbsAttachment, BbsMember, BbsSurplus,
+                     BbsThread, BbsPost, BbsPostContent)
 
 django_databrowse.site.register(BbsAttachment)
 django_databrowse.site.register(BbsMember)

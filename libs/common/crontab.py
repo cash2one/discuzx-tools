@@ -7,7 +7,7 @@ import datetime
 
 from twisted.internet import task, reactor
 
-from scheduler import skip_hours, NoInterval
+from .scheduler import skip_hours, NoInterval
 
 
 @skip_hours

@@ -12,10 +12,9 @@ from twisted.internet import reactor, task
 
 from conf.data_config import robot_session, REDIS_CONFIG
 from conf.logger_config import record_info, upload_info, upload_error
-from conf.regular_config import SEEK_DIRECTORY, IGNORE_FILE_LIST, \
-    SKIP_README_FILE, \
-    ENABLE_FOLDER_RULE, MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, \
-    USER_MAP_CONFIG, PLATE_MAP_CONFIG
+from conf.regular_config import (
+    SEEK_DIRECTORY, IGNORE_FILE_LIST, SKIP_README_FILE, ENABLE_FOLDER_RULE,
+    MATCH_FILES_LIMIT, MATCH_FILES_INTERVAL, USER_MAP_CONFIG, PLATE_MAP_CONFIG)
 from libs.common.func import FileFinished, Utils, RedisService
 from libs.common.warning import WarnMedia
 from libs.models.record import Attachment, Surplus
@@ -92,7 +91,7 @@ def map_handler(_attachment):
                                    kind="file",
                                    file_path=_attachment.file_name,
                                    progress_handler=progress_handler)
-    except Exception, ex:
+    except Exception as ex:
         upload_info.exception(ex)
     else:
         upload_info.info(_ret)
@@ -103,7 +102,7 @@ def map_handler(_attachment):
                 # 更新上传成功的数据
                 robot_session.add(attachment)
                 robot_session.commit()
-            except Exception, ex:
+            except Exception as ex:
                 robot_session.rollback()
                 upload_info.exception(ex)
                 upload_error.info(upload_only_log % (
@@ -113,7 +112,7 @@ def map_handler(_attachment):
                 file_name_list = [attachment.file_name]
                 try:
                     fileFinished.batch_move(file_name_list)
-                except Exception, ex:
+                except Exception as ex:
                     upload_info.exception(ex)
             finally:
                 robot_session.close()
@@ -134,8 +133,8 @@ def search_match_files(directory):
             if ENABLE_FOLDER_RULE:
                 base_name = os.path.basename(sub_path).lower()
                 if base_name not in itertools.chain(
-                        PLATE_MAP_CONFIG.keys(),
-                        USER_MAP_CONFIG.keys()):
+                        list(PLATE_MAP_CONFIG.keys()),
+                        list(USER_MAP_CONFIG.keys())):
                     continue
 
             search_match_files(sub_path)
@@ -143,7 +142,7 @@ def search_match_files(directory):
 
             # 跳过计划的文件列表.
             if SKIP_README_FILE:
-                ignore_file_list = map(lambda x: x.lower(), IGNORE_FILE_LIST)
+                ignore_file_list = [x.lower() for x in IGNORE_FILE_LIST]
                 if ignore_file_list and os.path.basename(
                         sub_path).lower() in ignore_file_list:
                     continue
@@ -199,7 +198,7 @@ def upload_match_files(limit=5, loops=True):
                     kind="file",
                     file_path=attachment.file_name,
                     progress_handler=progress_handler)
-            except Exception, ex:
+            except Exception as ex:
                 errors = True
                 upload_info.exception(ex)
             else:
@@ -211,7 +210,7 @@ def upload_match_files(limit=5, loops=True):
                         # 更新上传成功的数据
                         robot_session.add(attachment)
                         robot_session.commit()
-                    except Exception, ex:
+                    except Exception as ex:
                         errors = True
                         robot_session.rollback()
                         upload_info.exception(ex)
@@ -222,7 +221,7 @@ def upload_match_files(limit=5, loops=True):
                         file_name_list = [attachment.file_name]
                         try:
                             fileFinished.batch_move(file_name_list)
-                        except Exception, ex:
+                        except Exception as ex:
                             errors = True
                             upload_info.exception(ex)
                     finally:
@@ -255,7 +254,6 @@ def update_name_files(limit=20):
             suffix = Utils.get_info_by_path(attachment.file_name)[2]
 
             # 生成唯一标识, 防冲突可能从cache比对已有值.
-            key_name = ""
             while True:
                 key_name = ''.join((uuid.uuid4().get_hex(), suffix))
                 fid = redis_md5sum.get(key_name)
@@ -269,7 +267,7 @@ def update_name_files(limit=20):
         try:
             robot_session.add_all(attachment_entities)
             robot_session.commit()
-        except Exception, ex:
+        except Exception as ex:
             print(ex)
             robot_session.rollback()
         else:

@@ -55,7 +55,7 @@ def fake_visitor(gen_data_count=1):
 
         forum_session.add_all(member_status_list)
         forum_session.commit()
-    except Exception, ex:
+    except Exception as ex:
         faker_user_status_info.info(ex)
         traceback.print_exc()
         forum_session.rollback()

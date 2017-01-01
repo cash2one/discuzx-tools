@@ -68,7 +68,7 @@ def fake_recommend(gen_data_count=1):
             forum_session.add(forum_member_recommend)
             forum_session.add(forum_thread)
             forum_session.commit()
-        except Exception, ex:
+        except Exception as ex:
             faker_recommend_info.exception(ex)
             faker_recommend_info.info("评帖失败: Error.")
             forum_session.rollback()

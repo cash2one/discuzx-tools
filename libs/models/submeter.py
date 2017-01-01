@@ -31,7 +31,7 @@ class ModelFactory(object):
             class ForumAttachment(forum_attachment, BaseModel):
                 def __init__(self, **kargs):
                     BaseModel.__init__(self, **kargs)
-        except Exception, ex:
+        except Exception as ex:
             print(ex)
         else:
             return ForumAttachment

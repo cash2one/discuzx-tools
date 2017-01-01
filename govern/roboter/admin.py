@@ -5,8 +5,8 @@ from django.contrib import admin
 from django.contrib.auth import get_permission_codename
 from import_export.admin import ImportExportModelAdmin
 
-from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost, \
-    BbsPostContent
+from .models import (
+    BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost, BbsPostContent)
 
 
 class CustomModelAdmin(admin.ModelAdmin):

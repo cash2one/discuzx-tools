@@ -166,13 +166,15 @@ class Scheduler(object):
         time_index = self._time_origin()[0]
         time_yield = self._generate_time_point(
             index=time_index)  # 不传入break_loop的参数.
-        time_next = time_yield.next()
+        time_next = next(time_yield)
 
         while True:
             now_time = time.localtime()
             unix_time = int(time.mktime(now_time))
-            unix_next = self.make_timestamp(time_next[0], time_next[1],
-                                            compatible(time_next, 2))
+            unix_next = self.make_timestamp(
+                time_next[0],
+                time_next[1],
+                compatible(time_next, 2))
 
             interval = unix_next - unix_time
             if interval < 0:
@@ -184,7 +186,7 @@ class Scheduler(object):
             time.sleep(interval)
             self.work()
             time.sleep(60)
-            time_next = time_yield.next()
+            time_next = next(time_yield)
 
     def test(self):
         """测试.

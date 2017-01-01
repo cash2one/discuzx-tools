@@ -96,7 +96,7 @@ def scat_content_to_user():
         thread_moved = len(unit_entities) / 2
         forum_session.add_all(unit_entities)
         forum_session.commit()
-    except Exception, ex:
+    except Exception as ex:
         print(ex)
         traceback.print_exc()
         forum_session.rollback()
@@ -151,7 +151,7 @@ def fix_member_miss_status():
 
         forum_session.add_all(member_status_entities)
         forum_session.commit()
-    except Exception, ex:
+    except Exception as ex:
         print(ex)
         traceback.print_exc()
         forum_session.rollback()

@@ -67,7 +67,7 @@ def spread_match_files(limit=5):
                     robot_session.add(robot_record)
                     robot_session.commit()
                     post_info.info("发帖成功: OK.")
-                except Exception, ex:
+                except Exception as ex:
                     robot_session.rollback()
                     post_info.exception(ex)
                 finally:

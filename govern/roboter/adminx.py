@@ -5,7 +5,7 @@ import xadmin
 from xadmin import views
 from xadmin.plugins.batch import BatchChangeAction
 
-from models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost
+from .models import BbsAttachment, BbsMember, BbsSurplus, BbsThread, BbsPost
 
 
 class MainDashboard(object):

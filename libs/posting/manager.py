@@ -43,7 +43,7 @@ def alchemy_sql(sql, kind="list"):
             result = conn.execute(sql).scalar()
         elif kind == "execute":
             result = conn.execute(sql)
-    except Exception, ex:
+    except Exception as ex:
         print(ex)
         raise ex
     finally:
@@ -116,7 +116,7 @@ def spread_attachment(tid, pid, author, file_name, attachment):
         )
 
         attachment_class.add(forum_attachment)
-    except Exception, ex:
+    except Exception as ex:
         print(ex)
     else:
         return forum_attachment.__aid
@@ -148,7 +148,7 @@ def spread_post(uid, tid, fid, username, message):
             __dateline=int(time.time()))
 
         ForumPost.add(forum_post)
-    except Exception, ex:
+    except Exception as ex:
         print(ex)
         # raise ex
     else:
@@ -267,7 +267,7 @@ def spread_info(subject, message, author, fid, tid=0,
             post_info.info("3: 发附件 ==>> (%s)" % str(aid))
 
         forum_session.commit()
-    except Exception, ex:
+    except Exception as ex:
         traceback.print_exc()
         forum_session.rollback()
         raise ex

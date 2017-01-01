@@ -25,7 +25,7 @@ def get_thread_entities():
     thread_entities = None
     try:
         thread_entities = forum_session.query(ForumThread).all()
-    except Exception, ex:
+    except Exception as ex:
         print(ex)
         traceback.print_exc()
     finally:
@@ -65,7 +65,7 @@ class BroadSite(SitePush):
 
             urls_file = {}
             times = int(threads_total / self.urls_size) + 1
-            for index in xrange(0, times):
+            for index in range(0, times):
                 urls = 'urls_%d.txt' % index
                 if os.path.exists(urls):
                     os.remove(urls)
@@ -87,7 +87,7 @@ class BroadSite(SitePush):
             data_robots.write(str(tpl_content % '\n'.join(pages_list)))
             data_robots.close()
 
-            for index in xrange(0, times):
+            for index in range(0, times):
                 urls_file[index].close()
 
 

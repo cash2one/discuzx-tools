@@ -7,8 +7,8 @@
 from __future__ import unicode_literals, print_function
 
 from faker import Factory
-from testdata import DictFactory, RandomInteger, RandomLengthStringFactory, \
-    FakeDataFactory
+from testdata import (
+    DictFactory, RandomInteger, RandomLengthStringFactory, FakeDataFactory)
 from testdata.extra.mongodb import FieldFromCollection
 
 from conf.data_config import cache_option

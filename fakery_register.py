@@ -87,7 +87,7 @@ def fake_member(gen_data_count=1):
             member = Member(username, password, entity["email"], uid)
             robot_session.add(member)
             robot_session.commit()
-        except Exception, ex:
+        except Exception as ex:
             faker_user_info.exception(ex)
             faker_user_info.info("注册账户失败: Error.")
             forum_session.rollback()
