@@ -71,5 +71,5 @@ target/
 kylin_*
 nohup.out
 testing.py
-govern/static/*
+govern/govern/static/*
 *.tar.gz

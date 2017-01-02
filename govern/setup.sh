@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-sudo mkdir media
+sudo mkdir -p govern/media
 
-sudo apt-get install -y libxslt1-dev
-sudo apt-get install -y python-dev python-mysqldb
+sudo apt-get install -y libxslt1-dev python-dev python-mysqldb
 
-sudo wget http://jaist.dl.sourceforge.net/project/levent/libevent/libevent-2.0/libevent-2.0.22-stable.tar.gz
+sudo wget https://github.com/libevent/libevent/releases/download/release-2.0.22-stable/libevent-2.0.22-stable.tar.gz
 sudo tar xzf libevent-2.0.22-stable.tar.gz
 cd libevent-2.0.22-stable
 sudo ./configure
