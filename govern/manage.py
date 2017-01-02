@@ -18,5 +18,7 @@ if __name__ == "__main__":
                 "available on your PYTHONPATH environment variable? Did you "
                 "forget to activate a virtual environment?"
             )
+        else:
+            print(django.get_version())
         raise
     execute_from_command_line(sys.argv)

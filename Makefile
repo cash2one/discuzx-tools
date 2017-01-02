@@ -9,9 +9,9 @@ pre-commit:
 
 pip:
 	@make pre-commit
-	@pip --default-timeout=100 --retries=5 install -r requirement.txt
-	@pip --default-timeout=100 --retries=5 install -r requirement-dev.txt
-	@pip --default-timeout=100 --retries=5 install -r requirement-test.txt
+	@pip --default-timeout=100 --retries=5 install -r requirements/requirement.txt
+	@pip --default-timeout=100 --retries=5 install -r requirements/requirement-dev.txt
+	@pip --default-timeout=100 --retries=5 install -r requirements/requirement-test.txt
 
 lint:
 	@sh scripts/check_lint.sh

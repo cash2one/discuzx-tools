@@ -4,7 +4,7 @@
 
     readme.md
 
-    requirements.txt
+    requirements
 
 Redis
 =====

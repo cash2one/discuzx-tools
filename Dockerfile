@@ -20,11 +20,11 @@ RUN apt-get install -y libmysqlclient-dev libxslt1-dev python-dev python-pip
 RUN apt-get clean && apt-get autoclean && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/kylin/Luntan/service-quant
-ADD ./requirement.txt /home/kylin
+ADD ./requirements /home/kylin
 ADD ./scripts/install-avbin-linux-x86-64-v10 /home/kylin
 
 # 安装mp3支持包
 RUN sh /home/kylin/install-avbin-linux-x86-64-v10
-RUN pip install -r /home/kylin/requirement.txt
+RUN pip install -r /home/kylin/requirements/requirement.txt
 
 WORKDIR /home/kylin

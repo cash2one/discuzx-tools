@@ -4,10 +4,10 @@
 # 安装
     1, 安装MySQL.
     2, 执行./script/setup.sh.
-    3, 创建python运行虚拟环境, 在虚拟环境执行: pip install -r requirements.txt.
+    3, 创建python运行虚拟环境, 在虚拟环境执行: pip install -r requirements/requirement.txt.
 
 # 介绍
-    ./*.py      服务脚本
+    ./tools     服务脚本
     ./web       七牛文件下载代理
     ./govern    数据管理后台
 
@@ -22,7 +22,7 @@
     ./scripts/readme.md         # MongoDb可能使用的DBA账户
     ./govern/govern/settings.py # 管理后台配置信息 (Email\MySQL)
 
-    提醒：./conf/data_config.py 里 Redis\MongoDB 账户或密码的更改，请注意与 ./conf/redis_server.conf 或 ./conf/mongod.conf 一致。
+    提醒：./conf/data_config.py 里 Redis\MongoDB 账户或密码的更改，请注意与 ./deploy/redis_server.conf 或 ./deploy/mongod.conf 一致。
     
 # 环境变量设置
-    ./env_conf_init.txt 分两部分
+    .env_example 分两部分

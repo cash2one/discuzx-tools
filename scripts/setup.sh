@@ -3,10 +3,8 @@
 sudo apt-get install -y coreutils
 
 # Pip安装Python包的依赖项
-sudo apt-get install -y python-mysqldb
-sudo apt-get install -y libmysqlclient-dev
-sudo apt-get install -y libxslt1-dev
-sudo apt-get install -y python-dev
+sudo apt-get install -y python-dev python-mysqldb
+sudo apt-get install -y libmysqlclient-dev libxslt1-dev
 
 # mongodb数据临时存储
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
@@ -30,5 +28,4 @@ sudo sh install-avbin-linux-x86-64-v10
 
 # 安装python环境管理
 sudo apt-get install -y python-pip
-pip install virtualenv
-pip install virtualenvwrapper
+pip install virtualenv virtualenvwrapper
