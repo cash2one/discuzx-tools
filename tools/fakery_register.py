@@ -13,6 +13,7 @@ import time
 
 from twisted.internet import task, reactor
 
+from base import config_setup
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_user_info
 from libs.common.func import Utils, CacheService
@@ -21,6 +22,7 @@ from libs.models.record import Member
 from libs.models.remote import CommonMember, CenterMember, CommonMemberStatus
 from libs.register.factory import FakeMember, FakeMemberStatus
 
+print(config_setup)
 limits = (1, 2, 3)
 intervals = (30, 50, 70, 100)
 

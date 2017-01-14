@@ -12,6 +12,7 @@ import time
 
 from twisted.internet import task, reactor
 
+from base import config_setup
 from conf.data_config import forum_session
 from conf.logger_config import faker_recommend_info
 from libs.common.scheduler import partial, skip_hours, NoInterval
@@ -19,6 +20,7 @@ from libs.models.remote import ForumThread, ForumMemberRecommend
 from libs.models.submeter import cache_thread_member
 from libs.register.factory import FakeRecommend
 
+print(config_setup)
 limits = (1, 2, 3)
 intervals = (30, 50, 70, 80)
 

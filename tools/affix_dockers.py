@@ -10,6 +10,7 @@ import uuid
 
 from twisted.internet import reactor, task
 
+from base import config_setup
 from conf.data_config import robot_session, REDIS_CONFIG
 from conf.logger_config import record_info, upload_info, upload_error
 from conf.regular_config import (
@@ -19,6 +20,8 @@ from libs.common.func import FileFinished, Utils, RedisService
 from libs.common.warning import WarnMedia
 from libs.models.record import Attachment, Surplus
 from libs.upload import put_up_datum
+
+print(config_setup)
 
 
 def build_file_finished():

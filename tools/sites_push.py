@@ -7,7 +7,7 @@ import json
 import os
 import sys
 import traceback
-
+from base import config_setup
 from conf.data_config import forum_session
 from conf.env_conf import dz_site, dz_push_token
 from conf.logger_config import broad_site_info
@@ -16,6 +16,8 @@ from libs.models.remote import ForumThread
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+print(config_setup)
 
 
 def get_thread_entities():

@@ -11,7 +11,7 @@ import random
 import time
 
 from twisted.internet import task, reactor
-
+from base import config_setup
 from conf.data_config import robot_session
 from conf.logger_config import post_info
 from conf.regular_config import USER_MAP_CONFIG
@@ -19,6 +19,7 @@ from libs.common.scheduler import partial, skip_hours, NoInterval
 from libs.models.record import Attachment, Thread
 from libs.posting.manager import spread_info
 
+print(config_setup)
 limits = (2, 3, 5, 7)
 intervals = (20, 30, 50, 70, 100)
 

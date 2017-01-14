@@ -16,6 +16,10 @@ mysql_user = os.getenv('mysql_user')
 mysql_password = os.getenv('mysql_password')
 mysql_charset = os.getenv('mysql_charset')
 
+robots_db = os.getenv('robots_schema')
+discus_db = os.getenv('discus_schema')
+discus_prefix = os.getenv('discus_prefix')
+
 # Redis设置
 redis_host = os.getenv('redis_host')
 redis_port = os.getenv('redis_port')
@@ -34,3 +38,6 @@ dz_push_token = os.getenv('dz_push_token')
 
 discuss_username = os.getenv('discuss_username', '')
 discuss_password = os.getenv('discuss_password', '')
+
+if __name__ == '__main__':
+    print(locals())

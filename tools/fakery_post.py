@@ -12,6 +12,7 @@ import time
 
 from twisted.internet import task, reactor
 
+from base import config_setup
 from conf.data_config import robot_session, forum_session
 from conf.logger_config import faker_post_info, faker_post_error
 from libs.common.scheduler import partial, skip_hours, NoInterval
@@ -20,6 +21,8 @@ from libs.models.remote import ForumThread
 from libs.models.submeter import cache_thread_member
 from libs.posting.manager import spread_post
 from libs.register.factory import FakePost
+
+print(config_setup)
 
 limits = (1, 2, 3)
 intervals = (30, 50, 70, 80)

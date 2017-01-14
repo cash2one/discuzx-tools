@@ -10,10 +10,13 @@ import random
 import time
 import traceback
 
+from base import config_setup
 from conf.data_config import robot_session, forum_session
 from libs.models.record import Thread, Member
 from libs.models.remote import ForumThread, ForumPost, CommonMemberStatus
 from libs.register.factory import FakeMemberStatus
+
+print(config_setup)
 
 
 def scat_content_to_user():

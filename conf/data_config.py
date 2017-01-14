@@ -16,42 +16,31 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 from conf.env_conf import (
     mysql_host, mysql_port, mysql_user, mysql_password, mysql_charset,
-    redis_host, redis_port, redis_password,
-    cache_host, cache_port, cache_user, cache_password, cache_database)
+    robots_db, discus_db, discus_prefix, redis_host, redis_port,
+    redis_password, cache_host, cache_port, cache_user, cache_password,
+    cache_database)
 
-is_echo = False
-db_pool_recycle = 60
+echo = False
+pool_recycle = 60
 
-robot_environ = False  # local/server数据库连接, False: local; True: server.
 conn = ('mysql+pymysql://%(user)s:%(password)s@'
         '%(host)s:%(port)s/%(database)s?charset=%(charset)s')
 
-if robot_environ:
-    MYSQL_CONFIG = dict(
-        host=mysql_host or '127.0.0.1',
-        port=mysql_port or 3306,
-        user=mysql_user,
-        password=mysql_password,
-        charset=mysql_charset or "utf8")
-else:
-    MYSQL_CONFIG = dict(
-        host=mysql_host or '127.0.0.1',
-        port=mysql_port or 3306,
-        user=mysql_user,
-        password=mysql_password,
-        charset=mysql_charset or "utf8")
+MYSQL_CONFIG = dict(
+    host=mysql_host or '127.0.0.1',
+    port=mysql_port or 3306,
+    user=mysql_user,
+    password=mysql_password,
+    charset=mysql_charset or "utf8")
 
-MYSQL_CONFIG_NEW = MYSQL_CONFIG.copy()
+MYSQL_CONFIG.update(database=discus_db)
+forum_url = conn % MYSQL_CONFIG
 
-MYSQL_CONFIG_NEW.update(database="discuzx")
-forum_url = conn % MYSQL_CONFIG_NEW
-MYSQL_CONFIG_NEW.update(database="roboter")
-robot_url = conn % MYSQL_CONFIG_NEW
+MYSQL_CONFIG.update(database=robots_db)
+robot_url = conn % MYSQL_CONFIG
 
-forum_engine = create_engine(forum_url, echo=is_echo,
-                             pool_recycle=db_pool_recycle)
-robot_engine = create_engine(robot_url, echo=is_echo,
-                             pool_recycle=db_pool_recycle)
+forum_engine = create_engine(forum_url, echo=echo, pool_recycle=pool_recycle)
+robot_engine = create_engine(robot_url, echo=echo, pool_recycle=pool_recycle)
 
 forum_session = scoped_session(sessionmaker(bind=forum_engine))()
 robot_session = scoped_session(sessionmaker(bind=robot_engine))()
@@ -130,6 +119,7 @@ def generate_models(mysql_config, databases_config, database_name,
     _charset = mysql_config['charset']
     _database = database_name
     _tables = databases_config[_database]
+
     _models = Models(host=_host,
                      port=_port,
                      user=_user,
@@ -137,31 +127,31 @@ def generate_models(mysql_config, databases_config, database_name,
                      database=_database,
                      tables=_tables,
                      charset=_charset,
-                     echo=is_echo,
-                     pool_recycle=db_pool_recycle,
+                     echo=echo,
+                     pool_recycle=pool_recycle,
                      column_prefix=column_prefix,
                      schema=_database)
     return _models
 
 
-MYSQL_DATABASES_TABLES = dict(
-    discuzx=[
-        "bbs_common_member", "bbs_common_member_status", "bbs_ucenter_members",
-        "bbs_forum_thread",
-        "bbs_forum_post", "bbs_forum_attachment", "bbs_forum_memberrecommend",
+MYSQL_DATABASES_TABLES = {
+    discus_db: [
+        "common_member", "common_member_status", "ucenter_members",
+        "forum_thread",
+        "forum_post", "forum_attachment", "forum_memberrecommend",
     ]
-)
+}
+
+MYSQL_DATABASES_TABLES[discus_db] = [
+    "%s_%s" % ('iky', i) for i in MYSQL_DATABASES_TABLES[discus_db]]
 
 # 增加相关的分表
-bbs_forum_attachment_list = ["bbs_forum_attachment_%d" %
-                             i for i in range(0, 10)]
+forum_attachment_list = [
+    "%s_forum_attachment_%d" % (discus_prefix, i) for i in range(0, 10)]
 
-MYSQL_DATABASES_TABLES["discuzx"].extend(bbs_forum_attachment_list)
+MYSQL_DATABASES_TABLES[discus_db].extend(forum_attachment_list)
 
 generate_models = functools.partial(
     generate_models, MYSQL_CONFIG, MYSQL_DATABASES_TABLES)
 
-generate_db_models = generate_models("discuzx")
-
-if __name__ == "__main__":
-    pass
+generate_db_models = generate_models(discus_db)
