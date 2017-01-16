@@ -11,7 +11,7 @@ import os
 
 from sqlalchemy import Column, INTEGER, VARCHAR, TIMESTAMP
 
-from libs.models import BasicBase
+from libs.models.base import BasicBase
 
 
 class Attachment(BasicBase):

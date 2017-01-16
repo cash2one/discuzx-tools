@@ -1,3 +1,8 @@
+## Note:
+    此目录下的脚本运行为:
+    cd scripts
+    sudo sh ./*.sh
+
 ## mongoDb:
     $ mongo --host 127.0.0.1:27027
     

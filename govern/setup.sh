@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sudo mkdir -p govern/media
+sudo mkdir -p media
 
 sudo apt-get install -y libxslt1-dev python-dev python-mysqldb
 

@@ -9,7 +9,8 @@ from __future__ import unicode_literals, print_function
 import os
 import logging
 
-logs_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+logs_path = os.path.join(os.path.dirname(
+    os.path.dirname(os.path.dirname(__file__))), "logs")
 
 
 def build_file_logs(logger_name, level=logging.INFO):

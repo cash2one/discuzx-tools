@@ -63,7 +63,7 @@ if cache_user and cache_password:
 
 cache_option = {
     'host': cache_host,
-    'port': cache_port,
+    'port': int(cache_port),
     'database': cache_database,
 }
 

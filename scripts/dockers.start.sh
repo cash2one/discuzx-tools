@@ -3,7 +3,7 @@
 docker=$1
 
 if [ "$docker" -eq 0 ]; then
-    supervisord -c /home/kylin/Luntan/service-quant/deploy/supervisor_run.conf
+    supervisord -c ../deploy/supervisor_run.conf
 else
-    supervisorctrl -c /home/kylin/Luntan/service-quant/deploy/supervisor_run.conf
+    supervisorctrl -c ../deploy/supervisor_run.conf
 fi

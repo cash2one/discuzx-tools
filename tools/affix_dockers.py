@@ -36,7 +36,7 @@ redis_md5sum = RedisService(db="files_md5sum",
 redis_unique = RedisService(db="files_unique",
                             password=REDIS_CONFIG.get("password"))
 
-media_path = os.path.dirname(os.path.abspath(__file__))
+media_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 media_instance = WarnMedia(os.path.join(media_path, "media", "warn_pig.mp3"))
 upload_only_log = ("update bbs_attachment set status = 1, "
                    "upload_datetime = '%s' where id = %d;")

@@ -19,7 +19,7 @@ sys.setdefaultencoding('utf8')
 q = Auth(ACCESS_KEY, SECRET_KEY)
 bucket_instance = BucketManager(q)
 
-urljoin = six.moves.urljoin
+urljoin = six.moves.urllib.parse.urljoin
 StringIO = six.StringIO
 
 
